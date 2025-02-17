@@ -9,6 +9,7 @@ export interface Event {
     userId: string;
     title: string;
     medium: Medium;
+    eventType: EventType;
     startDate: Timestamp;
     endDate: Timestamp;
     private: boolean;
