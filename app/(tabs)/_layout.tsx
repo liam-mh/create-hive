@@ -1,12 +1,13 @@
 import { Tabs } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons"
+import { COLOURS, SIZES } from '@/styles';
 
 export default function RootLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: '#00626B',
-        headerTintColor: '#00626B',
+        tabBarActiveTintColor: COLOURS.primary,
+        headerTintColor: COLOURS.primary,
         headerShadowVisible: false
       }}
     >
@@ -15,7 +16,7 @@ export default function RootLayout() {
         options={{ 
           title: 'Home', 
           tabBarIcon: ({ color, focused }) => (
-            <MaterialCommunityIcons name={focused ? 'home' : 'home-outline'} color={color} size={24} />
+            <MaterialCommunityIcons name={focused ? 'home' : 'home-outline'} color={color} size={SIZES.l} />
           ),
         }}/>
       <Tabs.Screen 
@@ -24,7 +25,7 @@ export default function RootLayout() {
           title: 'Explore', 
           headerShown: false,
           tabBarIcon: ({ color, focused }) => (
-            <MaterialCommunityIcons name={focused ? 'map-marker' : 'map-marker-outline'} color={color} size={24} />
+            <MaterialCommunityIcons name={focused ? 'map-marker' : 'map-marker-outline'} color={color} size={SIZES.l} />
           ),
         }}/>
     </Tabs>
