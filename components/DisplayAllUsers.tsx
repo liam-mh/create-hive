@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { User } from '@/models/User';
 import { getUser } from '@/services/user';
+import { View, Text, FlatList, StyleSheet } from 'react-native'; // Import React Native components
 
 const DisplayAllUsers = () => {
     const [users, setUsers] = useState<User[]>([]);
@@ -13,7 +14,7 @@ const DisplayAllUsers = () => {
                 const fetchedUsers = await getUser();
                 setUsers(fetchedUsers);
             } catch (err) {
-                setError("Failed to load users."); 
+                setError("Failed to load users.");
                 console.error(err);
             } finally {
                 setLoading(false);
@@ -24,22 +25,33 @@ const DisplayAllUsers = () => {
     }, []);
 
     if (loading) {
-        return <p>Loading users...</p>;
+        return <Text>Loading users...</Text>; 
     }
 
     if (error) {
-        return <p>{error}</p>;
+        return <Text>{error}</Text>; 
     }
 
+
     return (
-        <ul>
-            {users.map((user) => (
-                <li key={user.userId}>
-                    <pre>{JSON.stringify(user, null, 2)}</pre> 
-                </li>
-            ))}
-        </ul>
+        <FlatList
+            data={users}
+            keyExtractor={(item) => item.userId}
+            renderItem={({ item }) => (
+                <View style={styles.listItem}> 
+                    <Text>{JSON.stringify(item, null, 2)}</Text> 
+                </View>
+            )}
+        />
     );
 };
+
+const styles = StyleSheet.create({
+    listItem: { 
+        padding: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#eee',
+    },
+});
 
 export default DisplayAllUsers;
