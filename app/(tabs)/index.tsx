@@ -1,6 +1,6 @@
+import { StyleSheet, Text, View} from 'react-native';
+import { useRouter, Link } from 'expo-router';
 import DisplayAllUsers from '@/components/DisplayAllUsers';
-import { Button, StyleSheet, Text, View} from 'react-native';
-import { useRouter } from 'expo-router';
 
 export default function Index() {
     const router = useRouter();
@@ -9,10 +9,9 @@ export default function Index() {
         <View style={styles.container}>
             <Text style={styles.text}>Hello world!</Text>
             <DisplayAllUsers />
-            <Button
-                title="Go to Explore"
-                onPress={() => router.push('/explore')} 
-            />
+            <Link href='/explore'>
+                Explore
+            </Link>
         </View>
     );
 }
