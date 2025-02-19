@@ -1,5 +1,4 @@
 import { Tabs } from "expo-router";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { COLOURS, SIZES } from '@/styles';
 
 import IconHouse from '@/assets/icons/house-door.svg';
