@@ -12,6 +12,7 @@ import IconPerson from '@/assets/icons/person.svg';
 import IconPersonFill from '@/assets/icons/person-fill.svg';
 
 export default function RootLayout() {
+  const ICON_SIZE = SIZES.m;
   return (
     <Tabs
       screenOptions={{
@@ -26,9 +27,9 @@ export default function RootLayout() {
           title: 'Home', 
           tabBarIcon: ({ color, focused }) => (
             focused ? 
-              <IconHouseFill width={SIZES.l} height={SIZES.l} fill={color} /> 
+              <IconHouseFill width={ICON_SIZE} height={ICON_SIZE} fill={color} /> 
               : 
-              <IconHouse width={SIZES.l} height={SIZES.l} fill={color} />
+              <IconHouse width={ICON_SIZE} height={ICON_SIZE} fill={color} />
           ),
         }}
       />
@@ -38,9 +39,9 @@ export default function RootLayout() {
           title: 'Search', 
           tabBarIcon: ({ color, focused }) => (
             focused ? 
-              <IconSearch width={SIZES.l} height={SIZES.l} fill={color} /> 
+              <IconSearch width={ICON_SIZE} height={ICON_SIZE} fill={color} /> 
               : 
-              <IconSearch width={SIZES.l} height={SIZES.l} fill={color} />
+              <IconSearch width={ICON_SIZE} height={ICON_SIZE} fill={color} />
           ),
         }}
       />
@@ -50,9 +51,9 @@ export default function RootLayout() {
           title: 'Create', 
           tabBarIcon: ({ color, focused }) => (
             focused ? 
-              <IconCreateFill width={SIZES.l} height={SIZES.l} fill={color} /> 
+              <IconCreateFill width={ICON_SIZE} height={ICON_SIZE} fill={color} /> 
               : 
-              <IconCreate width={SIZES.l} height={SIZES.l} fill={color} />
+              <IconCreate width={ICON_SIZE} height={ICON_SIZE} fill={color} />
           ),
         }}
       />
@@ -63,9 +64,9 @@ export default function RootLayout() {
           headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             focused ? 
-              <IconPinFill width={SIZES.l} height={SIZES.l} fill={color} /> 
+              <IconPinFill width={ICON_SIZE} height={ICON_SIZE} fill={color} /> 
               : 
-              <IconPin width={SIZES.l} height={SIZES.l} fill={color} />
+              <IconPin width={ICON_SIZE} height={ICON_SIZE} fill={color} />
           ),
         }}
       />
@@ -75,9 +76,9 @@ export default function RootLayout() {
           title: 'More', 
           tabBarIcon: ({ color, focused }) => (
             focused ? 
-              <IconPersonFill width={SIZES.l} height={SIZES.l} fill={color} /> 
+              <IconPersonFill width={ICON_SIZE} height={ICON_SIZE} fill={color} /> 
               : 
-              <IconPerson width={SIZES.l} height={SIZES.l} fill={color} />
+              <IconPerson width={ICON_SIZE} height={ICON_SIZE} fill={color} />
           ),
         }}
       />
