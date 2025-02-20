@@ -1,4 +1,4 @@
-import MapView, { PROVIDER_DEFAULT } from 'react-native-maps';
+import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps';
 import { StyleSheet, View, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
@@ -7,6 +7,7 @@ import { Location } from '@/types/Location';
 import { Region } from 'react-native-maps';
 import { useCityFromCoordinates } from '@/hooks/useCityFromCoordinates';
 import MapFiltersDropdown from './MapFiltersDropdown';
+import CustomMarker from './CustomMarker';
 
 const Map = () => {
   const inputLocation: Location = {
@@ -34,6 +35,18 @@ const Map = () => {
         showsMyLocationButton
         onRegionChangeComplete={(region) => setCurrentRegion(region)}
       >
+        <Marker 
+          coordinate={inputLocation}
+          tracksViewChanges={false}
+          image={require('@/assets/icons/bookmark-fill.svg')}
+        />
+
+        <CustomMarker
+          coordinate={inputLocation}
+          folder='artwork'
+          filename='acrylic-landscapes-beginners.jpg'
+        />
+
         <SafeAreaView style={[styles.headerContainer, [SHADOWS.containerShadow]]}>
           <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
             <Text style={TEXT.h1}>{city}</Text>
