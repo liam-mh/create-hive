@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-const unit = 16;
+export const UNIT = 16;
 
 export const COLOURS = {
     primary: '#00626B', 
@@ -18,11 +18,11 @@ const FONTS = {
 };
   
 export const SIZES = {
-    xs: unit / 2,
-    s: unit * 0.75,
-    m: unit,
-    l: unit * 1.5,
-    xl: unit * 2
+    xs: UNIT / 2,
+    s: UNIT * 0.75,
+    m: UNIT,
+    l: UNIT * 1.5,
+    xl: UNIT * 2
 };
 
 const SPACING = {
