@@ -25,8 +25,8 @@ const MapFiltersDropdown = () => {
   const toggleFilter = (filter: string) => {
     setSelectedFilters((prevSelected) =>
       prevSelected.includes(filter)
-        ? prevSelected.filter((item) => item !== filter) // Remove if already selected
-        : [...prevSelected, filter] // Add if not selected
+        ? prevSelected.filter((item) => item !== filter)
+        : [...prevSelected, filter] 
     );
   };
 
