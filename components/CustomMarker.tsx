@@ -1,77 +1,97 @@
-import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Image } from "react-native";
-import { Marker } from "react-native-maps";
-import Svg, { Circle, Path, Defs, ClipPath, Image as SvgImage } from "react-native-svg";
+import React, { useEffect, useState } from 'react';
+import { Marker } from 'react-native-maps';
+import { View, Text, Image, ActivityIndicator, StyleSheet } from 'react-native';
+import { COLOURS, UNIT, TEXT, SHADOWS } from "@/styles";
 import { Location } from "@/types/Location";
 import { getImageUrl } from "@/hooks/useFirebaseStorage";
-import { COLOURS, UNIT } from "@/styles";
+
+const DEFAULT_SIZE = UNIT * 2.5;
 
 interface CustomMarkerProps {
   coordinate: Location;
-  folder: string;
+  type: "artwork" | "event";
   filename: string;
-  size?: number;
+  text: string;
 }
 
-const DEFAULT_SIZE = UNIT * 3;
-
-const CustomMarker: React.FC<CustomMarkerProps> = ({ coordinate, folder, filename, size = DEFAULT_SIZE }) => {
+const CustomMarker: React.FC<CustomMarkerProps> = ({ coordinate, type = 'event', filename, text }) => {
   const [imageUri, setImageUri] = useState<string | null>(null);
-  const [imageSize, setImageSize] = useState<{ width: number; height: number } | null>(null);
-  const circleRadius = size / 2;
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchImage = async () => {
-      const url = await getImageUrl(folder, filename);
-      setImageUri(url);
-
-      if (url) {
-        Image.getSize(url, (width, height) => {
-          setImageSize({ width, height });
-        });
+      try {
+        setLoading(true);
+        const url = await getImageUrl(type, filename);
+        setImageUri(url);
+      } catch (error) {
+        console.error("Error fetching image URL:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchImage();
-  }, [folder, filename]);
+  }, [type, filename]);
 
-  if (!imageUri || !imageSize) {
-    return <ActivityIndicator size="small" color={COLOURS.primary} />;
+  const colour = type === "event" ? COLOURS.primary : COLOURS.secondary;
+  const corners = type === "event" ? 100 : 2;
+
+  if (loading || !imageUri) {
+    return (
+      <Marker coordinate={coordinate} tracksViewChanges={false}>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="small" color={COLOURS.primary} />
+          <Text style={TEXT.small}>Loading...</Text>
+        </View>
+      </Marker>
+    );
   }
 
-  const scaledWidth = (imageSize.width / imageSize.height) * (size - 4);
-
   return (
-    <Marker coordinate={coordinate} anchor={{ x: 0.5, y: 1 }}>
-      <Svg width={size} height={size + 10} viewBox={`0 0 ${size} ${size + 10}`}>
-        {/* Triangle Pointer */}
-        <Path
-          d={`M${circleRadius - 6},${size - 4} L${circleRadius},${size + 8} L${circleRadius + 6},${size - 2} Z`}
-          fill={COLOURS.primary}
-        />
+    <Marker 
+      coordinate={coordinate} 
+      key={`${type}-${filename}`}
+      tracksViewChanges={false}
+    >
+      <View style={[styles.container, [SHADOWS.containerShadow]]}>
+        <View style={[styles.pin, { width: DEFAULT_SIZE + 8, height: DEFAULT_SIZE + 8, backgroundColor: colour, borderRadius: corners }]}>
+          <Image source={{ uri: imageUri }} style={[{ width: DEFAULT_SIZE, height: DEFAULT_SIZE, borderRadius: corners }]} />
+        </View>
 
-        {/* Circle Outline */}
-        <Circle cx={circleRadius} cy={circleRadius} r={circleRadius - 2} fill="white" stroke={COLOURS.primary} strokeWidth={UNIT / 4} />
+        <View style={[styles.triangle, {borderTopColor: colour }]} />
 
-        {/* ClipPath Definition */}
-        <Defs>
-          <ClipPath id="clip-circle">
-            <Circle cx={circleRadius} cy={circleRadius} r={circleRadius - 4} />
-          </ClipPath>
-        </Defs>
-
-        {/* Image clipped inside the circle */}
-        <SvgImage
-          href={{ uri: imageUri }}
-          width={scaledWidth} 
-          height={size - 4} 
-          x={(size - scaledWidth) / 2} 
-          y={2}
-          clipPath="url(#clip-circle)"
-        />
-      </Svg>
+        <Text style={[TEXT.small, styles.text]}>{text}</Text>
+      </View>
     </Marker>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+  },
+  loadingContainer: {
+    alignItems: 'center',
+  },
+  pin: {
+    padding: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  triangle: {
+    width: 0,
+    height: 0,
+    borderLeftWidth: 8,
+    borderRightWidth: 8,
+    borderTopWidth: 10,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    marginTop: -2,
+  },
+  text: {
+    marginTop: 4,
+  },
+});
 
 export default CustomMarker;

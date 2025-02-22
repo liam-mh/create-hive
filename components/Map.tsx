@@ -1,8 +1,8 @@
-import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps';
+import MapView, { PROVIDER_DEFAULT } from 'react-native-maps';
 import { StyleSheet, View, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
-import TEXT, { SHADOWS, SIZES } from '@/styles';
+import { TEXT, SHADOWS, SIZES } from '@/styles';
 import { Location } from '@/types/Location';
 import { Region } from 'react-native-maps';
 import { useCityFromCoordinates } from '@/hooks/useCityFromCoordinates';
@@ -31,22 +31,21 @@ const Map = () => {
         style={styles.map} 
         provider={PROVIDER_DEFAULT}
         initialRegion={initialRegion}
-        showsUserLocation
-        showsMyLocationButton
         onRegionChangeComplete={(region) => setCurrentRegion(region)}
+        showsPointsOfInterest={false}
       >
-        <Marker 
-          coordinate={inputLocation}
-          tracksViewChanges={false}
-          image={require('@/assets/icons/bookmark-fill.svg')}
-        />
-
         <CustomMarker
-          coordinate={inputLocation}
-          folder='artwork'
-          filename='acrylic-landscapes-beginners.jpg'
+          coordinate={{ latitude: 53.380871, longitude: -1.4701 }}
+          type="event"
+          filename="event_1.jpg"
+          text='8 february'
         />
-
+        <CustomMarker
+          coordinate={{ latitude: 53.370871, longitude: -1.4701 }}
+          type="artwork"
+          filename="acrylic-landscapes-beginners.jpg"
+          text='acrylic'
+        />
         <SafeAreaView style={[styles.headerContainer, [SHADOWS.containerShadow]]}>
           <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
             <Text style={TEXT.h1}>{city}</Text>
