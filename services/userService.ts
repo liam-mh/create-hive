@@ -1,6 +1,6 @@
 import { DocumentData } from "firebase/firestore";
-import { readCollection } from "../hooks/useFirestore";
-import { User, mapUserFirestore } from "../models/User";
+import { readCollection } from "@/hooks/useFirestore";
+import { User, mapUserFirestore } from "@/models/User";
 
 export async function getUser(): Promise<User[]> {
     try {
