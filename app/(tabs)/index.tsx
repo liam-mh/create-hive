@@ -2,6 +2,7 @@ import { StyleSheet, Text, View} from 'react-native';
 import { useRouter, Link } from 'expo-router';
 import DisplayAllUsers from '@/components/DisplayAllUsers';
 import DisplayAllEvents from '@/components/DisplayAllEvents';
+import DisplayAllArtwork from '@/components/DisplayAllArtwork';
 
 export default function Index() {
     const router = useRouter();
@@ -10,11 +11,13 @@ export default function Index() {
         <View style={styles.container}>
             <Text style={styles.text}>Users</Text>
             <DisplayAllUsers />
+
             <Text style={styles.text}>Events</Text>
             <DisplayAllEvents />
-            <Link href='/explore'>
-                Explore
-            </Link>
+
+            <Text style={styles.text}>Artwork</Text>
+            <DisplayAllArtwork />
+          
         </View>
     );
 }
