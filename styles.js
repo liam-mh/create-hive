@@ -45,12 +45,12 @@ export const SHADOWS = {
 export const TEXT = StyleSheet.create({
     small: {
         fontFamily: FONTS.regular,
-        fontSize: SIZES.xs,
+        fontSize: SIZES.s,
         color: COLOURS.black,
     },
     smallPrimary: {
         fontFamily: FONTS.regular,
-        fontSize: SIZES.xs,
+        fontSize: SIZES.s,
         color: COLOURS.primary,
     },
     regular: {
