@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { User } from '@/models/User';
-import { getUser } from '@/services/user';
-import { View, Text, FlatList, StyleSheet } from 'react-native'; // Import React Native components
+import { getUser } from '@/services/userService';
+import { View, Text, FlatList, StyleSheet } from 'react-native'; 
 
 const DisplayAllUsers = () => {
     const [users, setUsers] = useState<User[]>([]);
@@ -31,7 +31,6 @@ const DisplayAllUsers = () => {
     if (error) {
         return <Text>{error}</Text>; 
     }
-
 
     return (
         <FlatList
