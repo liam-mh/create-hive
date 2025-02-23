@@ -6,10 +6,7 @@ interface MarkerManagerProps {
 }
 
 const MarkerManager: React.FC<MarkerManagerProps> = ({ markers }) => {
-  console.log('MARKER MANAGER: ', markers);
-
   const [selectedMarker, setSelectedMarker] = useState<string | null>(null);
-
   const handleMarkerPress = (markerKey: string) => {
     setSelectedMarker(prevSelectedMarker => {
       return prevSelectedMarker === markerKey ? null : markerKey;
@@ -18,14 +15,9 @@ const MarkerManager: React.FC<MarkerManagerProps> = ({ markers }) => {
 
   return (
     <>
-     
-
       {markers.map((marker) => {
         const markerKey = `${marker.type}-${marker.filename}`;
         const isSelected = selectedMarker === markerKey;
-
-        console.log('MARKER: ', marker);
-
         return (
           <CustomMarker
             key={markerKey}
@@ -36,9 +28,9 @@ const MarkerManager: React.FC<MarkerManagerProps> = ({ markers }) => {
             type={marker.type}
             filename={marker.filename}
             text={marker.text}
-            isSelected={isSelected} 
+            isSelected={isSelected}
+            onPress={() => handleMarkerPress(markerKey)}
           />
-         
         );
       })}
     </>

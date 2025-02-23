@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Marker } from 'react-native-maps';
-import { View, Text, Image, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, Image, ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
 import { COLOURS, UNIT, TEXT, SHADOWS } from "@/styles";
 import { Location } from "@/types/Location";
 import { getImageUrl } from "@/hooks/useFirebaseStorage";
@@ -13,9 +13,10 @@ export interface CustomMarkerProps {
   filename: string;
   text: string | null;
   isSelected: boolean;
+  onPress?: () => void;
 }
 
-const CustomMarker: React.FC<CustomMarkerProps> = ({ coordinate, type = 'event', filename, text }) => {
+const CustomMarker: React.FC<CustomMarkerProps> = ({ coordinate, type = 'event', filename, text, onPress }) => {
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -55,15 +56,17 @@ const CustomMarker: React.FC<CustomMarkerProps> = ({ coordinate, type = 'event',
       key={`${type}-${filename}`}
       tracksViewChanges={false}
     >
-      <View style={[styles.container, [SHADOWS.containerShadow]]}>
-        <View style={[styles.pin, { width: DEFAULT_SIZE + 8, height: DEFAULT_SIZE + 8, backgroundColor: colour, borderRadius: corners }]}>
-          <Image source={{ uri: imageUri }} style={[{ width: DEFAULT_SIZE, height: DEFAULT_SIZE, borderRadius: corners }]} />
+      <TouchableOpacity onPress={onPress}> 
+        <View style={[styles.container, [SHADOWS.containerShadow]]}>
+          <View style={[styles.pin, { width: DEFAULT_SIZE + 8, height: DEFAULT_SIZE + 8, backgroundColor: colour, borderRadius: corners }]}>
+            <Image source={{ uri: imageUri }} style={[{ width: DEFAULT_SIZE, height: DEFAULT_SIZE, borderRadius: corners }]} />
+          </View>
+
+          <View style={[styles.triangle, {borderTopColor: colour }]} />
+
+          <Text style={[TEXT.small, styles.text]}>{text}</Text>
         </View>
-
-        <View style={[styles.triangle, {borderTopColor: colour }]} />
-
-        <Text style={[TEXT.small, styles.text]}>{text}</Text>
-      </View>
+      </TouchableOpacity>
     </Marker>
   );
 };
