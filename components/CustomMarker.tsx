@@ -7,11 +7,12 @@ import { getImageUrl } from "@/hooks/useFirebaseStorage";
 
 const DEFAULT_SIZE = UNIT * 2.5;
 
-interface CustomMarkerProps {
+export interface CustomMarkerProps {
   coordinate: Location;
   type: "artwork" | "event";
   filename: string;
-  text: string;
+  text: string | null;
+  isSelected: boolean;
 }
 
 const CustomMarker: React.FC<CustomMarkerProps> = ({ coordinate, type = 'event', filename, text }) => {
