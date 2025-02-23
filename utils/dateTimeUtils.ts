@@ -44,3 +44,20 @@ export const timestampToTime = (timestamp: Timestamp | null | undefined): string
     return null;
   }
 };
+
+export const timestampToFormattedDate = (timestamp: Timestamp | null | undefined): string | null => {
+  if (!timestamp) {
+    return null;
+  }
+
+  try {
+    const date = timestamp.toDate();
+    const day = date.getDate();
+    const month = date.toLocaleString('en-US', { month: 'long' }); 
+
+    return `${day} ${month}`.toLowerCase();
+  } catch (error) {
+    console.error("Error converting timestamp to formatted date:", error);
+    return null;
+  }
+};
