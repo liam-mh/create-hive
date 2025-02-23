@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Artwork } from '@/models/Artwork';
-import { getArtworkDetailsById, getArtworks, getArtworkById } from '@/services/artworkService'; // Import getArtworkById
+import { getArtworkDetailsById, getArtwork as getArtwork, getArtworkById } from '@/services/artworkService'; // Import getArtworkById
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 
 const DisplayAllArtwork = () => {
@@ -13,7 +13,7 @@ const DisplayAllArtwork = () => {
   useEffect(() => {
     const fetchArtworks = async () => {
       try {
-        const fetchedArtworks = await getArtworks();
+        const fetchedArtworks = await getArtwork();
         setArtworks(fetchedArtworks);
       } catch (err) {
         setError("Failed to load artworks.");
