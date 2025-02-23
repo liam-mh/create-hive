@@ -1,4 +1,4 @@
-import MapView, { PROVIDER_DEFAULT } from 'react-native-maps';
+import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps';
 import { StyleSheet, View, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
@@ -8,6 +8,8 @@ import { Region } from 'react-native-maps';
 import { useCityFromCoordinates } from '@/hooks/useCityFromCoordinates';
 import MapFiltersDropdown from './MapFiltersDropdown';
 import CustomMarker from './CustomMarker';
+import MarkerManager from './MarkerManager';
+import useMarkers from '@/hooks/useMarkers';
 
 const Map = () => {
   const inputLocation: Location = {
@@ -25,6 +27,16 @@ const Map = () => {
   const [currentRegion, setCurrentRegion] = useState<Region>(initialRegion);
   const city = useCityFromCoordinates(currentRegion.latitude, currentRegion.longitude);
 
+  const { markers, loading, error } = useMarkers();
+
+  if (loading) {
+    return <Text>Loading...</Text>;
+  }
+
+  if (error) {
+    return <Text>{error}</Text>;
+  }
+
   return (
     <View style={{ flex: 1 }}>  
       <MapView 
@@ -33,22 +45,11 @@ const Map = () => {
         initialRegion={initialRegion}
         onRegionChangeComplete={(region) => setCurrentRegion(region)}
         showsPointsOfInterest={false}
-      >
-        <CustomMarker
-          coordinate={{ latitude: 53.380871, longitude: -1.4701 }}
-          type="event"
-          filename="event_1.jpg"
-          text='8 february'
-        />
-        <CustomMarker
-          coordinate={{ latitude: 53.370871, longitude: -1.4701 }}
-          type="artwork"
-          filename="acrylic-landscapes-beginners.jpg"
-          text='acrylic'
-        />
+      > 
+        <MarkerManager markers={markers} />
         <SafeAreaView style={[styles.headerContainer, [SHADOWS.containerShadow]]}>
           <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text style={TEXT.h1}>{city}</Text>
+            <Text style={TEXT.h1}>{city?.toLowerCase()}</Text>
             <MapFiltersDropdown />
           </View>
         </SafeAreaView>
