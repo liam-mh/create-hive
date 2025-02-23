@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Marker } from 'react-native-maps';
 import { View, Text, Image, ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
 import { COLOURS, UNIT, TEXT, SHADOWS } from "@/styles";
-import { Location } from "@/types/Location";
+import { Coordinate } from "@/types/Coordinate";
 import { getImageUrl } from "@/hooks/useFirebaseStorage";
 
 const DEFAULT_SIZE = UNIT * 2.5;
 
 export interface CustomMarkerProps {
-  coordinate: Location;
+  coordinate: Coordinate;
   type: "artwork" | "event";
   filename: string;
   text: string | null;

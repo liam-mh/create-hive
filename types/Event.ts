@@ -1,6 +1,6 @@
 import { Timestamp } from "firebase/firestore";
 import { Medium } from "./Medium";
-import { Location } from "./Location";
+import { Coordinate } from "./Coordinate";
 
 export type EventType = "casual" | "workshop" | "exhibiton";
 
@@ -13,7 +13,7 @@ export interface Event {
     startDate: Timestamp;
     endDate: Timestamp;
     private: boolean;
-    location: Location;
+    location: Coordinate;
     description: string;
     attendee: string[];
 }

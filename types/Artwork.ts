@@ -1,11 +1,11 @@
 import { Medium } from "./Medium";
-import { Location } from "./Location";
+import { Coordinate } from "./Coordinate";
 import { Timestamp } from "firebase/firestore";
 
 export interface Artwork {
     title: string;
     artist: string;
-    location: Location;
+    location: Coordinate;
     medium: Medium;
     timestamp: Timestamp;
     details?: object;

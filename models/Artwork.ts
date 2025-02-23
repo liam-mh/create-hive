@@ -1,13 +1,13 @@
 import { DocumentData, Timestamp } from "firebase/firestore";
 import { Medium, PrimaryMedium, SecondaryMedium } from "@/types/Medium";
-import { Location } from "@/types/Location";
+import { Coordinate } from "@/types/Coordinate";
 import { ArtworkDetail } from "./ArtworkDetails";
 
 export interface Artwork {
   artworkId: string;
   title: string;
   userId: string;
-  location: Location;
+  location: Coordinate;
   medium: Medium;
   timestamp: Timestamp;
   details?: ArtworkDetail | null;
