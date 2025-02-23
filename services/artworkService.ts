@@ -3,7 +3,7 @@ import { readCollection, readDocument } from "@/hooks/useFirestore";
 import { Artwork, mapArtworkFirestore } from "@/models/Artwork";
 import { ArtworkDetail, mapArtworkDetailFirestore } from "@/models/ArtworkDetails";
 
-export async function getArtworks(): Promise<Artwork[]> {
+export async function getArtwork(): Promise<Artwork[]> {
   try {
     const artworksData = await readCollection<DocumentData>("artwork");
     return artworksData.map(data => mapArtworkFirestore(data)).filter(artwork => artwork !== null) as Artwork[];
