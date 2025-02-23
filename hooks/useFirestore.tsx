@@ -1,5 +1,5 @@
 import { db } from '../config/firebase';
-import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, QueryConstraint, query } from 'firebase/firestore';
 
 export async function readCollection<T>(collectionName: string): Promise<T[]> {
   try {
@@ -24,6 +24,21 @@ export async function readDocument<T>(collectionName: string, documentId: string
     }
   } catch (error) {
     console.error(`Error reading document ${documentId} from collection ${collectionName}:`, error);
+    throw error;
+  }
+}
+
+export async function queryCollection<T>(
+  collectionName: string,
+  queryConstraints: QueryConstraint[]
+): Promise<T[]> {
+  try {
+    const collectionRef = collection(db, collectionName);
+    const q = query(collectionRef, ...queryConstraints);
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }) as T);
+  } catch (error) {
+    console.error(`Error querying collection ${collectionName}:`, error);
     throw error;
   }
 }
