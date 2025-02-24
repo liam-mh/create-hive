@@ -1,25 +1,33 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, Dispatch, RefObject } from 'react';
 import CustomMarker, { CustomMarkerProps } from '@/components/CustomMarker';
 import MapView, { Region } from 'react-native-maps';
 import { Coordinate } from '@/types/Coordinate';
+import BottomSheet from '@gorhom/bottom-sheet';
 
 interface MarkerManagerProps {
   markers: CustomMarkerProps[];
-  mapRef: React.RefObject<MapView>;
+  mapRef: RefObject<MapView>;
+  bottomSheetRef: RefObject<BottomSheet>;
+  setSelectedMarkerData: Dispatch<React.SetStateAction<CustomMarkerProps | null>>;
+  selectedMarkerData: CustomMarkerProps | null;
 }
 
-const MarkerManager: React.FC<MarkerManagerProps> = ({ markers, mapRef }) => {
-  const [selectedMarker, setSelectedMarker] = useState<string | null>(null);
-
-  const handleMarkerPress = (markerKey: string, coordinate: Coordinate) => { 
-    setSelectedMarker(prevSelectedMarker => {
-      return prevSelectedMarker === markerKey ? null : markerKey;
+const MarkerManager: React.FC<MarkerManagerProps> = ({ markers, mapRef, bottomSheetRef, setSelectedMarkerData, selectedMarkerData }) => {
+  const handleMarkerPress = (markerData: CustomMarkerProps) => {
+    setSelectedMarkerData(prevSelectedMarkerData => {
+      if (prevSelectedMarkerData && prevSelectedMarkerData.filename === markerData.filename && prevSelectedMarkerData.type === markerData.type) {
+        bottomSheetRef.current?.close();
+        return null;
+      } else {
+        bottomSheetRef.current?.expand();
+        return markerData;
+      }
     });
 
     if (mapRef.current) {
       const region: Region = {
-        latitude: coordinate.latitude,
-        longitude: coordinate.longitude,
+        latitude: markerData.coordinate.latitude,
+        longitude: markerData.coordinate.longitude,
         latitudeDelta: 0.02,
         longitudeDelta: 0.02,
       };
@@ -31,7 +39,7 @@ const MarkerManager: React.FC<MarkerManagerProps> = ({ markers, mapRef }) => {
     <>
       {markers.map((marker) => {
         const markerKey = `${marker.type}-${marker.filename}`;
-        const isSelected = selectedMarker === markerKey;
+        const isSelected = selectedMarkerData && selectedMarkerData.filename === marker.filename && selectedMarkerData.type === marker.type ? true : false;
         return (
           <CustomMarker
             key={markerKey}
@@ -43,7 +51,7 @@ const MarkerManager: React.FC<MarkerManagerProps> = ({ markers, mapRef }) => {
             filename={marker.filename}
             text={marker.text}
             isSelected={isSelected}
-            onPress={() => handleMarkerPress(markerKey, marker.coordinate)} 
+            onPress={() => handleMarkerPress(marker)}
           />
         );
       })}

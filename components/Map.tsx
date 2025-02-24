@@ -9,6 +9,9 @@ import { useCityFromCoordinates } from '@/hooks/useCityFromCoordinates';
 import MapFiltersDropdown from './MapFiltersDropdown';
 import MarkerManager from './MarkerManager';
 import useMarkers from '@/hooks/useMarkers';
+import BottomSheet from '@gorhom/bottom-sheet';
+import MarkerDetailsSheet from './MarkerDetailsSheet';
+import { CustomMarkerProps } from '@/components/CustomMarker';
 
 const Map = () => {
   const inputLocation: Coordinate = {
@@ -20,13 +23,15 @@ const Map = () => {
     latitude: inputLocation.latitude,
     longitude: inputLocation.longitude,
     latitudeDelta: 0.05,
-    longitudeDelta: 0.05 
+    longitudeDelta: 0.05,
   };
 
   const [currentRegion, setCurrentRegion] = useState<Region>(initialRegion);
   const city = useCityFromCoordinates(currentRegion.latitude, currentRegion.longitude);
   const { markers, loading, error } = useMarkers();
-  const mapRef = useRef<MapView>(null); 
+  const mapRef = useRef<MapView>(null);
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  const [selectedMarkerData, setSelectedMarkerData] = useState<CustomMarkerProps | null>(null);
 
   if (loading) {
     return <Text>Loading...</Text>;
@@ -39,21 +44,26 @@ const Map = () => {
   return (
     <View style={{ flex: 1 }}>
       <MapView
-        ref={mapRef} 
+        ref={mapRef}
         style={styles.map}
         provider={PROVIDER_DEFAULT}
         initialRegion={initialRegion}
         onRegionChangeComplete={(region) => setCurrentRegion(region)}
         showsPointsOfInterest={false}
       >
-        <MarkerManager markers={markers} mapRef={mapRef} /> 
+        <MarkerManager
+          markers={markers}
+          mapRef={mapRef}
+          bottomSheetRef={bottomSheetRef}
+          setSelectedMarkerData={setSelectedMarkerData} selectedMarkerData={null}        />
         <SafeAreaView style={[styles.headerContainer, [SHADOWS.containerShadow]]}>
-          <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
+          <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={TEXT.h1}>{city?.toLowerCase()}</Text>
             <MapFiltersDropdown />
           </View>
         </SafeAreaView>
       </MapView>
+      <MarkerDetailsSheet bottomSheetRef={bottomSheetRef} selectedMarkerData={selectedMarkerData} />
     </View>
   );
 };
@@ -65,9 +75,9 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   headerContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     paddingHorizontal: SIZES.m,
     paddingVertical: SIZES.s,
   },
