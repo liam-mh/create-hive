@@ -12,7 +12,12 @@ const MarkerDetailsSheet: React.FC<MarkerDetailsSheetProps> = ({ bottomSheetRef,
   const snapPoints = useMemo(() => ['25%', '50%'], []);
 
   return (
-    <BottomSheet ref={bottomSheetRef} index={-1} snapPoints={snapPoints}>
+    <BottomSheet
+      ref={bottomSheetRef}
+      index={-1}
+      snapPoints={snapPoints}
+      enablePanDownToClose={true} 
+    >
       <BottomSheetView style={styles.contentContainer}>
         {selectedMarkerData ? (
           <>
