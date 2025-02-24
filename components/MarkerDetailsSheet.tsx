@@ -23,7 +23,7 @@ const MarkerDetailsSheet: React.FC<MarkerDetailsSheetProps> = ({ bottomSheetRef,
           <>
             <Text>Marker Details</Text>
             <Text>Type: {selectedMarkerData.type}</Text>
-            <Text>Filename: {selectedMarkerData.filename}</Text>
+            <Text>ID: {selectedMarkerData.id}</Text>
             <Text>Text: {selectedMarkerData.text}</Text>
           </>
         ) : (

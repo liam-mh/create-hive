@@ -16,18 +16,18 @@ const useMarkers = (): { markers: CustomMarkerProps[]; loading: boolean; error: 
         const artworks = await getArtwork();
         const events = await getEvent();
         
-        const artworkMarkers = artworks.map(artwork => ({
+        const artworkMarkers: CustomMarkerProps[] = artworks.map(artwork => ({
           coordinate: artwork.location,
           type: 'artwork' as 'artwork' | 'event', 
-          filename: artwork.artworkId + ".jpg",
+          id: artwork.artworkId,
           text: artwork.medium.primary,
           isSelected: false,
         }));
 
-        const eventMarkers = events.map(event => ({
+        const eventMarkers: CustomMarkerProps[] = events.map(event => ({
           coordinate: event.location,
           type: 'event' as 'artwork' | 'event', 
-          filename: event.eventId + ".jpg",
+          id: event.eventId,
           text: event.start ? timestampToFormattedDate(event.start) : '',
           isSelected: false,
         }));

@@ -10,13 +10,13 @@ const DEFAULT_SIZE = UNIT * 2.5;
 export interface CustomMarkerProps {
   coordinate: Coordinate;
   type: "artwork" | "event";
-  filename: string;
+  id: string;
   text: string | null;
   isSelected: boolean;
   onPress?: () => void;
 }
 
-const CustomMarker: React.FC<CustomMarkerProps> = ({ coordinate, type = 'event', filename, text, onPress }) => {
+const CustomMarker: React.FC<CustomMarkerProps> = ({ coordinate, type = 'event', id, text, onPress }) => {
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -24,7 +24,7 @@ const CustomMarker: React.FC<CustomMarkerProps> = ({ coordinate, type = 'event',
     const fetchImage = async () => {
       try {
         setLoading(true);
-        const url = await getImageUrl(type, filename);
+        const url = await getImageUrl(type, id);
         setImageUri(url);
       } catch (error) {
         console.error("Error fetching image URL:", error);
@@ -34,7 +34,7 @@ const CustomMarker: React.FC<CustomMarkerProps> = ({ coordinate, type = 'event',
     };
 
     fetchImage();
-  }, [type, filename]);
+  }, [type, id]);
 
   const colour = type === "event" ? COLOURS.primary : COLOURS.secondary;
   const corners = type === "event" ? 100 : 2;
@@ -53,7 +53,7 @@ const CustomMarker: React.FC<CustomMarkerProps> = ({ coordinate, type = 'event',
   return (
     <Marker 
       coordinate={coordinate} 
-      key={`${type}-${filename}`}
+      key={`${type}-${id}`}
       tracksViewChanges={false}
     >
       <TouchableOpacity onPress={onPress}> 

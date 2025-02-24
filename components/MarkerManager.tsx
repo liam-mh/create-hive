@@ -15,7 +15,7 @@ interface MarkerManagerProps {
 const MarkerManager: React.FC<MarkerManagerProps> = ({ markers, mapRef, bottomSheetRef, setSelectedMarkerData, selectedMarkerData }) => {
   const handleMarkerPress = (markerData: CustomMarkerProps) => {
     setSelectedMarkerData(prevSelectedMarkerData => {
-      if (prevSelectedMarkerData && prevSelectedMarkerData.filename === markerData.filename && prevSelectedMarkerData.type === markerData.type) {
+      if (prevSelectedMarkerData && prevSelectedMarkerData.id === markerData.id && prevSelectedMarkerData.type === markerData.type) {
         bottomSheetRef.current?.close();
         return null;
       } else {
@@ -38,8 +38,8 @@ const MarkerManager: React.FC<MarkerManagerProps> = ({ markers, mapRef, bottomSh
   return (
     <>
       {markers.map((marker) => {
-        const markerKey = `${marker.type}-${marker.filename}`;
-        const isSelected = selectedMarkerData && selectedMarkerData.filename === marker.filename && selectedMarkerData.type === marker.type ? true : false;
+        const markerKey = `${marker.type}-${marker.id}`;
+        const isSelected = selectedMarkerData && selectedMarkerData.id === marker.id && selectedMarkerData.type === marker.type ? true : false;
         return (
           <CustomMarker
             key={markerKey}
@@ -48,7 +48,7 @@ const MarkerManager: React.FC<MarkerManagerProps> = ({ markers, mapRef, bottomSh
               longitude: marker.coordinate.longitude,
             }}
             type={marker.type}
-            filename={marker.filename}
+            id={marker.id}
             text={marker.text}
             isSelected={isSelected}
             onPress={() => handleMarkerPress(marker)}
