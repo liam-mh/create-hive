@@ -61,3 +61,48 @@ export const timestampToFormattedDate = (timestamp: Timestamp | null | undefined
     return null;
   }
 };
+
+interface EventDateTime {
+  date: string | null;
+  time: string | null;
+}
+
+export const calculateEventDateTime = (
+  startTimestamp: Timestamp | null | undefined,
+  endTimestamp: Timestamp | null | undefined
+): EventDateTime => {
+  const result: EventDateTime = {
+    date: null,
+    time: null,
+  };
+
+  if (!startTimestamp || !endTimestamp) {
+    return result;
+  }
+
+  try {
+    const startDate = startTimestamp.toDate();
+    const endDate = endTimestamp.toDate();
+
+    const day = startDate.getDate();
+    const month = startDate.toLocaleString("en-US", { month: "long" });
+    const weekday = startDate.toLocaleString("en-US", { weekday: "long" });
+
+    result.date = `${weekday} ${day} ${month}`.toLowerCase();
+
+    const startTimeString = startDate.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    const endTimeString = endDate.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    result.time = `${startTimeString} - ${endTimeString}`;
+  } catch (error) {
+    console.error("Error calculating event date and time:", error);
+  }
+
+  return result;
+};
