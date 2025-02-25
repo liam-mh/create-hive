@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { CustomMarkerProps } from '@/components/CustomMarker';
+import EventCard from './EventCard';
 
 interface MarkerDetailsSheetProps {
   bottomSheetRef: React.RefObject<BottomSheet>;
@@ -19,15 +20,12 @@ const MarkerDetailsSheet: React.FC<MarkerDetailsSheetProps> = ({ bottomSheetRef,
       enablePanDownToClose={true} 
     >
       <BottomSheetView style={styles.contentContainer}>
-        {selectedMarkerData ? (
-          <>
-            <Text>Marker Details</Text>
-            <Text>Type: {selectedMarkerData.type}</Text>
-            <Text>ID: {selectedMarkerData.id}</Text>
-            <Text>Text: {selectedMarkerData.text}</Text>
-          </>
+        {selectedMarkerData?.type == 'event' ? (
+          <EventCard eventId={selectedMarkerData.id} />
         ) : (
-          <Text>Select a marker to view details.</Text>
+          <View>
+            <Text>Artwork</Text>
+          </View>
         )}
       </BottomSheetView>
     </BottomSheet>
@@ -37,8 +35,6 @@ const MarkerDetailsSheet: React.FC<MarkerDetailsSheetProps> = ({ bottomSheetRef,
 const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
-    alignItems: 'center',
-    padding: 20,
   },
 });
 
