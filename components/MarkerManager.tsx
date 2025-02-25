@@ -26,7 +26,7 @@ const MarkerManager: React.FC<MarkerManagerProps> = ({ markers, mapRef, bottomSh
 
     if (mapRef.current) {
       const region: Region = {
-        latitude: markerData.coordinate.latitude,
+        latitude: markerData.coordinate.latitude-0.004,
         longitude: markerData.coordinate.longitude,
         latitudeDelta: 0.02,
         longitudeDelta: 0.02,
