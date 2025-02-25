@@ -1,17 +1,17 @@
-import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps';
+import MapView, { PROVIDER_DEFAULT } from 'react-native-maps';
 import { StyleSheet, View, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useState, useRef } from 'react'; // Import useRef
+import { useState, useRef, useEffect } from 'react'; 
 import { TEXT, SHADOWS, SIZES } from '@/styles';
 import { Coordinate } from '@/types/Coordinate';
 import { Region } from 'react-native-maps';
-import { useCityFromCoordinates } from '@/hooks/useCityFromCoordinates';
 import MapFiltersDropdown from './MapFiltersDropdown';
 import MarkerManager from './MarkerManager';
 import useMarkers from '@/hooks/useMarkers';
 import BottomSheet from '@gorhom/bottom-sheet';
 import MarkerDetailsSheet from './MarkerDetailsSheet';
 import { CustomMarkerProps } from '@/components/CustomMarker';
+import { getCityFromCoordinates } from '@/utils/locationUtils';
 
 const Map = () => {
   const inputLocation: Coordinate = {
@@ -27,7 +27,22 @@ const Map = () => {
   };
 
   const [currentRegion, setCurrentRegion] = useState<Region>(initialRegion);
-  const city = useCityFromCoordinates(currentRegion.latitude, currentRegion.longitude);
+  const [city, setCity] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchCity = async () => {
+      const coordinate: Coordinate = {
+        latitude: currentRegion.latitude,
+        longitude: currentRegion.longitude,
+      };
+
+      const fetchedCity = await getCityFromCoordinates(coordinate);
+      setCity(fetchedCity);
+    };
+
+    fetchCity();
+  }, [currentRegion]);
+
   const { markers, loading, error } = useMarkers();
   const mapRef = useRef<MapView>(null);
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -55,10 +70,10 @@ const Map = () => {
           markers={markers}
           mapRef={mapRef}
           bottomSheetRef={bottomSheetRef}
-          setSelectedMarkerData={setSelectedMarkerData} selectedMarkerData={null}        />
+          setSelectedMarkerData={setSelectedMarkerData} selectedMarkerData={null} />
         <SafeAreaView style={[styles.headerContainer, [SHADOWS.containerShadow]]}>
           <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={TEXT.h1}>{city?.toLowerCase()}</Text>
+            <Text style={TEXT.h1}>{city?.toLocaleLowerCase()}</Text>
             <MapFiltersDropdown />
           </View>
         </SafeAreaView>
