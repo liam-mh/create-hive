@@ -1,36 +1,20 @@
-import { DocumentData } from "firebase/firestore";
-import { readCollection, readDocument } from "@/hooks/useFirestore";
-import { Artwork, mapArtworkFirestore } from "@/models/Artwork";
-import { ArtworkDetail, mapArtworkDetailFirestore } from "@/models/ArtworkDetails";
+import { BaseService } from './baseService';
+import { Artwork, mapArtworkFirestore } from '@/models/Artwork';
+import { ArtworkDetail, mapArtworkDetailFirestore } from '@/models/ArtworkDetails';
 
+export const artworkService = new BaseService<Artwork>('artwork', mapArtworkFirestore);
+export const artworkDetailService = new BaseService<ArtworkDetail>('artworkDetail', mapArtworkDetailFirestore);
+
+// Artwork Service functions
 export async function getArtwork(): Promise<Artwork[]> {
-  try {
-    const artworksData = await readCollection<DocumentData>("artwork");
-    return artworksData.map(data => mapArtworkFirestore(data)).filter(artwork => artwork !== null) as Artwork[];
-  } catch (error) {
-    console.error("Error getting artworks:", error);
-    throw error;
-  }
+  return artworkService.get();
 }
 
-export async function getArtworkById(artworkId: string): Promise<Artwork | null> {
-  try {
-    const artworkDoc = await readDocument<DocumentData>("artwork", artworkId);
-    const mappedArtwork = artworkDoc ? mapArtworkFirestore(artworkDoc) : null;
-    return mappedArtwork;
-  } catch (error) {
-    console.error(`Error getting artwork for artworkId ${artworkId}:`, error);
-    throw error;
-  }
+export async function getArtworkById(id: string): Promise<Artwork | null> {
+  return artworkService.getById(id);
 }
 
-export async function getArtworkDetailsById(artworkDetailId: string): Promise<ArtworkDetail | null> {
-  try {
-    const artworkDetailDoc = await readDocument<DocumentData>("artworkDetail", artworkDetailId);
-    const mappedDetails = artworkDetailDoc ? mapArtworkDetailFirestore(artworkDetailDoc, artworkDetailId) : null;
-    return mappedDetails;
-  } catch (error) {
-    console.error(`Error getting artwork details for artworkDetailId ${artworkDetailId}:`, error);
-    throw error;
-  }
+// ArtworkDetail Service functions
+export async function getArtworkDetailsById(id: string): Promise<ArtworkDetail | null> {
+  return artworkDetailService.getById(id);
 }
