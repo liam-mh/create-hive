@@ -1,5 +1,3 @@
-// models/ArtworkDetail.ts
-
 import { DocumentData } from "firebase/firestore";
 
 export interface ArtworkDetail {
@@ -7,11 +5,11 @@ export interface ArtworkDetail {
   information: Record<string, any>;
 }
 
-export const mapArtworkDetailFirestore = (data: DocumentData | undefined, artworkDetailId: string): ArtworkDetail | null => {
+export const mapArtworkDetailFirestore = (data: DocumentData | undefined): ArtworkDetail | null => {
   if (!data) return null;
 
   return {
-    artworkDetailId: artworkDetailId, 
-    information: data, 
+    artworkDetailId: data.id,
+    information: data,
   };
 };
