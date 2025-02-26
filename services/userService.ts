@@ -1,13 +1,12 @@
-import { DocumentData } from "firebase/firestore";
-import { readCollection } from "@/hooks/useFirestore";
-import { User, mapUserFirestore } from "@/models/User";
+import { BaseService } from './baseService'; 
+import { User, mapUserFirestore } from '@/models/User';
+
+export const userService = new BaseService<User>('user', mapUserFirestore);
 
 export async function getUser(): Promise<User[]> {
-    try {
-        const usersData = await readCollection<DocumentData>('user');
-        return usersData.map(data => mapUserFirestore(data)).filter(user => user !== null) as User[]; 
-    } catch (error) {
-        console.error("Error getting users:", error);
-        throw error;
-    }
+  return userService.get();
+}
+
+export async function getUserById(id: string): Promise<User | null> {
+  return userService.getById(id);
 }
