@@ -1,5 +1,5 @@
 import { db } from '@/config/firebase';
-import { collection, getDocs, doc, getDoc, DocumentData, QueryConstraint, query } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, DocumentData, QueryConstraint, query, addDoc, deleteDoc, setDoc, updateDoc } from 'firebase/firestore';
 
 export class BaseService<T> {
   private collectionName: string;
@@ -17,6 +17,113 @@ export class BaseService<T> {
       throw new Error("Parent ID is required for subcollection service.");
     }
     return new BaseService<U>(subcollectionName, mapFunction, this.parentId);
+  }
+
+  // CRUD 
+
+  async create(data: Omit<T, 'id'>): Promise<T | null> {
+  try {
+    let collectionRef;
+    let fullPath: string;
+
+    if (this.parentId) {
+      // Corrected line: Use the subcollection name (this.collectionName) correctly
+      collectionRef = collection(db, 'interaction', this.parentId, this.collectionName);
+      fullPath = `/interaction/${this.parentId}/${this.collectionName}`;
+      console.log(`Creating document in subcollection: ${this.collectionName} within parent: ${this.parentId}`);
+    } else {
+      collectionRef = collection(db, this.collectionName);
+      fullPath = `/${this.collectionName}`;
+      console.log(`Creating document in collection: ${this.collectionName}`);
+    }
+
+    console.log('Full path:', fullPath);
+    console.log('Data to be saved:', data);
+
+    const docRef = await addDoc(collectionRef, data);
+
+    console.log(`Document created with ID: ${docRef.id}`);
+
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const mappedData = this.mapFunction({ id: docSnap.id, ...docSnap.data() });
+      console.log('Mapped data:', mappedData);
+      return mappedData;
+    } else {
+      console.log('Document snapshot does not exist.');
+      return null;
+    }
+  } catch (error) {
+    const parentInfo = this.parentId ? ` from parent ${this.parentId}` : '';
+    console.error(`Error creating document in ${this.collectionName}${parentInfo}:`, error);
+    throw error;
+  }
+}
+
+  async update(id: string, data: Partial<Omit<T, 'id'>>): Promise<T | null> {
+    try {
+      let docRef;
+      if (this.parentId) {
+        docRef = doc(db, this.collectionName, this.parentId, this.collectionName, id);
+      } else {
+        docRef = doc(db, this.collectionName, id);
+      }
+
+      await updateDoc(docRef, data);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        return this.mapFunction({ id: docSnap.id, ...docSnap.data() });
+      } else {
+        return null;
+      }
+    } catch (error) {
+      const parentInfo = this.parentId ? ` from parent ${this.parentId}` : '';
+      console.error(`Error updating document ${id} in ${this.collectionName}${parentInfo}:`, error);
+      throw error;
+    }
+  }
+
+  async delete(id: string): Promise<void> {
+    try {
+      let docRef;
+      if (this.parentId) {
+        docRef = doc(db, this.collectionName, this.parentId, this.collectionName, id);
+      } else {
+        docRef = doc(db, this.collectionName, id);
+      }
+
+      await deleteDoc(docRef);
+    } catch (error) {
+      const parentInfo = this.parentId ? ` from parent ${this.parentId}` : '';
+      console.error(`Error deleting document ${id} in ${this.collectionName}${parentInfo}:`, error);
+      throw error;
+    }
+  }
+
+  async set(id: string, data: Omit<T, 'id'>): Promise<T | null> {
+      try {
+          let docRef;
+          if (this.parentId) {
+              docRef = doc(db, this.collectionName, this.parentId, this.collectionName, id);
+          } else {
+              docRef = doc(db, this.collectionName, id);
+          }
+
+          await setDoc(docRef, data);
+          const docSnap = await getDoc(docRef);
+
+          if (docSnap.exists()) {
+              return this.mapFunction({ id: docSnap.id, ...docSnap.data() });
+          } else {
+              return null;
+          }
+      } catch (error) {
+          const parentInfo = this.parentId ? ` from parent ${this.parentId}` : '';
+          console.error(`Error setting document ${id} in ${this.collectionName}${parentInfo}:`, error);
+          throw error;
+      }
   }
 
   async get(queryConstraints?: QueryConstraint[]): Promise<T[]> {
