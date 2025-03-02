@@ -20,7 +20,6 @@ export const getAddressFromCoordinates = async (
 ): Promise<AddressData | null> => {
   try {
     const response = await Location.reverseGeocodeAsync(coordinate);
-    console.log(response);
     if (response.length > 0) {
       const locationData = response[0];
       return {
