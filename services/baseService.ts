@@ -3,11 +3,13 @@ import { collection, getDocs, doc, getDoc, DocumentData, QueryConstraint, query,
 
 export class BaseService<T> {
   private collectionName: string;
+  private subCollectionName?: string; 
   private mapFunction: (data: DocumentData | undefined) => T | null;
   private parentId?: string;
 
-  constructor(collectionName: string, mapFunction: (data: DocumentData | undefined) => T | null, parentId?: string) {
+  constructor(collectionName: string, mapFunction: (data: DocumentData | undefined) => T | null, parentId?: string, subCollectionName?: string) { 
     this.collectionName = collectionName;
+    this.subCollectionName = subCollectionName;
     this.mapFunction = mapFunction;
     this.parentId = parentId;
   }
@@ -16,50 +18,53 @@ export class BaseService<T> {
     if (!this.parentId) {
       throw new Error("Parent ID is required for subcollection service.");
     }
-    return new BaseService<U>(subcollectionName, mapFunction, this.parentId);
+    return new BaseService<U>(this.collectionName, mapFunction, this.parentId, subcollectionName);
   }
 
-  // CRUD 
+  // CRUD
 
   async create(data: Omit<T, 'id'>): Promise<T | null> {
-  try {
-    let collectionRef;
-    let fullPath: string;
+    try {
+      let collectionRef;
+      let fullPath: string;
 
-    if (this.parentId) {
-      // Corrected line: Use the subcollection name (this.collectionName) correctly
-      collectionRef = collection(db, 'interaction', this.parentId, this.collectionName);
-      fullPath = `/interaction/${this.parentId}/${this.collectionName}`;
-      console.log(`Creating document in subcollection: ${this.collectionName} within parent: ${this.parentId}`);
-    } else {
-      collectionRef = collection(db, this.collectionName);
-      fullPath = `/${this.collectionName}`;
-      console.log(`Creating document in collection: ${this.collectionName}`);
+      if (this.parentId && this.subCollectionName) {
+        collectionRef = collection(db, this.collectionName, this.parentId, this.subCollectionName);
+        fullPath = `/${this.collectionName}/${this.parentId}/${this.subCollectionName}`;
+        console.log(`Creating document in subcollection: ${this.subCollectionName} within parent: ${this.parentId} in collection ${this.collectionName}`);
+      } else if (this.parentId) {
+        collectionRef = collection(db, this.collectionName, this.parentId);
+        fullPath = `/${this.collectionName}/${this.parentId}`;
+        console.log(`Creating document in collection: ${this.collectionName} within parent: ${this.parentId}`);
+      } else {
+        collectionRef = collection(db, this.collectionName);
+        fullPath = `/${this.collectionName}`;
+        console.log(`Creating document in collection: ${this.collectionName}`);
+      }
+
+      console.log('Full path:', fullPath);
+      console.log('Data to be saved:', data);
+
+      const docRef = await addDoc(collectionRef, data);
+
+      console.log(`Document created with ID: ${docRef.id}`);
+
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const mappedData = this.mapFunction({ id: docSnap.id, ...docSnap.data() });
+        console.log('Mapped data:', mappedData);
+        return mappedData;
+      } else {
+        console.log('Document snapshot does not exist.');
+        return null;
+      }
+    } catch (error) {
+      const parentInfo = this.parentId ? ` from parent ${this.parentId}` : '';
+      console.error(`Error creating document in ${this.collectionName}${parentInfo}:`, error);
+      throw error;
     }
-
-    console.log('Full path:', fullPath);
-    console.log('Data to be saved:', data);
-
-    const docRef = await addDoc(collectionRef, data);
-
-    console.log(`Document created with ID: ${docRef.id}`);
-
-    const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-      const mappedData = this.mapFunction({ id: docSnap.id, ...docSnap.data() });
-      console.log('Mapped data:', mappedData);
-      return mappedData;
-    } else {
-      console.log('Document snapshot does not exist.');
-      return null;
-    }
-  } catch (error) {
-    const parentInfo = this.parentId ? ` from parent ${this.parentId}` : '';
-    console.error(`Error creating document in ${this.collectionName}${parentInfo}:`, error);
-    throw error;
   }
-}
 
   async update(id: string, data: Partial<Omit<T, 'id'>>): Promise<T | null> {
     try {
