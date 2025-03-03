@@ -1,6 +1,7 @@
 import { DocumentData, Timestamp } from "firebase/firestore";
 
 export interface Attendee {
+  id?: string;
   eventId: string;
   attendeeId: string;
   approved: boolean;
@@ -11,6 +12,7 @@ export const mapAttendeeFirestore = (data: DocumentData | undefined): Attendee |
   if (!data) return null; 
 
   return {
+    id: data.id,
     eventId: data.id, 
     attendeeId: data.attendeeId,
     approved: data.approved,
