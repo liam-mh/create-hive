@@ -1,6 +1,7 @@
 import { DocumentData, Timestamp } from "firebase/firestore";
 import { Medium, PrimaryMedium, SecondaryMedium } from "@/types/Medium";
 import { Coordinate } from "@/types/Coordinate";
+import { Attendee } from "@/models/Attendee";
 
 export type EventType = "casual" | "workshop" | "exhibiton";
 
@@ -15,7 +16,7 @@ export interface Event {
   private: boolean;
   location: Coordinate;
   description: string;
-  attendee: string[];
+  attendee?: Attendee[] | null;
 }
 
 export const mapEventFirestore = (data: DocumentData | undefined): Event | null => { 
@@ -39,6 +40,5 @@ export const mapEventFirestore = (data: DocumentData | undefined): Event | null 
     private: data.private ?? false,
     location: data.location ?? { latitude: 0, longitude: 0 },
     description: data.description ?? "",
-    attendee: data.attendee ?? [],
   };
 };
