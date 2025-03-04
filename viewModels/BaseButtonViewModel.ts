@@ -44,22 +44,6 @@ class BaseButtonViewModel {
     return this._isIconButton;
   }
 
-  get buttonStyle() {
-    let buttonStyle = styles.unselectedContainer;
-    let textAndIconColor = COLOURS.black;
-
-    if (this._isSelected) {
-      buttonStyle = styles.selectedContainer;
-      textAndIconColor = COLOURS.white;
-    }
-    if (this._pending) {
-      buttonStyle = styles.pendingContainer;
-      textAndIconColor = COLOURS.primary;
-    }
-
-    return { buttonStyle, textAndIconColor };
-  }
-
   toggleSelected(): void {
     this._isSelected = !this._isSelected;
   }

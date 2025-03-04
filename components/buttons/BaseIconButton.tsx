@@ -7,7 +7,9 @@ import { SharedButtonProps } from '@/types/SharedButtonProps';
 const BaseIconButton: React.FC<SharedButtonProps> = (props) => { 
   const viewModel = new BaseButtonViewModel(props);
   const [selected, setSelected] = useState(viewModel.isSelected);
-  const { buttonStyle, textAndIconColor } = viewModel.buttonStyle;
+  const textAndIconColor = props.pending || props.isSelected
+    ? COLOURS.primary
+    : COLOURS.black
   const iconSize = UNIT;
 
   const handlePress = () => {
@@ -20,7 +22,7 @@ const BaseIconButton: React.FC<SharedButtonProps> = (props) => {
 
   return (
     <TouchableOpacity
-      style={[styles.container, buttonStyle]}
+      style={styles.container}
       onPress={handlePress}
       disabled={viewModel.pending}
     >
@@ -38,16 +40,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     gap: UNIT/4,
-  },
-  unselectedContainer: {
-    backgroundColor: COLOURS.secondary,
-  },
-  selectedContainer: {
-    backgroundColor: COLOURS.primary,
-  },
-  pendingContainer: {
-    backgroundColor: COLOURS.offwhite,
-  },
+  }
 });
 
 export default BaseIconButton;

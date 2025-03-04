@@ -7,7 +7,19 @@ import { SharedButtonProps } from '@/types/SharedButtonProps';
 const BaseTextButton: React.FC<SharedButtonProps> = (props) => {
   const viewModel = new BaseButtonViewModel(props);
   const [selected, setSelected] = useState(viewModel.isSelected);
-  const { buttonStyle, textAndIconColor } = viewModel.buttonStyle;
+  
+  let buttonStyle = styles.unselectedContainer;
+  let textAndIconColor = COLOURS.black;
+
+  if (props.pending) {
+    buttonStyle = styles.pendingContainer;
+    textAndIconColor = COLOURS.primary;
+  }
+  if (props.isSelected) {
+    buttonStyle = styles.selectedContainer;
+    textAndIconColor = COLOURS.white;
+  }
+  
   const iconSize = UNIT;
 
   const handlePress = () => {
