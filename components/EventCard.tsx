@@ -68,6 +68,7 @@ const EventCard: React.FC<EventCardProps> = ({ eventId }) => {
             <IconWorkshopFill width={eventTypeIconSize} height={eventTypeIconSize} fill={COLOURS.secondary} />
           </View>
           <View style={styles.innerRow}>
+            <RegisterButton eventId={event.eventId} isIconButton={true} />  
             {!event.private && <IconLock width={iconSize} height={iconSize} fill={COLOURS.black} />}
             <IconBookmark width={iconSize} height={iconSize} fill={COLOURS.black} />
           </View>
