@@ -13,6 +13,8 @@ import IconMarker from '@/assets/icons/geo-alt.svg';
 
 import InformationButton from './buttons/InformationButton';
 import RegisterButton from './buttons/RegisterButton';
+import DetailsContainer from './DetailsContainer';
+import DetailsRow from './DetailsRow';
 
 interface EventCardProps {
   eventId: string;
@@ -71,26 +73,12 @@ const EventCard: React.FC<EventCardProps> = ({ eventId }) => {
           </View>
         </View>
 
-        <View style={styles.detailsContainer}>
-          <View style={styles.innerRow}>
-            <IconArtwork width={iconSize} height={iconSize} fill={COLOURS.black} />
-            <Text style={TEXT.regular}>
-              {event.medium.primary} - {event.medium.secondary}
-            </Text>
-          </View>
-          <View style={styles.innerRow}>
-            <IconCalendar width={iconSize} height={iconSize} fill={COLOURS.black} />
-            <Text style={TEXT.regular}>{eventDateTime?.date}</Text>
-          </View>
-          <View style={styles.innerRow}>
-            <IconClock width={iconSize} height={iconSize} fill={COLOURS.black} />
-            <Text style={TEXT.regular}>{eventDateTime?.time}</Text>
-          </View>
-          <View style={styles.innerRow}>
-            <IconMarker width={iconSize} height={iconSize} fill={COLOURS.black} />
-            <Text style={TEXT.regular}>{eventLocation?.toLocaleLowerCase()}</Text>
-          </View>
-        </View>
+        <DetailsContainer>
+          <DetailsRow Icon={IconArtwork} text={`${event.medium.primary} - ${event.medium.secondary}`} />
+          <DetailsRow Icon={IconCalendar} text={`${eventDateTime?.date}`} />
+          <DetailsRow Icon={IconClock} text={`${eventDateTime?.time}`} />
+          <DetailsRow Icon={IconMarker} text={`${eventLocation?.toLocaleLowerCase()}`} />
+        </DetailsContainer>
 
         <View style={styles.buttonsContainer}>
           <InformationButton type={'event'} id={event.eventId} />
