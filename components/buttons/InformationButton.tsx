@@ -21,8 +21,10 @@ const InformationButton: React.FC<InformationButtonProps> = ({ type, id }) => {
       text='more information'
       icon={IconInformation}
       iconFill={IconInformationFill}
+      pending={false}
       onPress={handlePress}
       isSelected={isSelected}
+      isIconButton={false}
     />
   );
 };
