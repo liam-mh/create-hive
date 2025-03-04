@@ -6,7 +6,7 @@ interface DetailsPanelProps {
   isSelected: boolean;
 }
 
-const DetailsPanel = ({ text, isSelected }: DetailsPanelProps) => {
+const MapFilterDetailsPanel = ({ text, isSelected }: DetailsPanelProps) => {
   return (
     <View
       style={[
@@ -38,4 +38,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DetailsPanel;
+export default MapFilterDetailsPanel;

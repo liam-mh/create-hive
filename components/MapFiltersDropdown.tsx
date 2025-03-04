@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { COLOURS, UNIT } from "@/styles";
-import DetailsPanel from "./DetailsPanel";
+import MapFilterDetailsPanel from "./MapFilterDetailsPanel";
 
 import IconVerified from '@/assets/icons/person-check.svg';
 import IconVerifiedFill from '@/assets/icons/person-fill-check.svg';
@@ -85,7 +85,7 @@ const MapFiltersDropdown = () => {
               onPress={() => toggleFilter(filter.filterKey)}
             >
               <View style={styles.filterRow}>
-                  <DetailsPanel text={filter.filterText} isSelected={selectedFilters.includes(filter.filterKey)}/>
+                  <MapFilterDetailsPanel text={filter.filterText} isSelected={selectedFilters.includes(filter.filterKey)}/>
               </View>
             </TouchableOpacity>
           ))}
