@@ -1,66 +1,44 @@
 import React, { useEffect, useState } from 'react';
 import BaseButton from '@/components/buttons/BaseButton';
-import { addAttendee, getAttendeeByUserIdAndEventId } from '@/services/attendeeService';
-import { Attendee } from '@/models/Attendee';
-
-import IconRegister from '@/assets/icons/plus-square.svg';
-import IconRegistered from '@/assets/icons/check-square-fill.svg';
-import IconPendingFill from '@/assets/icons/lock-fill.svg';
-import { registerUserForEvent } from '@/services/interaction/registerService';
+import RegisterButtonViewModel from '@/viewModels/RegisterButtonViewModel';
 
 interface RegisterButtonProps {
-  id: string;
+  eventId: string;
+  userId?: string; // TODO: make dynamic from session
 }
 
-const InformationButton: React.FC<RegisterButtonProps> = ({ id }) => {
-  const [isSelected, setIsSelected] = useState(false);
-  const [attendee, setAttendee] = useState<Attendee | null>(null);
+const RegisterButton: React.FC<RegisterButtonProps> = ({ eventId, userId = 'FghLfeUlFYO0RMZYjzI3' }) => {
+  const viewModel = new RegisterButtonViewModel(eventId, userId);
+
+  const [isSelected, setIsSelected] = useState(viewModel.isSelected);
+  const [loading, setLoading] = useState(viewModel.loading);
+  const [buttonState, setButtonState] = useState(viewModel.buttonState);
 
   useEffect(() => {
-    const fetchAttendee = async () => {
-      const fetchedAttendee = await getAttendeeByUserIdAndEventId( id, 'FghLfeUlFYO0RMZYjzI3' );
-      setAttendee(fetchedAttendee);
+    const fetchData = async () => {
+      await viewModel.fetchAttendee();
+      setLoading(viewModel.loading);
+      setButtonState(viewModel.buttonState);
     };
-
-    fetchAttendee();
-  }, [id, isSelected]);
+    fetchData();
+  }, [eventId]);
 
   const handlePress = async () => {
-    setIsSelected(!isSelected);
-    console.log(
-      `Register button with eventId ${id} pressed. State: ${
-        !isSelected ? 'selected' : 'unselected'
-      }`
-    );
-    registerUserForEvent( 'FghLfeUlFYO0RMZYjzI3', id );
-    addAttendee(id, 'FghLfeUlFYO0RMZYjzI3');
+    await viewModel.handlePress();
+    setIsSelected(viewModel.isSelected);
+    setButtonState(viewModel.buttonState);
   };
-
-  let text = 'register';
-  let icon = IconRegister
-  let pending = false;
-
-  if (attendee) {
-    if (attendee.approved) {
-      text = 'registered';
-      pending = false;
-    } else {
-      text = 'pending';
-      icon = IconPendingFill
-      pending = true;
-    }
-  }
 
   return (
     <BaseButton
-      text={text}
-      icon={icon}
-      iconFill={IconRegistered}
-      pending={pending} 
+      text={buttonState.text}
+      icon={buttonState.icon}
+      iconFill={buttonState.iconFill}
+      pending={buttonState.pending}
       onPress={handlePress}
       isSelected={isSelected}
     />
   );
 };
 
-export default InformationButton;
+export default RegisterButton;
