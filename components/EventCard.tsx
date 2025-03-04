@@ -1,12 +1,7 @@
-import { getEventById } from '@/services/eventService';
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ImageBackground } from 'react-native';
-import { Event } from '@/models/Event';
 import TEXT, { COLOURS, UNIT } from '@/styles';
-import { calculateEventDateTime } from '@/utils/dateTimeUtils';
-import { formatDistrictCity, getAddressFromCoordinates } from '@/utils/locationUtils';
-import { Coordinate } from '@/types/Coordinate';
-import { getImageUrl } from "@/hooks/useFirebaseStorage";
+import EventCardViewModel from '@/viewModels/EventCardViewModel';
 
 import IconWorkshopFill from '@/assets/icons/brush-fill.svg';
 import IconBookmark from '@/assets/icons/bookmark.svg';
@@ -15,6 +10,7 @@ import IconArtwork from '@/assets/icons/palette.svg';
 import IconCalendar from '@/assets/icons/calendar.svg';
 import IconClock from '@/assets/icons/clock.svg';
 import IconMarker from '@/assets/icons/geo-alt.svg';
+
 import InformationButton from './buttons/InformationButton';
 import RegisterButton from './buttons/RegisterButton';
 
@@ -23,73 +19,43 @@ interface EventCardProps {
 }
 
 const EventCard: React.FC<EventCardProps> = ({ eventId }) => {
-  const [event, setEvent] = useState<Event | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [eventLocation, setEventLocation] = useState<string | null>(null);
-  const [imageUri, setImageUri] = useState<string | null>(null);
+  const viewModel = new EventCardViewModel(eventId);
+  const [loading, setLoading] = useState(viewModel.loading);
+  const [error, setError] = useState(viewModel.error);
+  const [event, setEvent] = useState(viewModel.event);
+  const [eventLocation, setEventLocation] = useState(viewModel.eventLocation);
+  const [imageUri, setImageUri] = useState(viewModel.imageUri);
+  const [eventDateTime, setEventDateTime] = useState(viewModel.eventDateTime);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await viewModel.fetchEventData();
+      setLoading(viewModel.loading);
+      setError(viewModel.error);
+      setEvent(viewModel.event);
+      setEventLocation(viewModel.eventLocation);
+      setImageUri(viewModel.imageUri);
+      setEventDateTime(viewModel.eventDateTime);
+    };
+    fetchData();
+  }, [eventId]);
+
+  if (loading) {
+    return <View style={styles.contentContainer}><Text>Loading...</Text></View>;
+  }
+  if (error) {
+    return <View style={styles.contentContainer}><Text>Error: {error}</Text></View>;
+  }
+  if (!event) {
+    return <View style={styles.contentContainer}><Text>Event not found.</Text></View>;
+  }
 
   const eventTypeIconSize = UNIT * 1.5;
   const iconSize = UNIT;
 
-  useEffect(() => {
-    const fetchEvent = async () => {
-      try {
-        const fetchedEvent = await getEventById(eventId);
-        setEvent(fetchedEvent);
-
-        if (fetchedEvent) {
-          const coordinate: Coordinate = {
-            latitude: fetchedEvent.location.latitude,
-            longitude: fetchedEvent.location.longitude,
-          };
-          const address = await getAddressFromCoordinates(coordinate);
-          const formattedAddress = formatDistrictCity(address);
-          setEventLocation(formattedAddress);
-
-          const url = await getImageUrl('event', eventId);
-          setImageUri(url);
-        }
-      } catch (err) {
-        setError('Failed to load event.');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchEvent();
-  }, [eventId]);
-
-  if (loading) {
-    return (
-      <View style={styles.contentContainer}>
-        <Text>Loading...</Text>
-      </View>
-    );
-  }
-
-  if (error) {
-    return (
-      <View style={styles.contentContainer}>
-        <Text>Error: {error}</Text>
-      </View>
-    );
-  }
-
-  if (!event) {
-    return (
-      <View style={styles.contentContainer}>
-        <Text>Event not found.</Text>
-      </View>
-    );
-  }
-
-  const eventDateTime = calculateEventDateTime(event.start, event.end);
-
   return (
     <ImageBackground
-      source={{ uri: imageUri || undefined }} 
+      source={{ uri: imageUri || undefined }}
       style={styles.backgroundImage}
     >
       <View style={styles.overlay} />
@@ -108,15 +74,17 @@ const EventCard: React.FC<EventCardProps> = ({ eventId }) => {
         <View style={styles.detailsContainer}>
           <View style={styles.innerRow}>
             <IconArtwork width={iconSize} height={iconSize} fill={COLOURS.black} />
-            <Text style={TEXT.regular}>{event.medium.primary} - {event.medium.secondary}</Text>
+            <Text style={TEXT.regular}>
+              {event.medium.primary} - {event.medium.secondary}
+            </Text>
           </View>
           <View style={styles.innerRow}>
             <IconCalendar width={iconSize} height={iconSize} fill={COLOURS.black} />
-            <Text style={TEXT.regular}>{eventDateTime.date}</Text>
+            <Text style={TEXT.regular}>{eventDateTime?.date}</Text>
           </View>
           <View style={styles.innerRow}>
             <IconClock width={iconSize} height={iconSize} fill={COLOURS.black} />
-            <Text style={TEXT.regular}>{eventDateTime.time}</Text>
+            <Text style={TEXT.regular}>{eventDateTime?.time}</Text>
           </View>
           <View style={styles.innerRow}>
             <IconMarker width={iconSize} height={iconSize} fill={COLOURS.black} />
