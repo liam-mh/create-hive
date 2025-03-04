@@ -82,7 +82,7 @@ const EventCard: React.FC<EventCardProps> = ({ eventId }) => {
 
         <View style={styles.buttonsContainer}>
           <InformationButton type={'event'} id={event.eventId} />
-          <RegisterButton id={event.eventId} />
+          <RegisterButton eventId={event.eventId} />
         </View>
       </View>
     </ImageBackground>
