@@ -1,4 +1,4 @@
-import MapView, { PROVIDER_DEFAULT } from 'react-native-maps';
+import MapView, { Point, PROVIDER_DEFAULT } from 'react-native-maps';
 import { StyleSheet, View, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState, useRef, useEffect } from 'react'; 
@@ -65,6 +65,8 @@ const Map = () => {
         initialRegion={initialRegion}
         onRegionChangeComplete={(region) => setCurrentRegion(region)}
         showsPointsOfInterest={false}
+        userInterfaceStyle={'light'}
+        showsCompass={false}
       >
         <MarkerManager
           markers={markers}
