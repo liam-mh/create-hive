@@ -4,13 +4,17 @@ import RegisterButtonViewModel from '@/viewModels/RegisterButtonViewModel';
 
 interface RegisterButtonProps {
   eventId: string;
-  userId?: string; // TODO: make dynamic from session
+  userId?: string;
+  isIconButton?: boolean; 
 }
 
-const RegisterButton: React.FC<RegisterButtonProps> = ({ eventId, userId = 'FghLfeUlFYO0RMZYjzI3' }) => {
+const RegisterButton: React.FC<RegisterButtonProps> = ({
+  eventId,
+  userId = 'FghLfeUlFYO0RMZYjzI3',
+  isIconButton, 
+}) => {
   const viewModel = new RegisterButtonViewModel(eventId, userId);
 
-  const [isSelected, setIsSelected] = useState(viewModel.isSelected);
   const [loading, setLoading] = useState(viewModel.loading);
   const [buttonState, setButtonState] = useState(viewModel.buttonState);
 
@@ -25,7 +29,6 @@ const RegisterButton: React.FC<RegisterButtonProps> = ({ eventId, userId = 'FghL
 
   const handlePress = async () => {
     await viewModel.handlePress();
-    setIsSelected(viewModel.isSelected);
     setButtonState(viewModel.buttonState);
   };
 
@@ -36,7 +39,8 @@ const RegisterButton: React.FC<RegisterButtonProps> = ({ eventId, userId = 'FghL
       iconFill={buttonState.iconFill}
       pending={buttonState.pending}
       onPress={handlePress}
-      isSelected={isSelected}
+      isSelected={viewModel.isSelected}
+      isIconButton={isIconButton ?? false}
     />
   );
 };
