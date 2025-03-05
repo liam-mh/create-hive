@@ -6,7 +6,6 @@ import { SharedButtonProps } from '@/types/SharedButtonProps';
 
 const BaseTextButton: React.FC<SharedButtonProps> = (props) => {
   const viewModel = new BaseButtonViewModel(props);
-  const [selected, setSelected] = useState(viewModel.isSelected);
   
   let buttonStyle = styles.unselectedContainer;
   let textAndIconColor = COLOURS.black;
@@ -24,7 +23,6 @@ const BaseTextButton: React.FC<SharedButtonProps> = (props) => {
 
   const handlePress = () => {
     viewModel.toggleSelected();
-    setSelected(viewModel.isSelected);
     if (!viewModel.pending) {
       viewModel.onPress();
     }
@@ -36,10 +34,12 @@ const BaseTextButton: React.FC<SharedButtonProps> = (props) => {
       onPress={handlePress}
       disabled={viewModel.pending}
     >
-      {viewModel.icon && (
-        selected && viewModel.iconFill
-          ? <viewModel.iconFill width={iconSize} height={iconSize} fill={textAndIconColor} />
-          : <viewModel.icon width={iconSize} height={iconSize} fill={textAndIconColor} />
+      {viewModel.iconToUse && (
+        React.createElement(viewModel.iconToUse, { 
+          width: iconSize,
+          height: iconSize,
+          fill: textAndIconColor,
+        })
       )}
       <Text style={[TEXT.regular, { color: textAndIconColor }]}>{viewModel.text}</Text>
     </TouchableOpacity>

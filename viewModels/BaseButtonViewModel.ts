@@ -32,6 +32,10 @@ class BaseButtonViewModel {
     return this._iconFill;
   }
 
+  get iconToUse() {
+    return this._isSelected && this._iconFill ? this._iconFill : this._icon;
+  }
+
   get pending(): boolean {
     return this._pending;
   }
@@ -52,17 +56,5 @@ class BaseButtonViewModel {
     return this._onPress;
   }
 }
-
-const styles = {
-  unselectedContainer: {
-    backgroundColor: COLOURS.secondary,
-  },
-  selectedContainer: {
-    backgroundColor: COLOURS.primary,
-  },
-  pendingContainer: {
-    backgroundColor: COLOURS.offwhite,
-  },
-};
 
 export default BaseButtonViewModel;
