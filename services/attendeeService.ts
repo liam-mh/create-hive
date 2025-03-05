@@ -8,12 +8,12 @@ export function createAttendeeService(eventId: string) {
   return new BaseService<Attendee>(collectionName, mapAttendeeFirestore, eventId, collectionName);
 }
 
-export async function addAttendee(eventId: string, userId: string): Promise<Attendee | null> {
+export async function addAttendee(eventId: string, isPrivate: boolean, userId: string): Promise<Attendee | null> {
   const attendeeService = createAttendeeService(eventId);
   const newAttendee: Omit<Attendee, 'id'> = {
     eventId: eventId,
     attendeeId: userId,
-    approved: false,
+    approved: !isPrivate,
     timestamp: Timestamp.now(),
   };
   return attendeeService.create(newAttendee);

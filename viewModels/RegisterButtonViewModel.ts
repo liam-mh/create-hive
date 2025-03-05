@@ -8,13 +8,15 @@ import IconRegistered from '@/assets/icons/check-square-fill.svg';
 
 class RegisterButtonViewModel {
   private _eventId: string;
+  private _eventIsPrivate: boolean = false;
   private _userId: string;
   private _attendee: Attendee | null = null;
   private _loading: boolean = true;
   private _isSelected: boolean = false;
 
-  constructor(eventId: string, userId: string) {
+  constructor(eventId: string, eventIsPrivate: boolean, userId: string) {
     this._eventId = eventId;
+    this._eventIsPrivate = eventIsPrivate;
     this._userId = userId;
   }
 
@@ -40,7 +42,7 @@ class RegisterButtonViewModel {
       }`
     );
     await registerUserForEvent(this._userId, this._eventId);
-    await addAttendee(this._eventId, this._userId);
+    await addAttendee(this._eventId, this._eventIsPrivate, this._userId);
     await this.fetchAttendee();
   }
 
@@ -53,20 +55,21 @@ class RegisterButtonViewModel {
       if (this._attendee.approved) {
         text = 'registered';
         pending = false;
+        this._isSelected = true;
       } else {
         text = 'pending';
         icon = IconPending;
         pending = true;
       }
     }
-
+  
     return {
       text,
       icon,
       pending,
       iconFill: IconRegistered,
       onPress: async () => await this.handlePress(), 
-      isSelected: this.isSelected,
+      isSelected: this._isSelected,
     };
   }
 }

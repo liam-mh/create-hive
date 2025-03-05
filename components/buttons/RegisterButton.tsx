@@ -1,28 +1,33 @@
+// components/buttons/RegisterButton.tsx
 import React, { useEffect, useState } from 'react';
 import BaseButton from '@/components/buttons/BaseButton';
 import RegisterButtonViewModel from '@/viewModels/RegisterButtonViewModel';
 
 interface RegisterButtonProps {
   eventId: string;
+  eventIsPrivate: boolean;
   userId?: string;
-  isIconButton?: boolean; 
+  isIconButton?: boolean;
 }
 
 const RegisterButton: React.FC<RegisterButtonProps> = ({
   eventId,
+  eventIsPrivate,
   userId = 'FghLfeUlFYO0RMZYjzI3',
-  isIconButton, 
+  isIconButton,
 }) => {
-  const viewModel = new RegisterButtonViewModel(eventId, userId);
+  const viewModel = new RegisterButtonViewModel(eventId, eventIsPrivate, userId);
 
   const [loading, setLoading] = useState(viewModel.loading);
   const [buttonState, setButtonState] = useState(viewModel.buttonState);
+  const [isSelected, setIsSelected] = useState(viewModel.isSelected);
 
   useEffect(() => {
     const fetchData = async () => {
       await viewModel.fetchAttendee();
       setLoading(viewModel.loading);
       setButtonState(viewModel.buttonState);
+      setIsSelected(viewModel.isSelected); 
     };
     fetchData();
   }, [eventId]);
@@ -30,6 +35,7 @@ const RegisterButton: React.FC<RegisterButtonProps> = ({
   const handlePress = async () => {
     await viewModel.handlePress();
     setButtonState(viewModel.buttonState);
+    setIsSelected(viewModel.isSelected); 
   };
 
   return (
@@ -39,7 +45,7 @@ const RegisterButton: React.FC<RegisterButtonProps> = ({
       iconFill={buttonState.iconFill}
       pending={buttonState.pending}
       onPress={handlePress}
-      isSelected={viewModel.isSelected}
+      isSelected={isSelected} 
       isIconButton={isIconButton ?? false}
     />
   );
