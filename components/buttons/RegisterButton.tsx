@@ -1,4 +1,3 @@
-// components/buttons/RegisterButton.tsx
 import React, { useEffect, useState } from 'react';
 import BaseButton from '@/components/buttons/BaseButton';
 import RegisterButtonViewModel from '@/viewModels/RegisterButtonViewModel';
