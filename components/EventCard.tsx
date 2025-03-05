@@ -15,6 +15,7 @@ import InformationButton from './buttons/InformationButton';
 import RegisterButton from './buttons/RegisterButton';
 import DetailsContainer from './DetailsContainer';
 import DetailsRow from './DetailsRow';
+import EventPrivacyIcon from './buttons/EventPrivacyIcon';
 
 interface EventCardProps {
   eventId: string;
@@ -68,8 +69,8 @@ const EventCard: React.FC<EventCardProps> = ({ eventId }) => {
             <IconWorkshopFill width={eventTypeIconSize} height={eventTypeIconSize} fill={COLOURS.secondary} />
           </View>
           <View style={styles.innerRow}>
-            <RegisterButton eventId={event.eventId} isIconButton={true} />  
-            {!event.private && <IconLock width={iconSize} height={iconSize} fill={COLOURS.black} />}
+            <EventPrivacyIcon isPrivate={event.private} />
+            <RegisterButton eventId={event.eventId} eventIsPrivate={event.private} isIconButton={true} />  
             <IconBookmark width={iconSize} height={iconSize} fill={COLOURS.black} />
           </View>
         </View>
@@ -83,7 +84,7 @@ const EventCard: React.FC<EventCardProps> = ({ eventId }) => {
 
         <View style={styles.buttonsContainer}>
           <InformationButton type={'event'} id={event.eventId} />
-          <RegisterButton eventId={event.eventId} />
+          <RegisterButton eventId={event.eventId} eventIsPrivate={event.private} />
         </View>
       </View>
     </ImageBackground>
