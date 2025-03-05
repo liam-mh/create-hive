@@ -9,7 +9,7 @@ interface EventPrivacyIconProps {
 const InformationButton: React.FC<EventPrivacyIconProps> = ({ isPrivate = false }) => {
   const handlePress = () => {};
 
-  if (!isPrivate) {
+  if (isPrivate) {
     return (
       <BaseButton
         text='private'
