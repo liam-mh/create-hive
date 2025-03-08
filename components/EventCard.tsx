@@ -16,6 +16,7 @@ import RegisterButton from './buttons/RegisterButton';
 import DetailsContainer from './DetailsContainer';
 import DetailsRow from './DetailsRow';
 import EventPrivacyIcon from './buttons/EventPrivacyIcon';
+import SaveButton from './buttons/Savebutton';
 
 interface EventCardProps {
   eventId: string;
@@ -70,11 +71,11 @@ const EventCard: React.FC<EventCardProps> = ({ eventId }) => {
           </View>
           <View style={styles.innerRow}>
             <EventPrivacyIcon isPrivate={event.private} />
-            <RegisterButton eventId={event.eventId} eventIsPrivate={event.private} isIconButton={true} />  
-            <IconBookmark width={iconSize} height={iconSize} fill={COLOURS.black} />
+            <RegisterButton eventId={event.eventId} eventIsPrivate={event.private} userId={'FghLfeUlFYO0RMZYjzI3'} isIconButton={true} />  
+            <SaveButton itemId={event.eventId} itemType={'event'} userId={'FghLfeUlFYO0RMZYjzI3'} isIconButton={true} />
           </View>
         </View>
-
+        
         <DetailsContainer>
           <DetailsRow Icon={IconArtwork} text={`${event.medium.primary} - ${event.medium.secondary}`} />
           <DetailsRow Icon={IconCalendar} text={`${eventDateTime?.date}`} />
@@ -84,7 +85,7 @@ const EventCard: React.FC<EventCardProps> = ({ eventId }) => {
 
         <View style={styles.buttonsContainer}>
           <InformationButton type={'event'} id={event.eventId} />
-          <RegisterButton eventId={event.eventId} eventIsPrivate={event.private} />
+          <RegisterButton eventId={event.eventId} eventIsPrivate={event.private} userId={'FghLfeUlFYO0RMZYjzI3'} />
         </View>
       </View>
     </ImageBackground>
