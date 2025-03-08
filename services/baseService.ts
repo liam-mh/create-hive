@@ -135,23 +135,48 @@ export class BaseService<T> {
     try {
       let querySnapshot;
       let collectionRef;
-
-      if (this.parentId) {
-        collectionRef = collection(db, this.collectionName, this.parentId, this.collectionName); 
+      let fullPath: string;
+      let queryDescription: string = "No query constraints.";
+  
+      if (this.parentId && this.subCollectionName) {
+        collectionRef = collection(db, this.collectionName, this.parentId, this.subCollectionName);
+        fullPath = `/${this.collectionName}/${this.parentId}/${this.subCollectionName}`;
+        console.log(`Getting documents from subcollection: ${this.subCollectionName} within parent: ${this.parentId} in collection ${this.collectionName}`);
+      } else if (this.parentId) {
+        collectionRef = collection(db, this.collectionName, this.parentId, this.collectionName);
+        fullPath = `/${this.collectionName}/${this.parentId}/${this.collectionName}`;
+        console.log(`Getting documents from collection: ${this.collectionName} within parent: ${this.parentId}`);
       } else {
-        collectionRef = collection(db, this.collectionName); 
+        collectionRef = collection(db, this.collectionName);
+        fullPath = `/${this.collectionName}`;
+        console.log(`Getting documents from collection: ${this.collectionName}`);
       }
-
+  
+      console.log('Full path:', fullPath);
+  
       if (queryConstraints && queryConstraints.length > 0) {
         const q = query(collectionRef, ...queryConstraints);
         querySnapshot = await getDocs(q);
+  
+        // Construct query description for logging
+        queryDescription = "Query constraints: ";
+        queryConstraints.forEach((constraint, index) => {
+          queryDescription += constraint.toString();
+          if (index < queryConstraints.length - 1) {
+            queryDescription += ", ";
+          }
+        });
+        console.log(queryDescription);
       } else {
         querySnapshot = await getDocs(collectionRef);
       }
-
-      return querySnapshot.docs
+  
+      const mappedResults = querySnapshot.docs
         .map((doc) => this.mapFunction({ id: doc.id, ...doc.data() }))
         .filter((item) => item !== null) as T[];
+  
+      console.log('Mapped results:', mappedResults);
+      return mappedResults;
     } catch (error) {
       const parentInfo = this.parentId ? ` from parent ${this.parentId}` : '';
       console.error(`Error getting ${this.collectionName}${parentInfo}:`, error);
