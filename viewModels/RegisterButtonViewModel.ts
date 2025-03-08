@@ -1,6 +1,6 @@
 import { addAttendee, getAttendeeByUserIdAndEventId } from '@/services/attendeeService';
 import { Attendee } from '@/models/Attendee';
-import { registerUserForEvent } from '@/services/interaction/registerService';
+import { RegisterServiceProps, registerUserForEvent } from '@/services/interaction/registerService';
 
 import IconRegister from '@/assets/icons/plus-square.svg';
 import IconPending from '@/assets/icons/slash-square.svg';
@@ -28,6 +28,14 @@ class RegisterButtonViewModel {
     return this._isSelected;
   }
 
+  async handleRegister() {
+    const register: RegisterServiceProps = {
+      userId: this._userId,
+      itemId: this._eventId,
+    };
+    return register;
+  }
+
   async fetchAttendee(): Promise<void> {
     this._loading = true;
     this._attendee = await getAttendeeByUserIdAndEventId(this._eventId, this._userId);
@@ -41,7 +49,7 @@ class RegisterButtonViewModel {
         this._isSelected ? 'selected' : 'unselected'
       }`
     );
-    await registerUserForEvent(this._userId, this._eventId);
+    await registerUserForEvent(await this.handleRegister());
     await addAttendee(this._eventId, this._eventIsPrivate, this._userId);
     await this.fetchAttendee();
   }

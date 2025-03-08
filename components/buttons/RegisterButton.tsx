@@ -5,14 +5,14 @@ import RegisterButtonViewModel from '@/viewModels/RegisterButtonViewModel';
 interface RegisterButtonProps {
   eventId: string;
   eventIsPrivate: boolean;
-  userId?: string;
+  userId: string;
   isIconButton?: boolean;
 }
 
 const RegisterButton: React.FC<RegisterButtonProps> = ({
   eventId,
   eventIsPrivate,
-  userId = 'FghLfeUlFYO0RMZYjzI3',
+  userId,
   isIconButton,
 }) => {
   const viewModel = new RegisterButtonViewModel(eventId, eventIsPrivate, userId);
