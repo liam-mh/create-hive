@@ -16,7 +16,15 @@ export async function addInteraction(interaction: InteractionServicePost): Promi
 
 export async function getInteraction(
   userId: string, itemType: ItemType, itemId: string, interactionType: InteractionType 
-): Promise<Interaction[]> {
+): Promise<Interaction | null> {
   const service = createService(userId, itemType);
-  return service.get([where('itemId', '==', itemId), where('actionType', '==', interactionType)]);
+  const interactions = await service.get([
+    where('itemId', '==', itemId),
+    where('actionType', '==', interactionType)
+  ]);
+  if (interactions && interactions.length > 0) {
+    return interactions[0];
+  } else {
+    return null;
+  }
 } 
