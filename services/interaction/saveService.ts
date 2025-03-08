@@ -9,16 +9,16 @@ export interface SaveServiceProps {
   itemType: ItemType;
 }
 
-export async function saveItem(saveServiceProps: SaveServiceProps): Promise<Interaction | null> {
+export async function saveItem(props: SaveServiceProps): Promise<Interaction | null> {
   const save: InteractionServicePost = {
-    ...saveServiceProps,
+    ...props,
     actionType: type,
     timestamp: Timestamp.now(),
   }
   return addInteraction(save);
 }
 
-export async function getSave(saveServiceProps: SaveServiceProps): Promise<Interaction | null> {
-  const { userId, itemType, itemId } = saveServiceProps;
+export async function getSave(props: SaveServiceProps): Promise<Interaction | null> {
+  const { userId, itemType, itemId } = props;
   return getInteraction(userId, itemType, itemId, type);
 }
