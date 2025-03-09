@@ -1,24 +1,23 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { COLOURS, TEXT, UNIT } from '@/styles';
-import { SvgProps } from 'react-native-svg';
+import { getIcon, IconNameType } from '@/utils/iconUtils';
 
 interface DetailsRowProps {
-  Icon: React.ComponentType<SvgProps>;
+  iconName: IconNameType;
   text: string;
   primaryText?: boolean;
 }
 
-const DetailsRow: React.FC<DetailsRowProps> = ({ Icon, text, primaryText = false }) => {
-  const iconSize = UNIT;
-  const iconFill = COLOURS.black
+const DetailsRow: React.FC<DetailsRowProps> = ({ iconName, text, primaryText = false }) => {
+  const icon = getIcon(iconName);
   const textStyle = !primaryText 
     ? TEXT.regular
     : TEXT.boldPrimary
 
   return (
     <View style={styles.row}>
-      <Icon width={iconSize} height={iconSize} fill={iconFill} />
+      {icon}
       <Text style={textStyle}>{text}</Text>
     </View>
   );
