@@ -2,7 +2,13 @@ import { BaseService } from './baseService';
 import { Event, mapEventFirestore, EventType } from '@/models/Event';
 import { where } from 'firebase/firestore';
 
+export type EventServicePost = Omit<Event, 'eventId'>; 
+
 export const eventService = new BaseService<Event>('event', mapEventFirestore);
+
+export async function createEvent(props: EventServicePost): Promise<Event | null> {
+  return eventService.create<'eventId'>(props);
+}
 
 export async function getEvent(): Promise<Event[]> {
   return eventService.get();
