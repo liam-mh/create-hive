@@ -1,7 +1,9 @@
 import React from 'react';
 import { SvgProps } from 'react-native-svg';
+import { COLOURS, UNIT } from '@/styles';
+import { EventType } from '@/models/Event';
 
-// Import your SVG icons
+// Icon imports
 import At from '@/assets/icons/at.svg';
 import BookmarkFill from '@/assets/icons/bookmark-fill.svg';
 import Bookmark from '@/assets/icons/bookmark.svg';
@@ -52,9 +54,7 @@ import Telephone from '@/assets/icons/telephone.svg';
 import UnlockFill from '@/assets/icons/unlock-fill.svg';
 import Unlock from '@/assets/icons/unlock.svg';
 import XCircle from '@/assets/icons/x-circle.svg';
-import { COLOURS, UNIT } from '@/styles';
 
-// Define a mapping of words to icons
 const iconMap: Record<string, React.ComponentType<SvgProps>> = {
   at: At,
   bookmarkFill: BookmarkFill,
@@ -160,23 +160,15 @@ export type IconNameType =
   | 'unlock'
   | 'xCircle';
 
-const searchForIcon = (name: IconNameType): React.ComponentType<SvgProps> | null => {
-  const Icon = iconMap[name];
-  if (!Icon) return null;
-
-  if (typeof Icon === 'function') {
-    return Icon;
-  }
-
-  return null;
+const searchForIcon = (name: IconNameType): React.ComponentType<SvgProps> => {
+  return iconMap[name];
 };
 
 const createIconElement = (
-  Icon: React.ComponentType<SvgProps> | null,
+  Icon: React.ComponentType<SvgProps>,
   size: number,
   color: string
-) : React.ReactElement<SvgProps> | null => {
-  if(!Icon) return null;
+) : React.ReactElement<SvgProps> => {
   return React.createElement(Icon, {
     width: size,
     height: size,
@@ -184,14 +176,21 @@ const createIconElement = (
   });
 };
 
-const getIcon = (
+export const getIcon = (
   name: IconNameType, 
   size: number = UNIT, 
   color: string = COLOURS.black
-): React.ReactElement<SvgProps> | null => {
+): React.ReactElement<SvgProps> => {
   const icon = searchForIcon(name);
-  if (!icon) return null;
   return createIconElement(icon, size, color)
 }
 
-export default getIcon;
+export const getEventIconName = (eventType: EventType): IconNameType => {
+  if (eventType === 'workshop') {
+    return 'brushFill';
+  } else if (eventType === 'exhibiton') {
+    return 'easel2Fill';
+  } else {
+    return 'cupHotFill'; 
+  }
+};
