@@ -1,10 +1,7 @@
 import { addAttendee, getAttendeeByUserIdAndEventId } from '@/services/attendeeService';
 import { Attendee } from '@/models/Attendee';
 import { RegisterServiceProps, registerUserForEvent } from '@/services/interaction/registerService';
-
-import IconRegister from '@/assets/icons/plus-square.svg';
-import IconPending from '@/assets/icons/slash-square.svg';
-import IconRegistered from '@/assets/icons/check-square-fill.svg';
+import { IconNameType } from '@/utils/iconUtils';
 
 class RegisterButtonViewModel {
   private _eventId: string;
@@ -56,7 +53,8 @@ class RegisterButtonViewModel {
 
   get buttonState() {
     let text = 'register';
-    let icon = IconRegister;
+    let icon: IconNameType = 'plusSquare';
+    const iconFill: IconNameType = 'checkSquareFill';
     let pending = false;
 
     if (this._attendee) {
@@ -66,7 +64,7 @@ class RegisterButtonViewModel {
         this._isSelected = true;
       } else {
         text = 'pending';
-        icon = IconPending;
+        icon = 'slashSquare';
         pending = true;
       }
     }
@@ -75,7 +73,7 @@ class RegisterButtonViewModel {
       text,
       icon,
       pending,
-      iconFill: IconRegistered,
+      iconFill,
       onPress: async () => await this.handlePress(), 
       isSelected: this._isSelected,
     };

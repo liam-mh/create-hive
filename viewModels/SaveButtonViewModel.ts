@@ -1,7 +1,6 @@
-import IconSave from '@/assets/icons/bookmark.svg';
-import IconSaveFill from '@/assets/icons/bookmark-fill.svg';
 import { getSave, saveItem, SaveServiceProps } from '@/services/interaction/saveService';
 import { Interaction, ItemType } from '@/models/Interaction';
+import { IconNameType } from '@/utils/iconUtils';
 
 class SaveButtonViewModel {
   private _itemId: string;
@@ -66,11 +65,14 @@ class SaveButtonViewModel {
       text = 'saved';
       this._isSelected = true;
     }
-  
+
+    const icon: IconNameType = 'bookmark';
+    const iconFill: IconNameType = 'bookmarkFill';
+
     return {
       text,
-      icon: IconSave,
-      iconFill: IconSaveFill,
+      icon,
+      iconFill,
       onPress: async () => await this.handlePress(), 
       isSelected: this._isSelected,
       pending: false,

@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import BaseButton from '@/components/buttons/BaseButton';
-import IconInformation from '@/assets/icons/info-square.svg';
-import IconInformationFill from '@/assets/icons/info-square-fill.svg';
 
 interface InformationButtonProps {
   type: 'event' | 'artwork';
@@ -19,8 +17,8 @@ const InformationButton: React.FC<InformationButtonProps> = ({ type, id }) => {
   return (
     <BaseButton
       text='more information'
-      icon={IconInformation}
-      iconFill={IconInformationFill}
+      icon='infoSquare'
+      iconFill='infoSquareFill'
       pending={false}
       onPress={handlePress}
       isSelected={isSelected}

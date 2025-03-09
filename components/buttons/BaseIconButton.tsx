@@ -3,13 +3,15 @@ import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import TEXT, { COLOURS, UNIT } from '@/styles';
 import BaseButtonViewModel from '@/viewModels/BaseButtonViewModel';
 import { SharedButtonProps } from '@/types/SharedButtonProps';
+import { getIcon } from '@/utils/iconUtils';
 
 const BaseIconButton: React.FC<SharedButtonProps> = (props) => { 
   const viewModel = new BaseButtonViewModel(props);
   const textAndIconColor = props.pending || props.isSelected
     ? COLOURS.primary
     : COLOURS.black
-  const iconSize = UNIT;
+    
+  const iconElement = getIcon(viewModel.iconToUse, undefined, textAndIconColor);
 
   const handlePress = () => {
     viewModel.toggleSelected();
@@ -24,13 +26,7 @@ const BaseIconButton: React.FC<SharedButtonProps> = (props) => {
       onPress={handlePress}
       disabled={viewModel.pending}
     >
-      {viewModel.iconToUse && (
-        React.createElement(viewModel.iconToUse, {
-          width: iconSize,
-          height: iconSize,
-          fill: textAndIconColor,
-        })
-      )}
+      {iconElement}
       <Text style={[TEXT.small, { color: textAndIconColor }]}>{viewModel.text}</Text>
     </TouchableOpacity>
   );

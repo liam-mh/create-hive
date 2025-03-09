@@ -1,10 +1,10 @@
-import { COLOURS } from '@/styles';
 import { SharedButtonProps } from '@/types/SharedButtonProps';
+import { IconNameType } from '@/utils/iconUtils';
 
 class BaseButtonViewModel {
   private _text: string;
-  private _icon: React.ComponentType<any> | undefined;
-  private _iconFill: React.ComponentType<any> | undefined;
+  private _icon: IconNameType;
+  private _iconFill: IconNameType;
   private _pending: boolean;
   private _isSelected: boolean;
   private _onPress: () => void;
@@ -24,16 +24,22 @@ class BaseButtonViewModel {
     return this._text;
   }
 
-  get icon(): React.ComponentType<any> | undefined {
+  get icon(): IconNameType {
     return this._icon;
   }
 
-  get iconFill(): React.ComponentType<any> | undefined {
+  get iconFill(): IconNameType {
     return this._iconFill;
   }
 
   get iconToUse() {
-    return this._isSelected && this._iconFill ? this._iconFill : this._icon;
+    if (this._isSelected && this._iconFill) {
+      if(!this._iconFill){
+        return this._icon;
+      }
+      return this._iconFill;
+    }
+    return this._icon;
   }
 
   get pending(): boolean {
