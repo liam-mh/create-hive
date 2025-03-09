@@ -19,26 +19,42 @@ export interface Event {
   attendee?: Attendee[] | null;
 }
 
-export const mapEventFirestore = (data: DocumentData | undefined): Event | null => { 
-  if (!data) return null; 
+export const mapEventFirestore = (data: DocumentData | undefined): Event | null => {
+  if (!data) return null;
 
-  const primaryMedium = data.primaryMedium as PrimaryMedium | undefined;
-  const secondaryMedium = data.secondaryMedium as SecondaryMedium | undefined;
-  if (!primaryMedium || !secondaryMedium) return null;
+  const medium = data.medium as Medium | undefined;
+  const location = data.location as Coordinate | undefined;
+
+  if (
+    !medium ||
+    typeof medium !== 'object' ||
+    !medium.primary ||
+    !medium.secondary ||
+    !location ||
+    typeof location !== 'object' ||
+    typeof location.latitude !== 'number' ||
+    typeof location.longitude !== 'number'
+  ) {
+    return null; 
+  }
 
   return {
     eventId: data.id,
     userId: data.userId ?? '',
     title: data.title ?? '',
     medium: {
-      primary: primaryMedium,
-      secondary: secondaryMedium,
+      primary: medium.primary as PrimaryMedium,
+      secondary: medium.secondary as SecondaryMedium,
     },
     eventType: data.eventType ?? '',
     start: data.start instanceof Timestamp ? data.start : new Timestamp(0, 0),
     end: data.end instanceof Timestamp ? data.end : new Timestamp(0, 0),
     private: data.private ?? false,
-    location: data.location ?? { latitude: 0, longitude: 0 },
+    location: {
+      latitude: location.latitude,
+      longitude: location.longitude,
+    },
     description: data.description ?? "",
+    attendee: data.attendee ?? null,
   };
 };
