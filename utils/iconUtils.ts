@@ -1,6 +1,6 @@
 import React from 'react';
 import { SvgProps } from 'react-native-svg';
-import { COLOURS, UNIT } from '@/styles';
+import { COLOURS, SIZES } from '@/styles';
 import { EventType } from '@/models/Event';
 
 // Icon imports
@@ -178,7 +178,7 @@ const createIconElement = (
 
 export const getIcon = (
   name: IconNameType, 
-  size: number = UNIT, 
+  size: number = SIZES.m, 
   color: string = COLOURS.black
 ): React.ReactElement<SvgProps> => {
   const icon = searchForIcon(name);
