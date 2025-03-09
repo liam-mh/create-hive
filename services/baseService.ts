@@ -23,11 +23,11 @@ export class BaseService<T> {
 
   // CRUD
 
-  async create(data: Omit<T, 'id'>): Promise<T | null> {
+  async create<ID extends keyof T>(data: Omit<T, ID>): Promise<T | null> {
     try {
       let collectionRef;
       let fullPath: string;
-
+  
       if (this.parentId && this.subCollectionName) {
         collectionRef = collection(db, this.collectionName, this.parentId, this.subCollectionName);
         fullPath = `/${this.collectionName}/${this.parentId}/${this.subCollectionName}`;
@@ -41,16 +41,16 @@ export class BaseService<T> {
         fullPath = `/${this.collectionName}`;
         console.log(`Creating document in collection: ${this.collectionName}`);
       }
-
+  
       console.log('Full path:', fullPath);
       console.log('Data to be saved:', data);
-
-      const docRef = await addDoc(collectionRef, data);
-
+  
+      const docRef = await addDoc(collectionRef, data as any);
+  
       console.log(`Document created with ID: ${docRef.id}`);
-
+  
       const docSnap = await getDoc(docRef);
-
+  
       if (docSnap.exists()) {
         const mappedData = this.mapFunction({ id: docSnap.id, ...docSnap.data() });
         console.log('Mapped data:', mappedData);
