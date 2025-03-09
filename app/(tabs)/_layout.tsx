@@ -10,9 +10,9 @@ import IconCreate from '@/assets/icons/plus-square.svg';
 import IconCreateFill from '@/assets/icons/plus-square-fill.svg';
 import IconPerson from '@/assets/icons/person.svg';
 import IconPersonFill from '@/assets/icons/person-fill.svg';
+import { getIcon } from "@/utils/iconUtils";
 
 export default function RootLayout() {
-  const ICON_SIZE = SIZES.m;
   return (
     <Tabs
       screenOptions={{
@@ -25,36 +25,33 @@ export default function RootLayout() {
         name="index"
         options={{ 
           title: 'Home', 
-          tabBarIcon: ({ color, focused }) => (
-            focused ? 
-              <IconHouseFill width={ICON_SIZE} height={ICON_SIZE} fill={color} /> 
-              : 
-              <IconHouse width={ICON_SIZE} height={ICON_SIZE} fill={color} />
-          ),
+          tabBarIcon: ({ color, focused }) => {
+            return !focused 
+              ? getIcon('houseDoor', undefined, color) 
+              : getIcon('houseDoorFill', undefined, color);
+          },
         }}
       />
       <Tabs.Screen 
         name="search"
         options={{ 
           title: 'Search', 
-          tabBarIcon: ({ color, focused }) => (
-            focused ? 
-              <IconSearch width={ICON_SIZE} height={ICON_SIZE} fill={color} /> 
-              : 
-              <IconSearch width={ICON_SIZE} height={ICON_SIZE} fill={color} />
-          ),
+          tabBarIcon: ({ color, focused }) => {
+            return !focused 
+              ? getIcon('search', undefined, color) 
+              : getIcon('search', undefined, color);
+          },
         }}
       />
       <Tabs.Screen 
         name="create"
         options={{ 
           title: 'Create', 
-          tabBarIcon: ({ color, focused }) => (
-            focused ? 
-              <IconCreateFill width={ICON_SIZE} height={ICON_SIZE} fill={color} /> 
-              : 
-              <IconCreate width={ICON_SIZE} height={ICON_SIZE} fill={color} />
-          ),
+          tabBarIcon: ({ color, focused }) => {
+            return !focused 
+              ? getIcon('plusSquare', undefined, color) 
+              : getIcon('plusSquareFill', undefined, color);
+          },
         }}
       />
       <Tabs.Screen 
@@ -62,24 +59,22 @@ export default function RootLayout() {
         options={{ 
           title: 'Explore', 
           headerShown: false,
-          tabBarIcon: ({ color, focused }) => (
-            focused ? 
-              <IconPinFill width={ICON_SIZE} height={ICON_SIZE} fill={color} /> 
-              : 
-              <IconPin width={ICON_SIZE} height={ICON_SIZE} fill={color} />
-          ),
+          tabBarIcon: ({ color, focused }) => {
+            return !focused 
+              ? getIcon('geoAlt', undefined, color) 
+              : getIcon('geoAltFill', undefined, color);
+          },
         }}
       />
       <Tabs.Screen 
         name="more"
         options={{ 
           title: 'More', 
-          tabBarIcon: ({ color, focused }) => (
-            focused ? 
-              <IconPersonFill width={ICON_SIZE} height={ICON_SIZE} fill={color} /> 
-              : 
-              <IconPerson width={ICON_SIZE} height={ICON_SIZE} fill={color} />
-          ),
+          tabBarIcon: ({ color, focused }) => {
+            return !focused 
+              ? getIcon('person', undefined, color) 
+              : getIcon('personFill', undefined, color);
+          },
         }}
       />
     </Tabs>
