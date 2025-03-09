@@ -2,14 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ImageBackground } from 'react-native';
 import TEXT, { COLOURS, UNIT } from '@/styles';
 import EventCardViewModel from '@/viewModels/EventCardViewModel';
-
-import IconWorkshopFill from '@/assets/icons/brush-fill.svg';
-import IconBookmark from '@/assets/icons/bookmark.svg';
-import IconLock from '@/assets/icons/lock.svg';
-import IconArtwork from '@/assets/icons/palette.svg';
-import IconCalendar from '@/assets/icons/calendar.svg';
-import IconClock from '@/assets/icons/clock.svg';
-import IconMarker from '@/assets/icons/geo-alt.svg';
+import { IconNameType, getEventIconName, getIcon } from '@/utils/iconUtils';
 
 import InformationButton from './buttons/InformationButton';
 import RegisterButton from './buttons/RegisterButton';
@@ -54,8 +47,10 @@ const EventCard: React.FC<EventCardProps> = ({ eventId }) => {
     return <View style={styles.contentContainer}><Text>Event not found.</Text></View>;
   }
 
-  const eventTypeIconSize = UNIT * 1.5;
-  const iconSize = UNIT;
+  const iconHeaderName: IconNameType = getEventIconName(event.eventType);
+  const iconHeaderSize = UNIT * 1.5
+  const iconHeaderColour = COLOURS.primary
+  const icon = getIcon(iconHeaderName, iconHeaderSize, iconHeaderColour);
 
   return (
     <ImageBackground
@@ -67,7 +62,7 @@ const EventCard: React.FC<EventCardProps> = ({ eventId }) => {
         <View style={styles.titleContainer}>
           <View style={styles.innerRow}>
             <Text style={TEXT.h1}>{event.eventType}</Text>
-            <IconWorkshopFill width={eventTypeIconSize} height={eventTypeIconSize} fill={COLOURS.secondary} />
+            {icon}
           </View>
           <View style={styles.innerRow}>
             <EventPrivacyIcon isPrivate={event.private} />
@@ -77,10 +72,10 @@ const EventCard: React.FC<EventCardProps> = ({ eventId }) => {
         </View>
         
         <DetailsContainer>
-          <DetailsRow Icon={IconArtwork} text={`${event.medium.primary} - ${event.medium.secondary}`} />
-          <DetailsRow Icon={IconCalendar} text={`${eventDateTime?.date}`} />
-          <DetailsRow Icon={IconClock} text={`${eventDateTime?.time}`} />
-          <DetailsRow Icon={IconMarker} text={`${eventLocation?.toLocaleLowerCase()}`} />
+          <DetailsRow iconName='palette' text={`${event.medium.primary} - ${event.medium.secondary}`} />
+          <DetailsRow iconName='calendar' text={`${eventDateTime?.date}`} />
+          <DetailsRow iconName='clock' text={`${eventDateTime?.time}`} />
+          <DetailsRow iconName='geoAlt' text={`${eventLocation?.toLocaleLowerCase()}`} />
         </DetailsContainer>
 
         <View style={styles.buttonsContainer}>
