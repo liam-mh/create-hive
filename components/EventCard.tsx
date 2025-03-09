@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ImageBackground } from 'react-native';
-import TEXT, { COLOURS, UNIT } from '@/styles';
+import TEXT, { COLOURS, SIZES, UNIT } from '@/styles';
 import EventCardViewModel from '@/viewModels/EventCardViewModel';
 import { IconNameType, getEventIconName, getIcon } from '@/utils/iconUtils';
 
@@ -48,7 +48,7 @@ const EventCard: React.FC<EventCardProps> = ({ eventId }) => {
   }
 
   const iconHeaderName: IconNameType = getEventIconName(event.eventType);
-  const iconHeaderSize = UNIT * 1.5
+  const iconHeaderSize = SIZES.l
   const iconHeaderColour = COLOURS.primary
   const icon = getIcon(iconHeaderName, iconHeaderSize, iconHeaderColour);
 
