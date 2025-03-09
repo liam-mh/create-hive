@@ -1,65 +1,55 @@
 import React, { useState } from "react";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
-import { COLOURS, UNIT } from "@/styles";
+import { COLOURS, SIZES, UNIT } from "@/styles";
 import MapFilterDetailsPanel from "./MapFilterDetailsPanel";
-
-import IconVerified from '@/assets/icons/person-check.svg';
-import IconVerifiedFill from '@/assets/icons/person-fill-check.svg';
-import IconArtwork from '@/assets/icons/palette.svg';
-import IconArtworkFill from '@/assets/icons/palette-fill.svg';
-import IconCasual from '@/assets/icons/cup-hot.svg';
-import IconCasualFill from '@/assets/icons/cup-hot-fill.svg';
-import IconWorkshop from '@/assets/icons/brush.svg';
-import IconWorkshopFill from '@/assets/icons/brush-fill.svg';
-import IconExhibition from '@/assets/icons/easel2.svg';
-import IconExhibitionFill from '@/assets/icons/easel2-fill.svg';
+import { getIcon, IconNameType } from "@/utils/iconUtils";
 
 import IconChevronUp from '@/assets/icons/chevron-up.svg';
 import IconChevronDown from '@/assets/icons/chevron-down.svg';
 
 interface FilterItem {
   filterText: string;
-  icon: React.ComponentType<any>;
-  iconFill: React.ComponentType<any>;
+  icon: IconNameType;
+  iconFill: IconNameType;
   filterKey: string;
 }
 
 const MapFiltersDropdown = () => {
-  const ICON_SIZE = UNIT * 1.5;
-
   const [expanded, setExpanded] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
 
+  const ICON_SIZE = SIZES.l;
+
   const filters: FilterItem[] = [
     {
-      filterText: "verified only",
-      icon: IconVerified,
-      iconFill: IconVerifiedFill,
-      filterKey: "verified",
+      filterText: 'verified only',
+      icon: 'personCheck',
+      iconFill: 'personFillCheck',
+      filterKey: 'verified'
     },
     {
-      filterText: "hide artwork",
-      icon: IconArtwork,
-      iconFill: IconArtworkFill,
-      filterKey: "artwork",
+      filterText: 'hide artwork',
+      icon: 'palette',
+      iconFill: 'paletteFill',
+      filterKey: 'artwork'
     },
     {
-      filterText: "casual",
-      icon: IconCasual,
-      iconFill: IconCasualFill,
-      filterKey: "casual",
+      filterText: 'casual',
+      icon: 'cupHot',
+      iconFill: 'cupHotFill',
+      filterKey: 'casual',
     },
     {
-      filterText: "workshop",
-      icon: IconWorkshop,
-      iconFill: IconWorkshopFill,
-      filterKey: "workshop",
+      filterText: 'workshop',
+      icon: 'brush',
+      iconFill: 'brushFill',
+      filterKey: 'workshop',
     },
     {
-      filterText: "exhibition",
-      icon: IconExhibition,
-      iconFill: IconExhibitionFill,
-      filterKey: "exhibition",
+      filterText: 'exhibition',
+      icon: 'easel2',
+      iconFill: 'easel2Fill',
+      filterKey: 'exhibition',
     },
   ];
 
@@ -102,30 +92,21 @@ const MapFiltersDropdown = () => {
                 onPress={() => toggleFilter(filter.filterKey)}
               >
                 <View style={styles.filterRow}>
-                  {selectedFilters.includes(filter.filterKey) ? (
-                    <filter.iconFill
-                      width={ICON_SIZE}
-                      height={ICON_SIZE}
-                      fill={COLOURS.primary}
-                    />
-                  ) : (
-                    <filter.icon
-                      width={ICON_SIZE}
-                      height={ICON_SIZE}
-                      fill={COLOURS.black}
-                    />
-                  )}
+                  {selectedFilters.includes(filter.filterKey) 
+                    ? (getIcon(filter.iconFill, ICON_SIZE, COLOURS.primary))
+                    : (getIcon(filter.icon, ICON_SIZE, COLOURS.black))
+                  }
                 </View>
               </TouchableOpacity>
             ))}
 
             <TouchableOpacity onPress={toggleDropdown}>
-              <IconChevronUp width={ICON_SIZE} height={ICON_SIZE} fill={COLOURS.black} />
+              {getIcon('chevronUp', ICON_SIZE, COLOURS.black)}
             </TouchableOpacity>
           </>
         ) : (
           <TouchableOpacity onPress={toggleDropdown}>
-            <IconChevronDown width={ICON_SIZE} height={ICON_SIZE} fill={COLOURS.black} />
+            {getIcon('chevronDown', ICON_SIZE, COLOURS.black)}
           </TouchableOpacity>
         )}
       </View>
