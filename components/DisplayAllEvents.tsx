@@ -35,7 +35,7 @@ const DisplayAllEvents = () => {
     return (
         <FlatList
             data={events}
-            keyExtractor={(item) => item.userId}
+            keyExtractor={(item) => item.eventId}
             renderItem={({ item }) => (
                 <View style={styles.listItem}> 
                     <Text>{JSON.stringify(item, null, 2)}</Text> 
