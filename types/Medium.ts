@@ -7,6 +7,6 @@ export type DigitalArtSecondary = "digital painting" | "vector" | "3D" | "other"
 export type SecondaryMedium = DrawingSecondary | PaintingSecondary | DigitalArtSecondary;
 
 export interface Medium {
-    primary: PrimaryMedium;
-    secondary: SecondaryMedium
+  primary: PrimaryMedium;
+  secondary: SecondaryMedium
 }
