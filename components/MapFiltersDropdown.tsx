@@ -1,81 +1,47 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { COLOURS, SIZES, UNIT } from "@/styles";
 import MapFilterDetailsPanel from "./MapFilterDetailsPanel";
-import { getIcon, IconNameType } from "@/utils/iconUtils";
-
-import IconChevronUp from '@/assets/icons/chevron-up.svg';
-import IconChevronDown from '@/assets/icons/chevron-down.svg';
-
-interface FilterItem {
-  filterText: string;
-  icon: IconNameType;
-  iconFill: IconNameType;
-  filterKey: string;
-}
+import { getIcon } from "@/utils/iconUtils";
+import { MapFiltersDropdownViewModel } from "@/viewModels/MapFilterDropdownViewModel";
 
 const MapFiltersDropdown = () => {
-  const [expanded, setExpanded] = useState(false);
-  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+  const viewModel = useMemo(() => new MapFiltersDropdownViewModel(), []);
+  const [isExpanded, setIsExpanded] = useState(viewModel.expanded);
+  const [localSelectedFilters, setLocalSelectedFilters] = useState(viewModel.selectedFilters);
 
   const ICON_SIZE = SIZES.l;
 
-  const filters: FilterItem[] = [
-    {
-      filterText: 'verified only',
-      icon: 'personCheck',
-      iconFill: 'personFillCheck',
-      filterKey: 'verified'
-    },
-    {
-      filterText: 'hide artwork',
-      icon: 'palette',
-      iconFill: 'paletteFill',
-      filterKey: 'artwork'
-    },
-    {
-      filterText: 'casual',
-      icon: 'cupHot',
-      iconFill: 'cupHotFill',
-      filterKey: 'casual',
-    },
-    {
-      filterText: 'workshop',
-      icon: 'brush',
-      iconFill: 'brushFill',
-      filterKey: 'workshop',
-    },
-    {
-      filterText: 'exhibition',
-      icon: 'easel2',
-      iconFill: 'easel2Fill',
-      filterKey: 'exhibition',
-    },
-  ];
+  useEffect(() => {
+    setLocalSelectedFilters(viewModel.selectedFilters);
+  }, [viewModel.selectedFilters]);
 
-  const toggleDropdown = () => setExpanded(!expanded);
+  const toggleDropdown = () => {
+    viewModel.toggleDropdown();
+    setIsExpanded(viewModel.expanded);
+  };
 
   const toggleFilter = (filter: string) => {
-    setSelectedFilters((prevSelected) =>
-      prevSelected.includes(filter)
-        ? prevSelected.filter((item) => item !== filter)
-        : [...prevSelected, filter]
-    );
+    const updatedFilters = viewModel.toggleFilter(filter);
+    setLocalSelectedFilters(updatedFilters); 
   };
 
   return (
     <View style={styles.horizontalContainer}>
       {/* Filters */}
       <View style={styles.leftContainer}>
-        {expanded &&
-          filters.map((filter) => (
+        {isExpanded &&
+          viewModel.filters.map((filter) => (
             <TouchableOpacity
               key={filter.filterKey}
               style={styles.item}
               onPress={() => toggleFilter(filter.filterKey)}
             >
               <View style={styles.filterRow}>
-                  <MapFilterDetailsPanel text={filter.filterText} isSelected={selectedFilters.includes(filter.filterKey)}/>
+                <MapFilterDetailsPanel
+                  text={filter.filterText}
+                  isSelected={localSelectedFilters.includes(filter.filterKey)}
+                />
               </View>
             </TouchableOpacity>
           ))}
@@ -83,30 +49,29 @@ const MapFiltersDropdown = () => {
 
       {/* Icons */}
       <View style={[styles.container, styles.rightContainer]}>
-        {expanded ? (
+        {isExpanded ? (
           <>
-            {filters.map((filter) => (
+            {viewModel.filters.map((filter) => (
               <TouchableOpacity
                 key={filter.filterKey}
                 style={styles.item}
                 onPress={() => toggleFilter(filter.filterKey)}
               >
                 <View style={styles.filterRow}>
-                  {selectedFilters.includes(filter.filterKey) 
-                    ? (getIcon(filter.iconFill, ICON_SIZE, COLOURS.primary))
-                    : (getIcon(filter.icon, ICON_SIZE, COLOURS.black))
-                  }
+                  {localSelectedFilters.includes(filter.filterKey)
+                    ? getIcon(filter.iconFill, ICON_SIZE, COLOURS.primary)
+                    : getIcon(filter.icon, ICON_SIZE, COLOURS.black)}
                 </View>
               </TouchableOpacity>
             ))}
 
             <TouchableOpacity onPress={toggleDropdown}>
-              {getIcon('chevronUp', ICON_SIZE, COLOURS.black)}
+              {getIcon("chevronUp", ICON_SIZE, COLOURS.black)}
             </TouchableOpacity>
           </>
         ) : (
           <TouchableOpacity onPress={toggleDropdown}>
-            {getIcon('chevronDown', ICON_SIZE, COLOURS.black)}
+            {getIcon("chevronDown", ICON_SIZE, COLOURS.black)}
           </TouchableOpacity>
         )}
       </View>
@@ -116,7 +81,7 @@ const MapFiltersDropdown = () => {
 
 const styles = StyleSheet.create({
   horizontalContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   container: {
     backgroundColor: COLOURS.white,
@@ -133,17 +98,17 @@ const styles = StyleSheet.create({
   },
   leftContainer: {
     marginRight: UNIT / 2,
-    alignItems: 'flex-end',
+    alignItems: "flex-end",
     paddingVertical: UNIT / 2,
   },
   item: {
     marginBottom: UNIT,
     height: UNIT * 1.5,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   filterRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
 });
 
