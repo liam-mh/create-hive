@@ -23,6 +23,7 @@ const EventCard: React.FC<EventCardProps> = ({ eventId }) => {
   const [eventLocation, setEventLocation] = useState(viewModel.eventLocation);
   const [imageUri, setImageUri] = useState(viewModel.imageUri);
   const [eventDateTime, setEventDateTime] = useState(viewModel.eventDateTime);
+  const [icon, setIcon] = useState(viewModel.icon);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,6 +34,7 @@ const EventCard: React.FC<EventCardProps> = ({ eventId }) => {
       setEventLocation(viewModel.eventLocation);
       setImageUri(viewModel.imageUri);
       setEventDateTime(viewModel.eventDateTime);
+      setIcon(viewModel.icon);
     };
     fetchData();
   }, [eventId]);
@@ -46,11 +48,6 @@ const EventCard: React.FC<EventCardProps> = ({ eventId }) => {
   if (!event) {
     return <View style={styles.contentContainer}><Text>Event not found.</Text></View>;
   }
-
-  const iconHeaderName: IconNameType = getEventIconName(event.eventType);
-  const iconHeaderSize = SIZES.l
-  const iconHeaderColour = COLOURS.primary
-  const icon = getIcon(iconHeaderName, iconHeaderSize, iconHeaderColour);
 
   return (
     <ImageBackground

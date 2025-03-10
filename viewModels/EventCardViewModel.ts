@@ -5,6 +5,8 @@ import { calculateEventDateTime } from '@/utils/dateTimeUtils';
 import { formatDistrictCity, getAddressFromCoordinates } from '@/utils/locationUtils';
 import { Coordinate } from '@/types/Coordinate';
 import { getImageUrl } from "@/hooks/useFirebaseStorage";
+import { SIZES, COLOURS } from '@/styles';
+import { IconNameType, getEventIconName, getIcon } from '@/utils/iconUtils';
 
 class EventCardViewModel {
   private _eventId: string;
@@ -13,6 +15,7 @@ class EventCardViewModel {
   private _error: string | null = null;
   private _eventLocation: string | null = null;
   private _imageUri: string | null = null;
+  private _icon: React.ReactNode | null = null;
 
   constructor(eventId: string) {
     this._eventId = eventId;
@@ -38,6 +41,11 @@ class EventCardViewModel {
     return this._imageUri;
   }
 
+  get icon(): React.ReactNode | null {
+    return this._icon;
+  }
+
+
   async fetchEventData(): Promise<void> {
     this._loading = true;
     this._error = null;
@@ -47,6 +55,7 @@ class EventCardViewModel {
       if (this._event) {
         await this.fetchEventLocation();
         await this.fetchEventImage();
+        this.fetchIcon();
       }
     } catch (err) {
       this._error = 'Failed to load event data.';
@@ -96,6 +105,17 @@ class EventCardViewModel {
       return calculateEventDateTime(this._event.start, this._event.end);
     } else {
       return null;
+    }
+  }
+
+  private fetchIcon(): void {
+    if (this._event) {
+      const iconHeaderName: IconNameType = getEventIconName(this._event.eventType);
+      const iconHeaderSize = SIZES.l;
+      const iconHeaderColour = COLOURS.primary;
+      this._icon = getIcon(iconHeaderName, iconHeaderSize, iconHeaderColour);
+    } else {
+      this._icon = null;
     }
   }
 }
