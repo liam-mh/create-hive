@@ -1,15 +1,5 @@
 import { Tabs } from "expo-router";
-import { COLOURS, SIZES } from '@/styles';
-
-import IconHouse from '@/assets/icons/house-door.svg';
-import IconHouseFill from '@/assets/icons/house-door-fill.svg';
-import IconPin from '@/assets/icons/geo-alt.svg';
-import IconPinFill from '@/assets/icons/geo-alt-fill.svg';
-import IconSearch from '@/assets/icons/search.svg';
-import IconCreate from '@/assets/icons/plus-square.svg';
-import IconCreateFill from '@/assets/icons/plus-square-fill.svg';
-import IconPerson from '@/assets/icons/person.svg';
-import IconPersonFill from '@/assets/icons/person-fill.svg';
+import { COLOURS } from '@/styles';
 import { getIcon } from "@/utils/iconUtils";
 
 export default function RootLayout() {
