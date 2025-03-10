@@ -3,7 +3,7 @@ import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { COLOURS, SIZES, UNIT } from "@/styles";
 import MapFilterDetailsPanel from "./MapFilterDetailsPanel";
 import { getIcon } from "@/utils/iconUtils";
-import { MapFiltersDropdownViewModel } from "@/viewModels/MapFilterDropdownViewModel";
+import { MapFiltersDropdownViewModel } from "@/viewModels/MapFiltersDropdownViewModel";
 
 const MapFiltersDropdown = () => {
   const viewModel = useMemo(() => new MapFiltersDropdownViewModel(), []);
