@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ImageBackground } from 'react-native';
-import TEXT, { COLOURS, SIZES, UNIT } from '@/styles';
+import TEXT, { UNIT } from '@/styles';
 import EventCardViewModel from '@/viewModels/EventCardViewModel';
-import { IconNameType, getEventIconName, getIcon } from '@/utils/iconUtils';
-
 import InformationButton from './buttons/InformationButton';
 import RegisterButton from './buttons/RegisterButton';
 import DetailsContainer from './DetailsContainer';
@@ -24,6 +22,7 @@ const EventCard: React.FC<EventCardProps> = ({ eventId }) => {
   const [imageUri, setImageUri] = useState(viewModel.imageUri);
   const [eventDateTime, setEventDateTime] = useState(viewModel.eventDateTime);
   const [icon, setIcon] = useState(viewModel.icon);
+  const [host, setHost] = useState(viewModel.host);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,6 +34,7 @@ const EventCard: React.FC<EventCardProps> = ({ eventId }) => {
       setImageUri(viewModel.imageUri);
       setEventDateTime(viewModel.eventDateTime);
       setIcon(viewModel.icon);
+      setHost(viewModel.host);
     };
     fetchData();
   }, [eventId]);
@@ -73,6 +73,7 @@ const EventCard: React.FC<EventCardProps> = ({ eventId }) => {
           <DetailsRow iconName='calendar' text={`${eventDateTime?.date}`} />
           <DetailsRow iconName='clock' text={`${eventDateTime?.time}`} />
           <DetailsRow iconName='geoAlt' text={`${eventLocation?.toLocaleLowerCase()}`} />
+          <DetailsRow iconName='person' text={`${host?.userAt.toLocaleLowerCase()}`} />
         </DetailsContainer>
 
         <View style={styles.buttonsContainer}>
