@@ -3,7 +3,7 @@ import { UserProfile } from "@/types/UserProfile";
 
 export interface User {
   userId: string;
-  userName: string;
+  userAt: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -18,7 +18,7 @@ export const mapUserFirestore = (data: DocumentData | undefined): User | null =>
 
   return {
     userId: data.id, 
-    userName: data.userName ?? '',
+    userAt: data.userAt ?? '',
     firstName: data.firstName ?? '',
     lastName: data.lastName ?? '',
     email: data.email ?? '',
