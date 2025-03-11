@@ -10,7 +10,7 @@ interface MarkerDetailsSheetProps {
 }
 
 const MarkerDetailsSheet: React.FC<MarkerDetailsSheetProps> = ({ bottomSheetRef, selectedMarkerData }) => {
-  const snapPoints = useMemo(() => ['12%', '35%'], []);
+  const snapPoints = useMemo(() => ['12%', '37%'], []);
 
   return (
     <BottomSheet
