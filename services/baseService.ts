@@ -66,6 +66,49 @@ export class BaseService<T> {
     }
   }
 
+  async createById(id: string, data: T): Promise<T | null> {
+    try {
+      let docRef;
+      let fullPath: string;
+
+      if (this.parentId && this.subCollectionName) {
+        docRef = doc(db, this.collectionName, this.parentId, this.subCollectionName, id);
+        fullPath = `/${this.collectionName}/${this.parentId}/${this.subCollectionName}/${id}`;
+        console.log(`Creating document with ID: ${id} in subcollection: ${this.subCollectionName} within parent: ${this.parentId} in collection ${this.collectionName}`);
+      } else if (this.parentId) {
+        docRef = doc(db, this.collectionName, this.parentId, id);
+        fullPath = `/${this.collectionName}/${this.parentId}/${id}`;
+        console.log(`Creating document with ID: ${id} in collection: ${this.collectionName} within parent: ${this.parentId}`);
+      } else {
+        docRef = doc(db, this.collectionName, id);
+        fullPath = `/${this.collectionName}/${id}`;
+        console.log(`Creating document with ID: ${id} in collection: ${this.collectionName}`);
+      }
+
+      console.log('Full path:', fullPath);
+      console.log('Data to be saved:', data);
+
+      await setDoc(docRef, data as any);
+
+      console.log(`Document created with ID: ${id}`);
+
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const mappedData = this.mapFunction({ id: docSnap.id, ...docSnap.data() });
+        console.log('Mapped data:', mappedData);
+        return mappedData;
+      } else {
+        console.log('Document snapshot does not exist.');
+        return null;
+      }
+    } catch (error) {
+      const parentInfo = this.parentId ? ` from parent ${this.parentId}` : '';
+      console.error(`Error creating document with ID: ${id} in ${this.collectionName}${parentInfo}:`, error);
+      throw error;
+    }
+  }
+
   async update(id: string, data: Partial<Omit<T, 'id'>>): Promise<T | null> {
     try {
       let docRef;
