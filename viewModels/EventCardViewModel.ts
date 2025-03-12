@@ -13,13 +13,14 @@ import { User } from '@/models/User';
 class EventCardViewModel {
   private _eventId: string;
   private _event: Event | null = null;
-  private _loading: boolean = true;
-  private _error: string | null = null;
   private _eventLocation: string | null = null;
   private _imageUri: string | null = null;
   private _icon: React.ReactNode | null = null;
   private _host: User | null = null;
-
+  
+  private _loading: boolean = true;
+  private _error: string | null = null;
+  
   constructor(eventId: string) {
     this._eventId = eventId;
   }
