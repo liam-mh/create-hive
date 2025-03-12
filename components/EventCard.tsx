@@ -106,9 +106,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: UNIT,
   },
-  detailsContainer: {
-    gap: UNIT / 2,
-  },
   buttonsContainer: {
     flexDirection: 'row',
     gap: UNIT,
