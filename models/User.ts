@@ -1,5 +1,6 @@
 import { DocumentData, Timestamp } from "firebase/firestore";
-import { UserProfile } from "@/types/UserProfile";
+import { UserProfile } from "@/models/UserProfile";
+import { Coordinate } from "@/types/Coordinate";
 
 export interface User {
   userId: string;
@@ -8,7 +9,7 @@ export interface User {
   lastName: string;
   email: string;
   mobile: string;
-  location: Location;
+  location: Coordinate;
   created: Timestamp;
   profile?: UserProfile;
 }
