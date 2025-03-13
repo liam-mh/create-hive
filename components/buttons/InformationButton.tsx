@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import BaseButton from '@/components/buttons/BaseButton';
+import { useRouter } from 'expo-router';
 
 interface InformationButtonProps {
   type: 'event' | 'artwork';
@@ -8,10 +9,16 @@ interface InformationButtonProps {
 
 const InformationButton: React.FC<InformationButtonProps> = ({ type, id }) => {
   const [isSelected, setIsSelected] = useState(false);
+  const router = useRouter();
 
   const handlePress = () => {
     setIsSelected(!isSelected);
-    console.log(`Information button for ${type} with id ${id} pressed. State: ${!isSelected ? 'selected' : 'unselected'}`);
+    try {
+      router.push('/eventInformation');
+    } catch(error) {
+      throw(error);
+    }
+    
   };
 
   return (

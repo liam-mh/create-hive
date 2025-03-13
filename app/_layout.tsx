@@ -28,6 +28,7 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="eventInformation" />
         <Stack.Screen name="+not-found" />
       </Stack>
     </GestureHandlerRootView>
