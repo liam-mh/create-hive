@@ -2,13 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import TEXT, { COLOURS, UNIT } from '@/styles';
 import InformationButton from './buttons/InformationButton';
-import RegisterButton from './buttons/RegisterButton';
 import DetailsContainer from './DetailsContainer';
 import DetailsRow from './DetailsRow';
-import EventPrivacyIcon from './buttons/EventPrivacyIcon';
-import SaveButton from './buttons/Savebutton';
 import ProfileCardViewModel from '@/viewModels/ProfileCardViewModel';
-import { auth } from '@/config/firebase';
 
 interface ProfileCardProps {
   userId: string;
@@ -87,6 +83,7 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
+    height: UNIT * 6.5,
     aspectRatio: 1,
     borderWidth: 1,
     borderColor: COLOURS.primary
