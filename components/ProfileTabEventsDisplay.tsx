@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet  } from 'react-native';
 import ProfileTabEventsDisplayViewModel from '@/viewModels/ProfileTabEventsDisplayViewModel';
 import EventCardReel from './EventCardReel';
+import ContentDropdownContainer from './ContentDropdownContainer';
 
 interface ProfileTabEventsDisplayProps {
   userId: string;
@@ -36,7 +37,12 @@ const ProfileTabEventsDisplay: React.FC<ProfileTabEventsDisplayProps> = ( props 
   }
 
   return (
-    <EventCardReel events={events} />
+    <ContentDropdownContainer 
+      title={'upcoming'} 
+      children={
+        <EventCardReel events={events} />
+      } 
+    />
   );
 };
 
