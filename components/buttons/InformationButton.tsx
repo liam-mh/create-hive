@@ -8,17 +8,10 @@ interface InformationButtonProps {
 }
 
 const InformationButton: React.FC<InformationButtonProps> = ({ type, id }) => {
-  const [isSelected, setIsSelected] = useState(false);
   const router = useRouter();
 
   const handlePress = () => {
-    setIsSelected(!isSelected);
-    try {
-      router.push('/eventInformation');
-    } catch(error) {
-      throw(error);
-    }
-    
+    router.push('/eventInformation');
   };
 
   return (
@@ -28,7 +21,7 @@ const InformationButton: React.FC<InformationButtonProps> = ({ type, id }) => {
       iconFill='infoSquareFill'
       pending={false}
       onPress={handlePress}
-      isSelected={isSelected}
+      isSelected={false}
       isIconButton={false}
     />
   );
