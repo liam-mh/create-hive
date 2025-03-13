@@ -6,10 +6,11 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-nati
 interface ContentDropdownContainerProps {
   title: string;
   children: React.ReactNode;
+  expanded?: boolean;
 }
 
-const ContentDropdownContainer: React.FC<ContentDropdownContainerProps> = ({ title, children }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+const ContentDropdownContainer: React.FC<ContentDropdownContainerProps> = ({ title, children, expanded = false }) => {
+  const [isExpanded, setIsExpanded] = useState(expanded);
 
   const toggleDropdown = () => {
     setIsExpanded(!isExpanded);

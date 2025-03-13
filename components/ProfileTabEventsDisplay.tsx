@@ -41,7 +41,8 @@ const ProfileTabEventsDisplay: React.FC<ProfileTabEventsDisplayProps> = ( props 
       title={'upcoming'} 
       children={
         <EventCardReel events={events} />
-      } 
+      }
+      expanded={true}
     />
   );
 };
