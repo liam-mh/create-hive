@@ -1,6 +1,7 @@
 import { COLOURS, TEXT, UNIT } from '@/styles';
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import ProfileTabEventsDisplay from './ProfileTabEventsDisplay';
 
 type ProfileTab = 'events' | 'artwork' | 'verification';
 
@@ -15,19 +16,17 @@ const ProfileTabSelector = () => {
     switch (activeTab) {
       case 'events':
         return (
-          <View style={styles.tabContent}>
-            <Text>Events Content</Text>
-          </View>
+          <ProfileTabEventsDisplay userId={'FghLfeUlFYO0RMZYjzI3'} />
         );
       case 'artwork':
         return (
-          <View style={styles.tabContent}>
+          <View>
             <Text>Artwork Content</Text>
           </View>
         );
       case 'verification':
         return (
-          <View style={styles.tabContent}>
+          <View>
             <Text>Verification Content</Text>
           </View>
         );
@@ -78,17 +77,13 @@ const styles = StyleSheet.create({
   tabBar: {
     flexDirection: 'row',
     backgroundColor: COLOURS.white,
+    paddingBottom: UNIT
   },
   tabButton: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     paddingBottom: UNIT/4
-  },
-  tabContent: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   activeTabBorder: {
     borderBottomWidth: 2,
