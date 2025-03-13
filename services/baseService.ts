@@ -1,5 +1,5 @@
 import { db } from '@/config/firebase';
-import { collection, getDocs, doc, getDoc, DocumentData, QueryConstraint, query, addDoc, deleteDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, DocumentData, QueryConstraint, query, addDoc, deleteDoc, setDoc, updateDoc, QueryDocumentSnapshot, limit, orderBy, startAfter } from 'firebase/firestore';
 
 export class BaseService<T> {
   private collectionName: string;
@@ -223,6 +223,58 @@ export class BaseService<T> {
     } catch (error) {
       const parentInfo = this.parentId ? ` from parent ${this.parentId}` : '';
       console.error(`Error getting ${this.collectionName}${parentInfo}:`, error);
+      throw error;
+    }
+  }
+
+  async getPaginated(
+    queryConstraints: QueryConstraint[],
+    pageSize: number,
+    lastDocument?: QueryDocumentSnapshot<DocumentData>
+  ): Promise<{ data: T[]; lastDocument: QueryDocumentSnapshot<DocumentData> | null }> {
+    try {
+      let collectionRef;
+      let q;
+  
+      if (this.parentId && this.subCollectionName) {
+        collectionRef = collection(db, this.collectionName, this.parentId, this.subCollectionName);
+      } else if (this.parentId) {
+        collectionRef = collection(db, this.collectionName, this.parentId, this.collectionName);
+      } else {
+        collectionRef = collection(db, this.collectionName);
+      }
+  
+      if (lastDocument) {
+        q = query(
+          collectionRef,
+          ...queryConstraints,
+          startAfter(lastDocument),
+          limit(pageSize)
+        );
+      } else {
+        q = query(
+          collectionRef,
+          ...queryConstraints,
+          limit(pageSize)
+        );
+      }
+  
+      const querySnapshot = await getDocs(q);
+      const data: T[] = [];
+      let newLastDocument: QueryDocumentSnapshot<DocumentData> | null = null;
+  
+      querySnapshot.forEach((doc) => {
+        const mappedData = this.mapFunction({ id: doc.id, ...doc.data() });
+        if(mappedData){
+          data.push(mappedData);
+          newLastDocument = doc;
+        }
+      });
+  
+      return { data, lastDocument: newLastDocument };
+    } catch (error) {
+      const parentInfo = this.parentId ? ` from parent ${this.parentId}` : '';
+      console.error(`Error getting paginated ${this.collectionName}${parentInfo}:`, error);
       throw error;
     }
   }
