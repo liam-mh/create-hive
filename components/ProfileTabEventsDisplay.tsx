@@ -3,6 +3,7 @@ import { View, Text, StyleSheet  } from 'react-native';
 import ProfileTabEventsDisplayViewModel from '@/viewModels/ProfileTabEventsDisplayViewModel';
 import EventCardReel from './EventCardReel';
 import ContentDropdownContainer from './ContentDropdownContainer';
+import { UNIT } from '@/styles';
 
 interface ProfileTabEventsDisplayProps {
   userId: string;
@@ -37,19 +38,28 @@ const ProfileTabEventsDisplay: React.FC<ProfileTabEventsDisplayProps> = ( props 
   }
 
   return (
-    <ContentDropdownContainer 
-      title={'upcoming'} 
-      children={
-        <EventCardReel events={events} />
-      }
-      expanded={true}
-    />
+    <View style={styles.contentContainer}>
+      <ContentDropdownContainer 
+        title={'upcoming'} 
+        children={
+          <EventCardReel events={events} />
+        }
+        expanded={true}
+      />
+      <ContentDropdownContainer 
+        title={'past'} 
+        children={
+          <EventCardReel events={events} />
+        }
+      />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   contentContainer: {
-    flex: 1
+    flex: 1,
+    gap: UNIT
   }
 });
 

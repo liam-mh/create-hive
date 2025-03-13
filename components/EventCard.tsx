@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ImageBackground } from 'react-native';
-import TEXT, { UNIT } from '@/styles';
+import TEXT, { SHADOWS, UNIT } from '@/styles';
 import EventCardViewModel from '@/viewModels/EventCardViewModel';
 import InformationButton from './buttons/InformationButton';
 import RegisterButton from './buttons/RegisterButton';
@@ -56,44 +56,47 @@ const EventCard: React.FC<EventCardProps> = ({ eventId, inputEvent }) => {
   }
 
   return (
-    <ImageBackground
-      source={{ uri: imageUri || undefined }}
-      style={styles.backgroundImage}
-    >
-      <View style={styles.overlay} />
-      <View style={styles.contentContainer}>
-        <View style={styles.titleContainer}>
-          <View style={styles.innerRow}>
-            <Text style={TEXT.h1}>{event.eventType}</Text>
-            {icon}
+    <View style={SHADOWS.containerShadow}>
+      <ImageBackground
+        source={{ uri: imageUri || undefined }}
+        style={styles.backgroundImage}
+        resizeMode="cover"
+      >
+        <View style={styles.overlay} />
+        <View style={styles.contentContainer}>
+          <View style={styles.titleContainer}>
+            <View style={styles.innerRow}>
+              <Text style={TEXT.h1}>{event.eventType}</Text>
+              {icon}
+            </View>
+            <View style={styles.innerRow}>
+              <EventPrivacyIcon isPrivate={event.private} />
+              <RegisterButton eventId={event.eventId} eventIsPrivate={event.private} userId={'FghLfeUlFYO0RMZYjzI3'} isIconButton={true} />  
+              <SaveButton itemId={event.eventId} itemType={'event'} userId={'FghLfeUlFYO0RMZYjzI3'} isIconButton={true} />
+            </View>
           </View>
-          <View style={styles.innerRow}>
-            <EventPrivacyIcon isPrivate={event.private} />
-            <RegisterButton eventId={event.eventId} eventIsPrivate={event.private} userId={'FghLfeUlFYO0RMZYjzI3'} isIconButton={true} />  
-            <SaveButton itemId={event.eventId} itemType={'event'} userId={'FghLfeUlFYO0RMZYjzI3'} isIconButton={true} />
-          </View>
-        </View>
-        
-        <DetailsContainer>
-          <DetailsRow iconName='palette' text={`${event.medium.primary} - ${event.medium.secondary}`} />
-          <DetailsRow iconName='calendar' text={`${eventDateTime?.date}`} />
-          <DetailsRow iconName='clock' text={`${eventDateTime?.time}`} />
-          <DetailsRow iconName='geoAlt' text={`${eventLocation?.toLocaleLowerCase()}`} />
-          <DetailsRow iconName='person' text={`${host?.userAt.toLocaleLowerCase()}`} />
-        </DetailsContainer>
+          
+          <DetailsContainer>
+            <DetailsRow iconName='palette' text={`${event.medium.primary} - ${event.medium.secondary}`} />
+            <DetailsRow iconName='calendar' text={`${eventDateTime?.date}`} />
+            <DetailsRow iconName='clock' text={`${eventDateTime?.time}`} />
+            <DetailsRow iconName='geoAlt' text={`${eventLocation?.toLocaleLowerCase()}`} />
+            <DetailsRow iconName='person' text={`${host?.userAt.toLocaleLowerCase()}`} />
+          </DetailsContainer>
 
-        <View style={styles.buttonsContainer}>
-          <InformationButton type={'event'} id={event.eventId} />
-          <RegisterButton eventId={event.eventId} eventIsPrivate={event.private} userId={'FghLfeUlFYO0RMZYjzI3'} />
+          <View style={styles.buttonsContainer}>
+            <InformationButton type={'event'} id={event.eventId} />
+            <RegisterButton eventId={event.eventId} eventIsPrivate={event.private} userId={'FghLfeUlFYO0RMZYjzI3'} />
+          </View>
         </View>
-      </View>
-    </ImageBackground>
+      </ImageBackground>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   backgroundImage: {
-    flex: 1
+    width: '100%',
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,

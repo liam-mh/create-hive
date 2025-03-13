@@ -11,9 +11,7 @@ export default function More() {
           <ProfileCard userId='FghLfeUlFYO0RMZYjzI3' />
         </View>
         <View style={styles.div} />
-        <View style={styles.sectionContainer}>
-          <ProfileTabSelector />
-        </View>
+        <ProfileTabSelector />
       </View>
     </ScrollView>
   );
