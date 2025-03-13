@@ -8,13 +8,19 @@ import DetailsContainer from './DetailsContainer';
 import DetailsRow from './DetailsRow';
 import EventPrivacyIcon from './buttons/EventPrivacyIcon';
 import SaveButton from './buttons/Savebutton';
+import { Event } from '@/models/Event';
 
 interface EventCardProps {
   eventId: string;
+  inputEvent?: Event;
 }
 
-const EventCard: React.FC<EventCardProps> = ({ eventId }) => {
-  const viewModel = new EventCardViewModel(eventId);
+const EventCard: React.FC<EventCardProps> = ({ eventId, inputEvent }) => {
+  let viewModel = null;
+  inputEvent
+    ? viewModel = new EventCardViewModel(eventId, inputEvent)
+    : viewModel = new EventCardViewModel(eventId);
+  
   const [loading, setLoading] = useState(viewModel.loading);
   const [error, setError] = useState(viewModel.error);
   const [event, setEvent] = useState(viewModel.event);
