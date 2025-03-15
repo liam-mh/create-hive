@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Button, Image, ImageBackground, ScrollView } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import EventPrivacyIcon from '@/components/buttons/EventPrivacyIcon';
-import InformationButton from '@/components/buttons/InformationButton';
 import RegisterButton from '@/components/buttons/RegisterButton';
 import SaveButton from '@/components/buttons/Savebutton';
 import DetailsContainer from '@/components/DetailsContainer';
@@ -12,6 +11,7 @@ import EventCardViewModel from '@/viewModels/EventCardViewModel';
 import ContentDropdownContainer from '@/components/ContentDropdownContainer';
 import KeyValueRow from '@/components/KeyValueRow';
 import TagButton from '@/components/buttons/TagButton';
+import SmallMap from '@/components/SmallMap';
 
 const eventInformation = () => {
   const router = useRouter();
@@ -123,6 +123,15 @@ const eventInformation = () => {
             <KeyValueRow rowType={'text'} textData={{key: 'privacy', value: privacyText}} />
             <KeyValueRow rowType={'text'} textData={{key: 'venue', value: 'sheffield arts hall'}} />
             <KeyValueRow rowType={'longText'} textData={{key: 'description', value: 'We will be back at the sheffield arts hall this week. In room 5'}} />
+            <ContentDropdownContainer 
+              title={'map'} 
+              expanded={true}
+              addPadding={true}
+              isPrimary={false}
+              children={
+                <SmallMap itemId={event.eventId} itemType={'event'} pinCoordinate={event.location} />
+              } 
+            />
           </DetailsContainer>
         </View>
 
@@ -136,7 +145,7 @@ const eventInformation = () => {
             children={
               <View style={styles.tagsContainer}>
                 {tags.map((tag, key) => (
-                  <TagButton tag={tag} />
+                  <TagButton tag={tag} key={key} />
                 ))}
               </View>
             } 
