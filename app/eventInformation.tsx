@@ -122,8 +122,7 @@ const eventInformation = () => {
           <DetailsContainer>
             <KeyValueRow rowType={'text'} textData={{key: 'privacy', value: privacyText}} />
             <KeyValueRow rowType={'text'} textData={{key: 'venue', value: 'sheffield arts hall'}} />
-            <KeyValueRow rowType={'longText'} textData={{key: 'description', value: 'We will be back at the sheffield arts hall this week. In room 5'}}  />
-            <KeyValueRow rowType={'bullet'} bulletData={{key:'materials', value: ['flat brush size 4 - 10', 'liquitex acrylic paint']}}  />
+            <KeyValueRow rowType={'longText'} textData={{key: 'description', value: 'We will be back at the sheffield arts hall this week. In room 5'}} />
           </DetailsContainer>
         </View>
 
@@ -136,7 +135,7 @@ const eventInformation = () => {
             addPadding={true}
             children={
               <View style={styles.tagsContainer}>
-                {tags.map((tag) => (
+                {tags.map((tag, key) => (
                   <TagButton tag={tag} />
                 ))}
               </View>
