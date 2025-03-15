@@ -7,26 +7,41 @@ interface ContentDropdownContainerProps {
   title: string;
   children: React.ReactNode;
   expanded?: boolean;
+  addPadding?: boolean;
+  isPrimary?: boolean;
 }
 
-const ContentDropdownContainer: React.FC<ContentDropdownContainerProps> = ({ title, children, expanded = false }) => {
+const ContentDropdownContainer: React.FC<ContentDropdownContainerProps> = ({
+  title,
+  children,
+  expanded = false,
+  addPadding = false, 
+  isPrimary = true,
+}) => {
   const [isExpanded, setIsExpanded] = useState(expanded);
 
   const toggleDropdown = () => {
     setIsExpanded(!isExpanded);
   };
 
+  const colour = isPrimary ? COLOURS.primary : COLOURS.darkgrey;
   const iconName = isExpanded ? 'chevronUp' : 'chevronDown';
-  const icon = getIcon(iconName, undefined, COLOURS.primary);
+  const icon = getIcon(iconName, undefined, colour);
+  const text = isPrimary ? TEXT.boldPrimary : TEXT.regularGrey;
+
+  const contentContainerStyle = [
+    styles.contentContainer,
+    addPadding && styles.paddedContentContainer,
+  ];
 
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.header} onPress={toggleDropdown}>
-        <Text style={TEXT.boldPrimary}>{title}</Text>
+        <Text style={text}>{title}</Text>
         {icon}
       </TouchableOpacity>
       {isExpanded && (
-        <ScrollView style={styles.contentContainer}>
+        <ScrollView style={contentContainerStyle}>
           <View>
             {children}
           </View>
@@ -45,10 +60,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingInline: UNIT,
   },
   contentContainer: {
     overflow: 'hidden',
+  },
+  paddedContentContainer: {
+    paddingTop: UNIT/2, 
   },
 });
 
