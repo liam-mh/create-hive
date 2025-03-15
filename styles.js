@@ -42,11 +42,27 @@ export const SHADOWS = {
     },
 };
 
+export const DIVS = {
+  offwhite: {
+    height: 1,
+    backgroundColor: COLOURS.offwhite,
+  },
+  primary: {
+    height: 1,
+    backgroundColor: COLOURS.primary,
+  },
+}
+
 export const TEXT = StyleSheet.create({
     small: {
         fontFamily: FONTS.regular,
         fontSize: SIZES.s,
         color: COLOURS.black,
+    },
+    smallGrey: {
+      fontFamily: FONTS.regular,
+      fontSize: SIZES.s,
+      color: COLOURS.primary,
     },
     smallPrimary: {
         fontFamily: FONTS.regular,
