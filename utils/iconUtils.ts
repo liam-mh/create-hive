@@ -50,6 +50,8 @@ import PlusSquareFill from '@/assets/icons/plus-square-fill.svg';
 import PlusSquare from '@/assets/icons/plus-square.svg';
 import Search from '@/assets/icons/search.svg';
 import SlashSquare from '@/assets/icons/slash-square.svg';
+import Tag from '@/assets/icons/tag.svg';
+import TagFill from '@/assets/icons/tag-fill.svg';
 import Telephone from '@/assets/icons/telephone.svg';
 import UnlockFill from '@/assets/icons/unlock-fill.svg';
 import Unlock from '@/assets/icons/unlock.svg';
@@ -102,6 +104,8 @@ const iconMap: Record<string, React.ComponentType<SvgProps>> = {
   plusSquare: PlusSquare,
   search: Search,
   slashSquare: SlashSquare,
+  tag: Tag,
+  tagFill: TagFill,
   telephone: Telephone,
   unlockFill: UnlockFill,
   unlock: Unlock,
@@ -155,6 +159,8 @@ export type IconNameType =
   | 'plusSquare'
   | 'search'
   | 'slashSquare'
+  | 'tag'
+  | 'tagFill'
   | 'telephone'
   | 'unlockFill'
   | 'unlock'
