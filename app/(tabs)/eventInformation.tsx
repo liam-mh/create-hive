@@ -158,6 +158,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     gap: UNIT,
+    paddingBottom: UNIT
   },
   titleContainer: {
     flexDirection: 'row',
