@@ -1,6 +1,6 @@
 import ProfileCard from '@/components/ProfileCard';
 import ProfileTabSelector from '@/components/ProfileTabSelector';
-import { COLOURS, UNIT } from '@/styles';
+import { COLOURS, DIVS, UNIT } from '@/styles';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 export default function More() {
@@ -10,7 +10,7 @@ export default function More() {
         <View style={styles.sectionContainer}>
           <ProfileCard userId='FghLfeUlFYO0RMZYjzI3' />
         </View>
-        <View style={styles.div} />
+        <View style={DIVS.offwhite} />
         <ProfileTabSelector />
       </View>
     </ScrollView>
@@ -27,9 +27,5 @@ const styles = StyleSheet.create({
   },
   sectionContainer: {
     paddingInline: UNIT,
-  },
-  div: {
-    height: 1,
-    backgroundColor: COLOURS.offwhite,
   },
 });
