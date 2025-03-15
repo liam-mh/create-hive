@@ -67,6 +67,13 @@ export default function RootLayout() {
           },
         }}
       />
+      <Tabs.Screen 
+        name="eventInformation"
+        options={{ 
+          headerShown: false, 
+          tabBarButton: () => null, 
+        }}
+      />
     </Tabs>
   );
 }
