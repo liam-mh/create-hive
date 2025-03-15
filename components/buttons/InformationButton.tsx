@@ -7,11 +7,17 @@ interface InformationButtonProps {
   id: string;
 }
 
-const InformationButton: React.FC<InformationButtonProps> = ({ type, id }) => {
+const InformationButton: React.FC<InformationButtonProps> = ( props: InformationButtonProps ) => {
   const router = useRouter();
 
   const handlePress = () => {
-    router.push('/eventInformation');
+    router.push({
+      pathname: '/eventInformation',
+      params: {
+        type: props.type,
+        id: props.id
+      }
+    });
   };
 
   return (
