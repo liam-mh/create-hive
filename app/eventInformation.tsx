@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Button, Image, ImageBackground, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import EventPrivacyIcon from '@/components/buttons/EventPrivacyIcon';
-import RegisterButton from '@/components/buttons/RegisterButton';
-import SaveButton from '@/components/buttons/Savebutton';
 import DetailsContainer from '@/components/DetailsContainer';
 import DetailsRow from '@/components/DetailsRow';
-import TEXT, { COLOURS, DIVS, SHADOWS, UNIT } from '@/styles';
+import TEXT, { COLOURS, DIVS, UNIT } from '@/styles';
 import EventCardViewModel from '@/viewModels/EventCardViewModel';
 import ContentDropdownContainer from '@/components/ContentDropdownContainer';
 import KeyValueRow from '@/components/KeyValueRow';
 import TagButton from '@/components/buttons/TagButton';
 import SmallMap from '@/components/SmallMap';
+import EventHeader from '@/components/EventHeader';
+import { EventType } from '@/models/Event';
+import CustomHeader from '@/components/CustomHeader';
 
 const eventInformation = () => {
   const router = useRouter();
@@ -57,106 +57,98 @@ const eventInformation = () => {
   const tags = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5']
 
   return (
-    <ScrollView style={styles.container}>
+    <>
+      <CustomHeader 
+        children={
+          <EventHeader
+            eventId={id as string}
+            eventType={event.eventType as EventType}
+            isPrivate={event.private}
+            userId={'FghLfeUlFYO0RMZYjzI3'}
+          />
+        } 
+      />
 
-      <View style={styles.contentContainer}>
-
-        <View style={styles.titleContainer}>
-          <View style={styles.innerRow}>
-            <Text style={TEXT.h1}>{event.eventType}</Text>
-            {icon}
+      <ScrollView style={styles.container}>
+        <View style={styles.contentContainer}>
+          <View>
+            <Image
+              source={imageUri ? { uri: imageUri } : defaultImage}
+              style={styles.image} 
+              resizeMode="cover"
+            />
           </View>
-          <View style={styles.innerRow}>
-            <EventPrivacyIcon isPrivate={event.private} />
-            <RegisterButton eventId={event.eventId} eventIsPrivate={event.private} userId={'FghLfeUlFYO0RMZYjzI3'} isIconButton={true} />  
-            <SaveButton itemId={event.eventId} itemType={'event'} userId={'FghLfeUlFYO0RMZYjzI3'} isIconButton={true} />
+
+          <View style={styles.sectionContainer}>
+            <DetailsContainer>
+              <DetailsRow iconName='cardHeading' text={event.title} primaryText={true} />
+              <DetailsRow iconName='palette' text={`${event.medium.primary} - ${event.medium.secondary}`} />
+              <DetailsRow iconName='calendar' text={`${eventDateTime?.date}`} />
+              <DetailsRow iconName='clock' text={`${eventDateTime?.time}`} />
+              <DetailsRow iconName='geoAlt' text={`${eventLocation?.toLocaleLowerCase()}`} />
+              <DetailsRow iconName='person' text={`${host?.userAt.toLocaleLowerCase()}`} />
+            </DetailsContainer>
           </View>
-        </View>
 
-        <View>
-          <Image
-            source={imageUri ? { uri: imageUri } : defaultImage}
-            style={styles.image} 
-            resizeMode="cover"
-          />
-        </View>
+          <View style={DIVS.offwhite} />
 
-        <View style={styles.sectionContainer}>
-          <DetailsContainer>
-            <DetailsRow iconName='cardHeading' text={event.title} primaryText={true} />
-            <DetailsRow iconName='palette' text={`${event.medium.primary} - ${event.medium.secondary}`} />
-            <DetailsRow iconName='calendar' text={`${eventDateTime?.date}`} />
-            <DetailsRow iconName='clock' text={`${eventDateTime?.time}`} />
-            <DetailsRow iconName='geoAlt' text={`${eventLocation?.toLocaleLowerCase()}`} />
-            <DetailsRow iconName='person' text={`${host?.userAt.toLocaleLowerCase()}`} />
-          </DetailsContainer>
-        </View>
-
-        <View style={DIVS.offwhite} />
-
-        <View style={styles.sectionContainer}>
-          <ContentDropdownContainer 
-            title={'description'} 
-            expanded={true}
-            addPadding={true}
-            children={
-              <Text style={TEXT.regular}>{event.description}</Text>
-            } 
-          />
-        </View>
-        
-        <View style={DIVS.offwhite} />  
-
-        <View style={styles.sectionContainer}>
-          <ContentDropdownContainer 
-            title={'location'} 
-            expanded={true}
-            addPadding={true}
-            children={
-              <Text style={TEXT.regular}>{event.description}</Text>
-            } 
-          />
-        </View>
-
-        <View style={styles.sectionContainer}>
-          <DetailsContainer>
-            <KeyValueRow rowType={'text'} textData={{key: 'privacy', value: privacyText}} />
-            <KeyValueRow rowType={'text'} textData={{key: 'venue', value: 'sheffield arts hall'}} />
-            <KeyValueRow rowType={'longText'} textData={{key: 'description', value: 'We will be back at the sheffield arts hall this week. In room 5'}} />
+          <View style={styles.sectionContainer}>
             <ContentDropdownContainer 
-              title={'map'} 
+              title={'description'} 
               expanded={true}
               addPadding={true}
-              isPrimary={false}
               children={
-                <SmallMap itemId={event.eventId} itemType={'event'} pinCoordinate={event.location} />
+                <Text style={TEXT.regular}>{event.description}</Text>
               } 
             />
-          </DetailsContainer>
-        </View>
-
-        <View style={DIVS.offwhite} />  
-
-        <View style={styles.sectionContainer}>
-          <ContentDropdownContainer 
-            title={'tags'} 
-            expanded={true}
-            addPadding={true}
-            children={
-              <View style={styles.tagsContainer}>
-                {tags.map((tag, key) => (
-                  <TagButton tag={tag} key={key} />
-                ))}
-              </View>
-            } 
-          />
+          </View>
           
+          <View style={DIVS.offwhite} />  
+
+          <View style={styles.sectionContainer}>
+            <ContentDropdownContainer 
+              title={'location'} 
+              expanded={true}
+              addPadding={true}
+              children={
+                <DetailsContainer>
+                  <KeyValueRow rowType={'text'} textData={{key: 'privacy', value: privacyText}} />
+                  <KeyValueRow rowType={'text'} textData={{key: 'venue', value: 'sheffield arts hall'}} />
+                  <KeyValueRow rowType={'longText'} textData={{key: 'description', value: 'We will be back at the sheffield arts hall this week. In room 5'}} />
+                  <ContentDropdownContainer 
+                    title={'map'} 
+                    expanded={true}
+                    addPadding={true}
+                    isPrimary={false}
+                    children={
+                      <SmallMap itemId={event.eventId} itemType={'event'} pinCoordinate={event.location} />
+                    } 
+                  />
+                </DetailsContainer>
+              } 
+            />
+          </View>
+
+          <View style={DIVS.offwhite} />  
+
+          <View style={styles.sectionContainer}>
+            <ContentDropdownContainer 
+              title={'tags'} 
+              expanded={true}
+              addPadding={true}
+              children={
+                <View style={styles.tagsContainer}>
+                  {tags.map((tag, key) => (
+                    <TagButton tag={tag} key={key} />
+                  ))}
+                </View>
+              } 
+            />
+            
+          </View>
         </View>
-
-      </View>
-
-    </ScrollView>
-
+      </ScrollView>
+    </>
   );
 };
 
