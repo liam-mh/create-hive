@@ -3,7 +3,7 @@ import { View, Text, StyleSheet  } from 'react-native';
 import ProfileTabEventsDisplayViewModel from '@/viewModels/ProfileTabEventsDisplayViewModel';
 import EventCardReel from './EventCardReel';
 import ContentDropdownContainer from './ContentDropdownContainer';
-import { UNIT } from '@/styles';
+import { DIVS, UNIT } from '@/styles';
 
 interface ProfileTabEventsDisplayProps {
   userId: string;
@@ -46,6 +46,7 @@ const ProfileTabEventsDisplay: React.FC<ProfileTabEventsDisplayProps> = ( props 
         }
         expanded={true}
       />
+      <View style={DIVS.offwhite} />
       <ContentDropdownContainer 
         title={'past'} 
         children={
