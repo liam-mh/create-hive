@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     paddingBottom: UNIT/2,
     backgroundColor: COLOURS.white,
     borderColor: COLOURS.primary,
-    borderWidth: 2
+    borderBottomWidth: 1
   },
   backButton: {
     paddingRight: UNIT,
