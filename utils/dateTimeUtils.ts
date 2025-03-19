@@ -106,3 +106,20 @@ export const calculateEventDateTime = (
 
   return result;
 };
+
+export const timestampToMonthYear = (timestamp: Timestamp | null | undefined): string | null => {
+  if (!timestamp) {
+    return null;
+  }
+
+  try {
+    const date = timestamp.toDate();
+    const month = date.toLocaleString('en-US', { month: 'long' });
+    const year = date.getFullYear();
+
+    return `${month} ${year}`;
+  } catch (error) {
+    console.error("Error converting timestamp to month year:", error);
+    return null;
+  }
+};
