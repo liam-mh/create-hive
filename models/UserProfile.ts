@@ -1,5 +1,5 @@
 import { DocumentData } from "firebase/firestore";
-import { Verification } from "../types/Verification";
+import { Verification } from "./Verification";
 import { Medium, PrimaryMedium, SecondaryMedium } from "@/types/Medium";
 import { Coordinate } from "@/types/Coordinate";
 
