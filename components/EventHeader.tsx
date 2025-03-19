@@ -15,7 +15,6 @@ interface EventHeaderProps {
 }
 
 const EventHeader: React.FC<EventHeaderProps> = (props) => {
-  console.log(props.eventType);
   const iconHeaderName: IconNameType = getEventIconName(props.eventType);
   const icon = getIcon(iconHeaderName, SIZES.l, COLOURS.secondary);
 
