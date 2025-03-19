@@ -7,18 +7,28 @@ interface DetailsRowProps {
   iconName: IconNameType;
   text: string;
   primaryText?: boolean;
+  verificationTick?: boolean;
 }
 
-const DetailsRow: React.FC<DetailsRowProps> = ({ iconName, text, primaryText = false }) => {
+const DetailsRow: React.FC<DetailsRowProps> = ({ 
+  iconName, 
+  text, 
+  primaryText = false, 
+  verificationTick = false
+}) => {
   const icon = getIcon(iconName);
   const textStyle = !primaryText 
     ? TEXT.regular
     : TEXT.boldPrimary
+  const iconVerification = getIcon('checkCircle', undefined, COLOURS.primary);
 
   return (
     <View style={styles.row}>
       {icon}
       <Text style={textStyle}>{text}</Text>
+      {verificationTick &&
+        iconVerification
+      }
     </View>
   );
 };
