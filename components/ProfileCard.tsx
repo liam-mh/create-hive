@@ -48,9 +48,6 @@ const ProfileCard: React.FC<ProfileCardProps> = ( props ) => {
 
   return (
     <View style={styles.contentContainer}>
-
-      <Text style={TEXT.h1}>{`${user.firstName.toLocaleLowerCase()} ${user.lastName.toLocaleLowerCase()}`}</Text>
-
       <View style={styles.innerRow}>
         <View>
           <Image
@@ -80,6 +77,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     gap: UNIT,
     backgroundColor: COLOURS.white,
+    paddingTop: UNIT
   },
   image: {
     flex: 1,

@@ -60,6 +60,7 @@ export default function RootLayout() {
         name="more"
         options={{ 
           title: 'More', 
+          headerShown: false,
           tabBarIcon: ({ color, focused }) => {
             return !focused 
               ? getIcon('person', undefined, color) 
