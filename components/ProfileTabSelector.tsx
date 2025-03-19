@@ -2,6 +2,7 @@ import { COLOURS, TEXT, UNIT } from '@/styles';
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import ProfileTabEventsDisplay from './ProfileTabEventsDisplay';
+import ProfileTabVerification from './ProfileTabVerification';
 
 type ProfileTab = 'events' | 'artwork' | 'verification';
 
@@ -26,9 +27,7 @@ const ProfileTabSelector = () => {
         );
       case 'verification':
         return (
-          <View>
-            <Text>Verification Content</Text>
-          </View>
+          <ProfileTabVerification userId={'FghLfeUlFYO0RMZYjzI3'} />
         );
       default:
         return null;
