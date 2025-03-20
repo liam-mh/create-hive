@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import ProfileTabEventsDisplay from './ProfileTabEventsDisplay';
 import ProfileTabVerification from './ProfileTabVerification';
+import ProfileTabArtwork from './ProfileTabArtwork';
 
 type ProfileTab = 'events' | 'artwork' | 'verification';
 
@@ -21,9 +22,7 @@ const ProfileTabSelector = () => {
         );
       case 'artwork':
         return (
-          <View>
-            <Text>Artwork Content</Text>
-          </View>
+          <ProfileTabArtwork userId={'FghLfeUlFYO0RMZYjzI3'} />
         );
       case 'verification':
         return (
