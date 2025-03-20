@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Marker } from 'react-native-maps';
 import { View, Text, Image, ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
-import { COLOURS, UNIT, TEXT, SHADOWS } from "@/styles";
+import { COLOURS, UNIT, TEXT, SHADOWS, CORNERS } from "@/styles";
 import { Coordinate } from "@/types/Coordinate";
 import { getImageUrl } from "@/hooks/useFirebaseStorage";
 
@@ -37,7 +37,7 @@ const CustomMarker: React.FC<CustomMarkerProps> = ({ coordinate, type = 'event',
   }, [type, id]);
 
   const colour = type === "event" ? COLOURS.primary : COLOURS.secondary;
-  const corners = type === "event" ? 100 : 2;
+  const corners = type === "event" ? 100 : CORNERS.default;
 
   if (loading || !imageUri) {
     return (

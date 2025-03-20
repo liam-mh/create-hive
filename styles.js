@@ -54,6 +54,10 @@ export const DIVS = {
   },
 }
 
+export const CORNERS = {
+  default: 5
+}
+
 export const TEXT = StyleSheet.create({
     small: {
         fontFamily: FONTS.regular,

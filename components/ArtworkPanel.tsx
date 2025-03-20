@@ -1,4 +1,5 @@
 import { getImageUrl } from "@/hooks/useFirebaseStorage";
+import { CORNERS } from "@/styles";
 import { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
 
@@ -36,6 +37,7 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     aspectRatio: 1,
+    borderRadius: CORNERS.default
   }
 });
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
-import TEXT, { COLOURS, UNIT } from '@/styles';
+import TEXT, { COLOURS, CORNERS, UNIT } from '@/styles';
 import InformationButton from './buttons/InformationButton';
 import DetailsContainer from './DetailsContainer';
 import DetailsRow from './DetailsRow';
@@ -84,7 +84,8 @@ const styles = StyleSheet.create({
     height: UNIT * 6.5,
     aspectRatio: 1,
     borderWidth: 1,
-    borderColor: COLOURS.primary
+    borderColor: COLOURS.primary,
+    borderRadius: CORNERS.default
   },
   innerRow: {
     flexDirection: 'row',
