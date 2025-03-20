@@ -3,13 +3,14 @@ import { StyleSheet } from 'react-native';
 export const UNIT = 16;
 
 export const COLOURS = {
-    primary: '#00626B', 
-    secondary: '#83C5BE',
-    offwhite: '#DDE8ED',  
-    darkgrey: '#505050', 
-    background: '#f0f0f0',        
-    white: '#FFFFFF',
-    black: '#000000',
+  primary: '#00626B', 
+  secondary: '#83C5BE',
+  offwhite: '#DDE8ED',  
+  darkgrey: '#505050', 
+  background: '#f0f0f0',        
+  white: '#FFFFFF',
+  black: '#000000',
+  offblack: '#001C1F'
 };
 
 const FONTS = {
@@ -30,16 +31,16 @@ const SPACING = {
 };
 
 export const SHADOWS = {
-    containerShadow: {
-        shadowColor: "#000000",
-        shadowOffset: {
-            width: 0,
-            height: 3,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 2,
-        elevation: 4,
+  containerShadow: {
+    shadowColor: COLOURS.offblack,
+    shadowOffset: {
+      width: 0,
+      height: 2,
     },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+    elevation: 4,
+  },
 };
 
 export const DIVS = {
