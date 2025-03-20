@@ -14,7 +14,7 @@ const EventCardReel: React.FC<EventCardReelProps> = ( props ) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, SHADOWS.containerShadow]}>
       {props.events.map((event) => (
         <EventCard key={event.eventId} eventId={event.eventId} inputEvent={event} />
       ))}
@@ -24,7 +24,6 @@ const EventCardReel: React.FC<EventCardReelProps> = ( props ) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: UNIT,
     gap: UNIT
   }
 });
