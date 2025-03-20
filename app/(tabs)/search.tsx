@@ -1,15 +1,12 @@
-import InformationButton from '@/components/buttons/InformationButton';
 import { useLocalSearchParams } from 'expo-router';
-import { StyleSheet, View, SafeAreaView, Text } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { StyleSheet, View, Text } from 'react-native';
 
 export default function Search() {
   const { tag } = useLocalSearchParams();
 
   return (
     <View style={styles.container}>
-      <Text>Search</Text>
-      <InformationButton type={'event'} id={'Tj8LZQ3UjkDPHkJ77hNB'} />
+      <Text>{tag ? tag : 'no search term'}</Text>
     </View>
   );
 }
