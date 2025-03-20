@@ -54,7 +54,7 @@ const ContentDropdownContainer: React.FC<ContentDropdownContainerProps> = ({
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    overflow: 'hidden',
+    overflow: 'visible'
   },
   header: {
     flexDirection: 'row',
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   contentContainer: {
-    overflow: 'hidden',
+    overflow: 'visible'
   },
   paddedContentContainer: {
     paddingTop: UNIT/2, 
