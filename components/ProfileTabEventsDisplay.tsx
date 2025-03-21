@@ -39,22 +39,26 @@ const ProfileTabEventsDisplay: React.FC<ProfileTabEventsDisplayProps> = ( props 
 
   return (
     <View style={styles.contentContainer}>
-      <ContentDropdownContainer 
-        title={'upcoming'} 
-        addPadding={true}
-        expanded={true}
-        children={
-          <EventCardReel events={events} />
-        }
-      />
+      <View style={styles.sectionContainer}>
+        <ContentDropdownContainer 
+          title={'upcoming'} 
+          addPadding={true}
+          expanded={true}
+          children={
+            <EventCardReel events={events} />
+          }
+        />
+      </View>
       <View style={DIVS.offwhite} />
-      <ContentDropdownContainer 
-        title={'past'} 
-        addPadding={true}
-        children={
-          <EventCardReel events={events} />
-        }
-      />
+      <View style={styles.sectionContainer}>
+        <ContentDropdownContainer 
+          title={'past'} 
+          addPadding={true}
+          children={
+            <EventCardReel events={events} />
+          }
+        />
+      </View>
     </View>
   );
 };
@@ -63,8 +67,11 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     gap: UNIT,
-    paddingInline: UNIT,
-    overflow: 'visible'
+    overflow: 'visible',
+    paddingBottom: UNIT
+  },
+  sectionContainer: {
+    paddingInline: UNIT
   }
 });
 
