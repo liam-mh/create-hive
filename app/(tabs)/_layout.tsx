@@ -1,8 +1,32 @@
-import { Tabs } from "expo-router";
+import { Slot, Tabs, useRouter } from "expo-router";
 import { COLOURS } from '@/styles';
 import { getIcon } from "@/utils/iconUtils";
+import { AuthProvider, useAuth } from "@/context/authContext";
+import { useEffect } from 'react';
 
 export default function RootLayout() {
+  return (
+    <AuthProvider>
+      <InnerTabs />
+    </AuthProvider>
+  );
+}
+
+function InnerTabs() {
+  const { user } = useAuth();
+  const router = useRouter();
+  console.log(user);
+
+  useEffect(() => {
+    if (!user) {
+      router.replace('/login');
+    }
+  }, [user, router]);
+
+  if (!user) {
+    return null;
+  }
+
   return (
     <Tabs
       screenOptions={{
@@ -77,4 +101,4 @@ export default function RootLayout() {
       />
     </Tabs>
   );
-}
+};
