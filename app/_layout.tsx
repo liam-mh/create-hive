@@ -20,13 +20,15 @@ export default function RootLayout() {
     }
   }, [fontsLoaded]);
 
-  if (!fontsLoaded) {
-    return <Slot />;
-  }
-
   return (
     <AuthProvider>
-      <InnerLayout />
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        {fontsLoaded ? (
+          <InnerLayout />
+        ) : (
+          <Slot />
+        )}
+      </GestureHandlerRootView>
     </AuthProvider>
   );
 }
@@ -35,12 +37,10 @@ function InnerLayout() {
   const { user } = useAuth();
   console.log(user);
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <Stack initialRouteName={user ? "(tabs)" : "login"}>
-        <Stack.Screen name="login" />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </GestureHandlerRootView>
+    <Stack initialRouteName={user ? "(tabs)" : "login"}>
+      <Stack.Screen name="login" />
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="+not-found" />
+    </Stack>
   );
 }
