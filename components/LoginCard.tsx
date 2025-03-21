@@ -9,8 +9,6 @@ const LoginCard = () => {
   const [loginError, setLoginError] = useState<string | null>(null);
   const router = useRouter();
 
-  console.log('login card')
-
   const handleLogin = async () => {
     const user = await signIn(username);
     if (!user) {
@@ -27,7 +25,12 @@ const LoginCard = () => {
 
   return (
     <View>
-      <TextInput placeholder="Username" value={username} onChangeText={setUsername} />
+      <TextInput 
+        placeholder="username" 
+        value={username} 
+        onChangeText={setUsername}
+        autoCapitalize='none' 
+      />
       <Button title="Login" onPress={handleLogin} />
       {loginError && <Text style={{ color: 'red' }}>{loginError}</Text>}
     </View>

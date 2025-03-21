@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { View, ActivityIndicator, AppState, AppStateStatus } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { User } from '@/models/User';
-import { getUserById } from '@/services/userService';
+import { getUserByUserAt } from '@/services/userService';
 
 interface AuthContextType {
   user: User | null;
@@ -61,16 +61,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signIn = async (userAt: string) => {
+    console.log('logging in with: ', userAt);
     try {
-      const fetchedUser: User | null = await getUserById(userAt);
-      await AsyncStorage.setItem('user', JSON.stringify(fetchedUser));
-      setUser(fetchedUser);
-      return fetchedUser;
+      const fetchedUsers: User[] = await getUserByUserAt(userAt);
+      if (fetchedUsers && fetchedUsers.length > 0) {
+        const fetchedUser: User = fetchedUsers[0];
+        await AsyncStorage.setItem('user', JSON.stringify(fetchedUser));
+        setUser(fetchedUser);
+        return fetchedUser;
+      } else {
+        return null;
+      }
     } catch (error) {
       console.error('Login failed:', error);
       return null;
     }
   };
+
 
   const signOut = async () => {
     try {
