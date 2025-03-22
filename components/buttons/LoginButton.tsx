@@ -10,11 +10,10 @@ interface LoginButtonProps {
 
 const LoginButton: React.FC<LoginButtonProps> = ( props ) => {
   const { signIn } = useAuth();
-  const [ username ] = useState(props.userAt);
   const router = useRouter();
 
   const handlePress = async () => {
-    const user = await signIn(username);
+    const user = await signIn(props.userAt);
     if (!user) {
       props.onLoginResult('login failed. please check your credentials');
     } else {
