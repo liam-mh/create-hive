@@ -99,6 +99,11 @@ export const TEXT = StyleSheet.create({
         fontSize: SIZES.m,
         color: COLOURS.black,
     },
+    boldGrey: {
+      fontFamily: FONTS.bold,
+      fontSize: SIZES.m,
+      color: COLOURS.darkgrey,
+    },
     boldPrimary: {
         fontFamily: FONTS.bold,
         fontSize: SIZES.m,
