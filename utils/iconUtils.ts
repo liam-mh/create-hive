@@ -35,6 +35,7 @@ import HouseDoorFill from '@/assets/icons/house-door-fill.svg';
 import HouseDoor from '@/assets/icons/house-door.svg';
 import InfoSquareFill from '@/assets/icons/info-square-fill.svg';
 import InfoSquare from '@/assets/icons/info-square.svg';
+import List from '@/assets/icons/list.svg';
 import LockFill from '@/assets/icons/lock-fill.svg';
 import Lock from '@/assets/icons/lock.svg';
 import PaletteFill from '@/assets/icons/palette-fill.svg';
@@ -89,6 +90,7 @@ const iconMap: Record<string, React.ComponentType<SvgProps>> = {
   houseDoor: HouseDoor,
   infoSquareFill: InfoSquareFill,
   infoSquare: InfoSquare,
+  list: List,
   lockFill: LockFill,
   lock: Lock,
   paletteFill: PaletteFill,
@@ -144,6 +146,7 @@ export type IconNameType =
   | 'houseDoor'
   | 'infoSquareFill'
   | 'infoSquare'
+  | 'list'
   | 'lockFill'
   | 'lock'
   | 'paletteFill'

@@ -2,14 +2,15 @@ import React from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { COLOURS, SIZES, UNIT } from '@/styles'; 
+import { COLOURS, SIZES, UNIT } from '@/styles';
 import { getIcon } from '@/utils/iconUtils';
 
 interface CustomHeaderProps {
   children: React.ReactNode;
+  settingsIcon?: boolean;
 }
 
-const CustomHeader: React.FC<CustomHeaderProps> = ({ children }) => {
+const CustomHeader: React.FC<CustomHeaderProps> = ({ children, settingsIcon = false }) => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
@@ -17,14 +18,26 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({ children }) => {
     router.back();
   };
 
+  const handleSettings = () => {
+    router.push('/(tabs)/settings');
+  };
+
   const icon = getIcon('chevronLeft', SIZES.l, COLOURS.primary);
+  const iconList = getIcon('list', SIZES.l, COLOURS.primary);
 
   return (
-    <View style={[styles.headerContainer, {paddingTop: insets.top}]}>
+    <View style={[styles.headerContainer, { paddingTop: insets.top }]}>
       <TouchableOpacity style={styles.backButton} onPress={handleBack}>
         {icon}
       </TouchableOpacity>
-      <View style={styles.contentContainer}>{children}</View>
+      <View style={styles.contentContainer}>
+        {children}
+      </View>
+      {settingsIcon && (
+        <TouchableOpacity style={styles.settingsButton} onPress={handleSettings}>
+          {iconList}
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -34,16 +47,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: UNIT,
-    paddingBottom: UNIT/2,
+    paddingBottom: UNIT / 2,
     backgroundColor: COLOURS.white,
     borderColor: COLOURS.primary,
-    borderBottomWidth: 1
+    borderBottomWidth: 1,
   },
   backButton: {
     paddingRight: UNIT,
   },
   contentContainer: {
-    flex: 1, 
+    flex: 1,
+  },
+  settingsButton: {
+    paddingLeft: UNIT,
   },
 });
 

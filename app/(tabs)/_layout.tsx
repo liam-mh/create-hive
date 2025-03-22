@@ -104,6 +104,13 @@ function InnerTabs() {
         name='userProfile'
         options={{ 
           headerShown: false,
+          href: null,
+          tabBarStyle: { display: 'none' }
+        }}
+      />
+      <Tabs.Screen 
+        name='settings'
+        options={{ 
           href: null
         }}
       />

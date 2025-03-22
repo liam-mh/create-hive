@@ -34,11 +34,12 @@ const ProfilePage: React.FC<ProfilePageProps> = ( props ) => {
 
   if (!user) {
     return <View style={styles.container}><Text>Could not find user</Text></View>;
-  }
+  };
 
   return (
     <>
       <CustomHeader
+        settingsIcon={props.user ? true : false}
         children={
           <Text style={TEXT.h1}>{`${user.firstName} ${user.lastName}`}</Text> 
         }
