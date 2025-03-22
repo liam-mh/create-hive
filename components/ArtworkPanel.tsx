@@ -1,10 +1,11 @@
 import { getImageUrl } from "@/hooks/useFirebaseStorage";
+import { Artwork } from "@/models/Artwork";
 import { CORNERS } from "@/styles";
 import { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
 
 export interface ArtworkPanelProps {
-  artworkId: string;
+  artwork: Artwork;
   likes?: number;
 }
 
@@ -13,13 +14,13 @@ const ArtworkPanel: React.FC<ArtworkPanelProps> = ( props ) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const url = await getImageUrl('artwork', props.artworkId);
+      const url = await getImageUrl('artwork', props.artwork.artworkId);
       setImageUri(url);
     };
     fetchData();
-  }, [props.artworkId]);
+  }, [props.artwork]);
 
-  if (!props.artworkId) {
+  if (!props.artwork) {
     return <View><Text>Artwork not found.</Text></View>;
   }
 
