@@ -38,7 +38,7 @@ function InnerLayout() {
   console.log(user);
   return (
     <Stack initialRouteName={user ? "(tabs)" : "login"}>
-      <Stack.Screen name="login" />
+      <Stack.Screen name="login" options={{ headerShown: false }} />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="+not-found" />
     </Stack>
