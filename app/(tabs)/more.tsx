@@ -6,28 +6,35 @@ import ProfileTabSelector from '@/components/ProfileTabSelector';
 import { getUserById } from '@/services/userService';
 import TEXT, { COLOURS, DIVS, UNIT } from '@/styles';
 import { User } from '@/models/User';
+import { useLocalSearchParams } from 'expo-router';
+import { useAuth } from '@/context/authContext';
 
-interface MoreProps {
-  userId: string;
+interface MoreParams {
+  userId?: string;
 }
 
-const More: React.FC<MoreProps> = ( props ) => { 
-  if (!props.userId) {
-    props.userId = 'FghLfeUlFYO0RMZYjzI3'
-  }
-  const [user, setUser] = useState<User | null>(null); 
+export default function More() {
+  const { userId } = useLocalSearchParams<Partial<MoreParams>>(); 
+  const { user: authUser } = useAuth();
+  const [ user, setUser ] = useState<User | null>(null); 
+
+  console.log('More page with userId: ', userId);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userData = await getUserById('FghLfeUlFYO0RMZYjzI3'); 
-        setUser(userData);
+        if (userId) {
+          const userData = await getUserById(userId);
+          setUser(userData);
+        } else {
+          setUser(authUser); 
+        }
       } catch (error) {
         console.error('Error fetching user:', error);
       }
     };
     fetchData();
-  }, [props.userId]); 
+  }, [userId, authUser]);
 
   if (!user) {
     return <View style={styles.container}><Text>Could not find user</Text></View>;
@@ -44,7 +51,7 @@ const More: React.FC<MoreProps> = ( props ) => {
       <ScrollView style={styles.container}>
         <View style={styles.content}>
           <View style={styles.sectionContainer}>
-            <ProfileCard userId={'FghLfeUlFYO0RMZYjzI3'} /> 
+            <ProfileCard userId={user.userId} /> 
           </View>
           <View style={DIVS.offwhite} />
           <ProfileTabSelector />
@@ -66,5 +73,3 @@ const styles = StyleSheet.create({
     paddingInline: UNIT,
   },
 });
-
-export default More;
