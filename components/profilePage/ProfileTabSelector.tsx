@@ -7,7 +7,11 @@ import ProfileTabArtwork from './ProfileTabArtwork';
 
 type ProfileTab = 'events' | 'artwork' | 'verification';
 
-const ProfileTabSelector = () => {
+interface ProfileTabSelectorProps {
+  userId: string;
+}
+
+const ProfileTabSelector: React.FC<ProfileTabSelectorProps> = ( props ) => {
   const [activeTab, setActiveTab] = useState<ProfileTab>('events');
 
   const handleTabPress = (tabName: ProfileTab) => {
@@ -18,15 +22,15 @@ const ProfileTabSelector = () => {
     switch (activeTab) {
       case 'events':
         return (
-          <ProfileTabEventsDisplay userId={'FghLfeUlFYO0RMZYjzI3'} />
+          <ProfileTabEventsDisplay userId={props.userId} />
         );
       case 'artwork':
         return (
-          <ProfileTabArtwork userId={'FghLfeUlFYO0RMZYjzI3'} />
+          <ProfileTabArtwork userId={props.userId} />
         );
       case 'verification':
         return (
-          <ProfileTabVerification userId={'FghLfeUlFYO0RMZYjzI3'} />
+          <ProfileTabVerification userId={props.userId} />
         );
       default:
         return null;

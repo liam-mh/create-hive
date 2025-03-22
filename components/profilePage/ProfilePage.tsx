@@ -51,7 +51,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ( props ) => {
             <ProfileCard userId={user.userId} /> 
           </View>
           <View style={DIVS.offwhite} />
-          <ProfileTabSelector />
+          <ProfileTabSelector userId={user.userId}/>
         </View>
       </ScrollView>
     </>
