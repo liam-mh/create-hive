@@ -87,7 +87,7 @@ class ProfileCardViewModel {
   private async fetchProfileImage(): Promise<void> {
     this._loading = true;
     try {
-      this._imageUri = await getImageUrl('profile', this._userId);
+      this._imageUri = await getImageUrl('user', this._userId);
     } catch (err) {
       this._error = 'Failed to load event image.';
       console.error(err);
