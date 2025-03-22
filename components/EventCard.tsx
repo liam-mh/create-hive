@@ -9,6 +9,7 @@ import DetailsRow from './DetailsRow';
 import EventPrivacyIcon from './buttons/EventPrivacyIcon';
 import SaveButton from './buttons/Savebutton';
 import { Event } from '@/models/Event';
+import { useAuth } from '@/context/authContext';
 
 interface EventCardProps {
   eventId: string;
@@ -21,6 +22,7 @@ const EventCard: React.FC<EventCardProps> = ({ eventId, inputEvent }) => {
     ? viewModel = new EventCardViewModel(eventId, inputEvent)
     : viewModel = new EventCardViewModel(eventId);
   
+  const userId = useAuth().user!.userId;
   const [loading, setLoading] = useState(viewModel.loading);
   const [error, setError] = useState(viewModel.error);
   const [event, setEvent] = useState(viewModel.event);
@@ -70,8 +72,8 @@ const EventCard: React.FC<EventCardProps> = ({ eventId, inputEvent }) => {
           </View>
           <View style={styles.innerRow}>
             <EventPrivacyIcon isPrivate={event.private} />
-            <RegisterButton eventId={event.eventId} eventIsPrivate={event.private} userId={'FghLfeUlFYO0RMZYjzI3'} isIconButton={true} />  
-            <SaveButton itemId={event.eventId} itemType={'event'} userId={'FghLfeUlFYO0RMZYjzI3'} isIconButton={true} />
+            <RegisterButton eventId={event.eventId} eventIsPrivate={event.private} userId={userId} isIconButton={true} />  
+            <SaveButton itemId={event.eventId} itemType={'event'} userId={userId} isIconButton={true} />
           </View>
         </View>
         
@@ -85,7 +87,7 @@ const EventCard: React.FC<EventCardProps> = ({ eventId, inputEvent }) => {
 
         <View style={styles.buttonsContainer}>
           <InformationButton type={'event'} id={event.eventId} />
-          <RegisterButton eventId={event.eventId} eventIsPrivate={event.private} userId={'FghLfeUlFYO0RMZYjzI3'} />
+          <RegisterButton eventId={event.eventId} eventIsPrivate={event.private} userId={userId} />
         </View>
       </View>
     </ImageBackground>
