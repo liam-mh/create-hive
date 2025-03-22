@@ -9,17 +9,24 @@ export default function LoginPage() {
   const footer = require('@/assets/images/login-footer.png');
 
   return (
-    <View style={[styles.container, {paddingTop: insets.top, paddingBottom: insets.bottom}]}>
-      <View style={styles.logoContainer}>
-        <Image source={logo} style={styles.logo} />
+    <View style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
+      <View style={styles.sectionContainer}>
+        <View style={styles.logoContainer}>
+          <Image source={logo} style={styles.logo} />
+          <Text style={[TEXT.boldGrey, { textAlign: 'center' }]}>
+            unleash your art{'\n'}discover your community
+          </Text>
+        </View>
       </View>
-      <View style={styles.centralContainer}>
-        <Text style={TEXT.boldGrey}>unleash your art</Text>
-        <Text style={TEXT.boldGrey}>discover your community</Text>
+
+      <View style={styles.sectionContainer}>
+        <LoginCard />
       </View>
-      <LoginCard />
-      <View style={styles.footerContainer}>
-        <Image source={footer} style={styles.footer} />
+
+      <View style={styles.sectionContainer}>
+        <View style={styles.footerContainer}>
+          <Image source={footer} style={styles.footer} />
+        </View>
       </View>
     </View>
   );
@@ -30,12 +37,15 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingInline: UNIT,
     backgroundColor: COLOURS.white,
-    gap: UNIT*4,
+  },
+  sectionContainer: {
+    flex: 1,
   },
   logoContainer: {
     justifyContent: 'center',
-    alignItems: 'center', 
-    paddingTop: UNIT*4
+    alignItems: 'center',
+    paddingTop: UNIT * 4,
+    gap: UNIT * 2
   },
   logo: {
     width: '70%',
@@ -43,7 +53,7 @@ const styles = StyleSheet.create({
   },
   footerContainer: {
     justifyContent: 'center',
-    alignItems: 'center', 
+    alignItems: 'center',
   },
   footer: {
     width: '110%',
@@ -51,5 +61,5 @@ const styles = StyleSheet.create({
   },
   centralContainer: {
     alignItems: 'center',
-  }
+  },
 });
