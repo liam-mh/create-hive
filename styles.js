@@ -10,24 +10,25 @@ export const COLOURS = {
   background: '#f0f0f0',        
   white: '#FFFFFF',
   black: '#000000',
-  offblack: '#001C1F'
+  offblack: '#001C1F',
+  red: '#AD1A00'
 };
 
 const FONTS = {
-    regular: 'Rubik_400Regular',  
-    bold: 'Rubik_700Bold',      
+  regular: 'Rubik_400Regular',  
+  bold: 'Rubik_700Bold',      
 };
   
 export const SIZES = {
-    xs: UNIT / 2,
-    s: UNIT * 0.75,
-    m: UNIT,
-    l: UNIT * 1.5,
-    xl: UNIT * 2
+  xs: UNIT / 2,
+  s: UNIT * 0.75,
+  m: UNIT,
+  l: UNIT * 1.5,
+  xl: UNIT * 2
 };
 
 const SPACING = {
-    reduced: -2
+  reduced: -2
 };
 
 export const SHADOWS = {
@@ -59,67 +60,72 @@ export const CORNERS = {
 }
 
 export const TEXT = StyleSheet.create({
-    small: {
-        fontFamily: FONTS.regular,
-        fontSize: SIZES.s,
-        color: COLOURS.black,
-    },
-    smallGrey: {
-      fontFamily: FONTS.regular,
-      fontSize: SIZES.s,
-      color: COLOURS.primary,
-    },
-    smallPrimary: {
-        fontFamily: FONTS.regular,
-        fontSize: SIZES.s,
-        color: COLOURS.primary,
-    },
-    regular: {
-        fontFamily: FONTS.regular,
-        fontSize: SIZES.m,
-        color: COLOURS.black,
-    },
-    regularWhite: {
-        fontFamily: FONTS.regular,
-        fontSize: SIZES.m,
-        color: COLOURS.white,
-    },
-    regularGrey: {
-        fontFamily: FONTS.regular,
-        fontSize: SIZES.m,
-        color: COLOURS.darkgrey,
-    },
-    regularPrimary: {
-        fontFamily: FONTS.regular,
-        fontSize: SIZES.m,
-        color: COLOURS.primary,
-    },
-    bold: {
-        fontFamily: FONTS.bold,
-        fontSize: SIZES.m,
-        color: COLOURS.black,
-    },
-    boldGrey: {
-      fontFamily: FONTS.bold,
-      fontSize: SIZES.m,
-      color: COLOURS.darkgrey,
-    },
-    boldPrimary: {
-        fontFamily: FONTS.bold,
-        fontSize: SIZES.m,
-        color: COLOURS.primary,
-    },
-    h1: {
-        fontFamily: FONTS.bold,
-        fontSize: SIZES.xl,
-        color: COLOURS.primary,
-        letterSpacing: SPACING.reduced,
-    },
-    h2: {
-        fontFamily: FONTS.bold,
-        fontSize: SIZES.m,
-        color: COLOURS.primary,
-    },
+  small: {
+    fontFamily: FONTS.regular,
+    fontSize: SIZES.s,
+    color: COLOURS.black,
+  },
+  smallGrey: {
+    fontFamily: FONTS.regular,
+    fontSize: SIZES.s,
+    color: COLOURS.primary,
+  },
+  smallPrimary: {
+    fontFamily: FONTS.regular,
+    fontSize: SIZES.s,
+    color: COLOURS.primary,
+  },
+  regular: {
+    fontFamily: FONTS.regular,
+    fontSize: SIZES.m,
+    color: COLOURS.black,
+  },
+  regularWhite: {
+    fontFamily: FONTS.regular,
+    fontSize: SIZES.m,
+    color: COLOURS.white,
+  },
+  regularGrey: {
+    fontFamily: FONTS.regular,
+    fontSize: SIZES.m,
+    color: COLOURS.darkgrey,
+  },
+  regularPrimary: {
+    fontFamily: FONTS.regular,
+    fontSize: SIZES.m,
+    color: COLOURS.primary,
+  },
+  regularError: {
+    fontFamily: FONTS.regular,
+    fontSize: SIZES.m,
+    color: COLOURS.red,
+  },
+  bold: {
+    fontFamily: FONTS.bold,
+    fontSize: SIZES.m,
+    color: COLOURS.black,
+  },
+  boldGrey: {
+    fontFamily: FONTS.bold,
+    fontSize: SIZES.m,
+    color: COLOURS.darkgrey,
+  },
+  boldPrimary: {
+    fontFamily: FONTS.bold,
+    fontSize: SIZES.m,
+    color: COLOURS.primary,
+  },
+  h1: {
+    fontFamily: FONTS.bold,
+    fontSize: SIZES.xl,
+    color: COLOURS.primary,
+    letterSpacing: SPACING.reduced,
+  },
+  h2: {
+    fontFamily: FONTS.bold, 
+    fontSize: SIZES.m,
+    color: COLOURS.primary,
+  },
 });
 
 export default TEXT;
