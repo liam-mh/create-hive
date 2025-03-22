@@ -1,8 +1,9 @@
 import { getImageUrl } from "@/hooks/useFirebaseStorage";
 import { Artwork } from "@/models/Artwork";
 import { CORNERS } from "@/styles";
+import { useRouter } from "expo-router";
 import { useState, useEffect } from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 
 export interface ArtworkPanelProps {
   artwork: Artwork;
@@ -10,6 +11,7 @@ export interface ArtworkPanelProps {
 }
 
 const ArtworkPanel: React.FC<ArtworkPanelProps> = ( props ) => {
+  const router = useRouter();
   const [imageUri, setImageUri] = useState<string | null>(null);
 
   useEffect(() => {
@@ -24,13 +26,24 @@ const ArtworkPanel: React.FC<ArtworkPanelProps> = ( props ) => {
     return <View><Text>Artwork not found.</Text></View>;
   }
 
+  const handlePress = () => {
+    router.push({
+      pathname: '/',
+      params: {
+        userId: props.artwork.artworkId
+      }
+    });
+  };
+
   const defaultImage = require('@/assets/images/default-artwork-photo.jpg')
 
   return (
-    <Image
-      source={imageUri ? { uri: imageUri } : defaultImage}
-      style={styles.image} 
-    />
+    <TouchableOpacity onPress={handlePress}>
+      <Image
+        source={imageUri ? { uri: imageUri } : defaultImage}
+        style={styles.image} 
+      />
+    </TouchableOpacity>
   );
 };
 
