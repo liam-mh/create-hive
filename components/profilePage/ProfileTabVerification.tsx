@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet  } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity  } from 'react-native';
 import ContentDropdownContainer from '../ContentDropdownContainer';
 import { DIVS, UNIT } from '@/styles';
 import ProfileTabVerificationViewModel from '@/viewModels/ProfileTabVerificationViewModel';
 import DetailsContainer from '../DetailsContainer';
 import KeyValueRow from '../KeyValueRow';
 import DetailsRow from '../DetailsRow';
+import { useRouter } from 'expo-router';
 
 interface ProfileTabVerificationProps {
   userId: string;
 }
 
 const ProfileTabVerification: React.FC<ProfileTabVerificationProps> = ( props ) => {
+  const router = useRouter();
   const viewModel = new ProfileTabVerificationViewModel(props.userId);
   const [loading, setLoading] = useState(viewModel.loading);
   const [error, setError] = useState(viewModel.error);
@@ -30,6 +32,15 @@ const ProfileTabVerification: React.FC<ProfileTabVerificationProps> = ( props ) 
     };
     fetchData();
   }, [props.userId]);
+
+  const handleReport = () => {
+    router.push({
+      pathname: '/(tabs)/report',
+      params: {
+        userId: props.userId
+      }
+    });
+  };
 
   if (loading) {
     return <View style={styles.contentContainer}><Text>Loading...</Text></View>;
@@ -93,9 +104,11 @@ const ProfileTabVerification: React.FC<ProfileTabVerificationProps> = ( props ) 
           addPadding={true}
           expanded={true}
           children={
-            <DetailsContainer>
-              <DetailsRow iconName={'flag'} text={'report this profile'} />
-            </DetailsContainer>
+            <TouchableOpacity onPress={handleReport}>
+              <DetailsContainer>
+                <DetailsRow iconName={'flag'} text={'report this profile'} />
+              </DetailsContainer>
+            </TouchableOpacity>
           }
         />
       </View>

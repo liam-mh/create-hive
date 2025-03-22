@@ -111,7 +111,15 @@ function InnerTabs() {
       <Tabs.Screen 
         name='settings'
         options={{ 
+          headerShown: false,
           href: null
+        }}
+      />
+      <Tabs.Screen 
+        name='report'
+        options={{ 
+          href: null,
+          tabBarStyle: { display: 'none' },
         }}
       />
     </Tabs>
