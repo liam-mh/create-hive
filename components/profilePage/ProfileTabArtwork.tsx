@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet  } from 'react-native';
-import ContentDropdownContainer from './ContentDropdownContainer';
+import ContentDropdownContainer from '../ContentDropdownContainer';
 import { DIVS, UNIT } from '@/styles';
-import ArtworkPanelReel from './ArtworkPanelReel';
+import ArtworkPanelReel from '../ArtworkPanelReel';
 
 interface ProfileTabArtworkProps {
   userId: string;

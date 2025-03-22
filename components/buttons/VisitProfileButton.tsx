@@ -11,7 +11,7 @@ const VisitProfileButton: React.FC<VisitProfileButtonProps> = ( props ) => {
 
   const handlePress = () => {
     router.push({
-      pathname: '/(tabs)/more',
+      pathname: '/(tabs)/userProfile',
       params: {
         userId: props.id
       }

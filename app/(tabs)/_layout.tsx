@@ -92,8 +92,16 @@ function InnerTabs() {
           },
         }}
       />
+      {/* Hidden Tabs */}
       <Tabs.Screen 
-        name="eventInformation"
+        name='eventInformation'
+        options={{ 
+          headerShown: false,
+          href: null
+        }}
+      />
+      <Tabs.Screen 
+        name='userProfile'
         options={{ 
           headerShown: false,
           href: null

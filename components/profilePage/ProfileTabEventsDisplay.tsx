@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet  } from 'react-native';
 import ProfileTabEventsDisplayViewModel from '@/viewModels/ProfileTabEventsDisplayViewModel';
-import EventCardReel from './EventCardReel';
-import ContentDropdownContainer from './ContentDropdownContainer';
+import EventCardReel from '../EventCardReel';
+import ContentDropdownContainer from '../ContentDropdownContainer';
 import { DIVS, UNIT } from '@/styles';
 
 interface ProfileTabEventsDisplayProps {

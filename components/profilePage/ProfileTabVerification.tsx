@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet  } from 'react-native';
-import ContentDropdownContainer from './ContentDropdownContainer';
+import ContentDropdownContainer from '../ContentDropdownContainer';
 import { DIVS, UNIT } from '@/styles';
 import ProfileTabVerificationViewModel from '@/viewModels/ProfileTabVerificationViewModel';
-import DetailsContainer from './DetailsContainer';
-import KeyValueRow from './KeyValueRow';
-import DetailsRow from './DetailsRow';
+import DetailsContainer from '../DetailsContainer';
+import KeyValueRow from '../KeyValueRow';
+import DetailsRow from '../DetailsRow';
 
 interface ProfileTabVerificationProps {
   userId: string;

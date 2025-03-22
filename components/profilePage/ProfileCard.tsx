@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import TEXT, { COLOURS, CORNERS, UNIT } from '@/styles';
-import InformationButton from './buttons/InformationButton';
-import DetailsContainer from './DetailsContainer';
-import DetailsRow from './DetailsRow';
+import InformationButton from '../buttons/InformationButton';
+import DetailsContainer from '../DetailsContainer';
+import DetailsRow from '../DetailsRow';
 import ProfileCardViewModel from '@/viewModels/ProfileCardViewModel';
 
 interface ProfileCardProps {
