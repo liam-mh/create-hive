@@ -4,6 +4,7 @@ import ProfileTabEventsDisplayViewModel from '@/viewModels/ProfileTabEventsDispl
 import EventCardReel from '../EventCardReel';
 import ContentDropdownContainer from '../ContentDropdownContainer';
 import { DIVS, UNIT } from '@/styles';
+import { Event } from '@/models/Event';
 
 interface ProfileTabEventsDisplayProps {
   userId: string;
@@ -14,7 +15,8 @@ const ProfileTabEventsDisplay: React.FC<ProfileTabEventsDisplayProps> = ( props 
   const [loading, setLoading] = useState(viewModel.loading);
   const [error, setError] = useState(viewModel.error);
 
-  const [events, setEvents] = useState(viewModel.events);
+  const [allEvents, setAllEvents] =  useState<Event[]>([]);
+  const [upcomingEvents, setUpcomingEvents] = useState<Event[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,7 +24,7 @@ const ProfileTabEventsDisplay: React.FC<ProfileTabEventsDisplayProps> = ( props 
       setLoading(viewModel.loading);
       setError(viewModel.error);
 
-      setEvents(viewModel.events);
+      setUpcomingEvents(viewModel.upcomingEvents);
     };
     fetchData();
   }, [props.userId]);
@@ -33,9 +35,6 @@ const ProfileTabEventsDisplay: React.FC<ProfileTabEventsDisplayProps> = ( props 
   if (error) {
     return <View style={styles.contentContainer}><Text>Error: {error}</Text></View>;
   }
-  if (!events) {
-    return <View style={styles.contentContainer}><Text>No events to show.</Text></View>;
-  }
 
   return (
     <View style={styles.contentContainer}>
@@ -45,17 +44,17 @@ const ProfileTabEventsDisplay: React.FC<ProfileTabEventsDisplayProps> = ( props 
           addPadding={true}
           expanded={true}
           children={
-            <EventCardReel events={events} />
+            <EventCardReel events={upcomingEvents} />
           }
         />
       </View>
       <View style={DIVS.offwhite} />
       <View style={styles.sectionContainer}>
         <ContentDropdownContainer 
-          title={'past'} 
+          title={'all'} 
           addPadding={true}
           children={
-            <EventCardReel events={events} />
+            <EventCardReel events={upcomingEvents} />
           }
         />
       </View>

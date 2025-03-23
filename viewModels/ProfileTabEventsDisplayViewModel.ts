@@ -1,4 +1,4 @@
-import { getEventsByUserIdPaginated } from '@/services/eventService';
+import { getEventsByUserIdPaginated, getUpcomingEventsByUserId } from '@/services/eventService';
 import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
 import { Event } from '@/models/Event'; 
 
@@ -6,7 +6,8 @@ const pageSize = 10;
 
 class ProfileTabEventsDisplayViewModel {
   private _userId: string;
-  private _events: Event[] | null = null;
+  private _events: Event[] = [];
+  private _upcomingEvents: Event[] = [];
   private _lastDocument: QueryDocumentSnapshot<DocumentData> | null = null;
 
   private _loading: boolean = true;
@@ -16,8 +17,12 @@ class ProfileTabEventsDisplayViewModel {
     this._userId = userId;
   }
 
-  get events(): Event[] | null {
+  get events(): Event[] {
     return this._events;
+  }
+
+  get upcomingEvents(): Event[] {
+    return this._upcomingEvents;
   }
 
   get lastDocument(): QueryDocumentSnapshot<DocumentData> | null {
@@ -32,7 +37,20 @@ class ProfileTabEventsDisplayViewModel {
     return this._error;
   }
 
-  private async fetchEvents(): Promise<void> {
+  private async fetchUpcomingEvents(): Promise<void> {
+    this._loading = true;
+    try {
+      const upcomingEvents = await getUpcomingEventsByUserId(this._userId);
+      this._upcomingEvents = upcomingEvents;
+    } catch (err) {
+      this._error = 'Failed to get upcoming events.';
+      console.error(err);
+    } finally {
+      this._loading = false;
+    }
+  }
+
+  private async fetchAllEvents(): Promise<void> {
     this._loading = true;
     try {
       const { events, lastDocument } = await getEventsByUserIdPaginated(
@@ -55,9 +73,9 @@ class ProfileTabEventsDisplayViewModel {
     this._error = null;
 
     try {
-      await this.fetchEvents();
+      await this.fetchUpcomingEvents();
     } catch (err) {
-      this._error = 'Failed to load profile data.';
+      this._error = 'Failed to load profile events data.';
       console.error(err);
     } finally {
       this._loading = false;
