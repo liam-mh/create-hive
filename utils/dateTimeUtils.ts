@@ -1,4 +1,5 @@
 import { Timestamp } from "firebase/firestore";
+import { format, parseISO } from 'date-fns';
 
 // Output Example: "11/15/2023, 3:30:45 PM" (Locale-dependent)
 export const timestampToDateTime = (timestamp: Timestamp | null | undefined): string | null => {
@@ -135,3 +136,14 @@ export const checkExpired = (comparisonDate: Timestamp): boolean => {
   const comparison = comparisonDate.toDate(); 
   return comparison < now;
 }
+
+// Output Example: "monday 24 march"
+export const formatDateForCalendar = (dateString: string): string => {
+  try {
+    const parsedDate = parseISO(dateString);
+    return format(parsedDate, 'EEEE d MMMM');
+  } catch (error) {
+    console.error('Error formatting date:', error);
+    return 'Invalid Date';
+  }
+};

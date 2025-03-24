@@ -1,9 +1,8 @@
 import CustomHeader from '@/components/CustomHeader';
 import TEXT, { SIZES, UNIT, COLOURS, CORNERS } from '@/styles';
 import { getIcon } from '@/utils/iconUtils';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useRef, useState } from 'react';
 import CreateEvent from '@/components/createPage/CreateEvent';
 import { useAuth } from '@/context/authContext';
@@ -21,7 +20,7 @@ export default function Create() {
   const handleEventPress = () => {
     setShowCreateEvent(true);
     setShowCreateArtwork(false);
-    bottomSheetRef.current?.close(); 
+    bottomSheetRef.current?.close();
   };
 
   const handleArtworkPress = () => {
@@ -33,40 +32,42 @@ export default function Create() {
   return (
     <>
       <CustomHeader hideBackButton>
-        <Text style={TEXT.h1}>create</Text> 
+        <Text style={TEXT.h1}>create</Text>
       </CustomHeader>
 
-      <View style={styles.container}>
+      <ScrollView
+        style={[
+          styles.container,
+          (showCreateArtwork || showCreateEvent) && { backgroundColor: COLOURS.white },
+        ]}
+      >
         {showCreateEvent && <CreateEvent userId={userId} />}
+      </ScrollView>
 
-      </View>
-
-      <GestureHandlerRootView>
-        <BottomSheet ref={bottomSheetRef}>
-          <BottomSheetView style={styles.sheetContentContainer}>
-            <Text style={TEXT.bold}>What would you like to create?</Text>
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity style={styles.panelContainer} onPress={handleEventPress}>
-                {iconEvent}
-                <Text style={TEXT.regularWhite}>Host an event</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.panelContainer} onPress={handleArtworkPress}>
-                {iconArtwork}
-                <Text style={TEXT.regularWhite}>Post my artwork</Text>
-              </TouchableOpacity>
-            </View>
-          </BottomSheetView>
-        </BottomSheet>
-      </GestureHandlerRootView>
+      <BottomSheet ref={bottomSheetRef}>
+        <BottomSheetView style={styles.sheetContentContainer}>
+          <Text style={TEXT.bold}>What would you like to create?</Text>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.panelContainer} onPress={handleEventPress}>
+              {iconEvent}
+              <Text style={TEXT.regularWhite}>Host an event</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.panelContainer} onPress={handleArtworkPress}>
+              {iconArtwork}
+              <Text style={TEXT.regularWhite}>Post my artwork</Text>
+            </TouchableOpacity>
+          </View>
+        </BottomSheetView>
+      </BottomSheet>
     </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1, 
+    flex: 1,
     paddingVertical: UNIT,
-    backgroundColor: COLOURS.white
+    backgroundColor: COLOURS.offwhite,
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -75,16 +76,16 @@ const styles = StyleSheet.create({
   },
   panelContainer: {
     flex: 1,
-    gap: UNIT/2,
-    alignItems: 'center', 
-    justifyContent: 'center', 
+    gap: UNIT / 2,
+    alignItems: 'center',
+    justifyContent: 'center',
     padding: UNIT,
     backgroundColor: COLOURS.primary,
-    borderRadius: CORNERS.default
+    borderRadius: CORNERS.default,
   },
   sheetContentContainer: {
     padding: UNIT,
     alignItems: 'center',
-    gap: UNIT
+    gap: UNIT,
   },
 });

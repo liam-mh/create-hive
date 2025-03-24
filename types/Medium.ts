@@ -10,3 +10,11 @@ export interface Medium {
   primary: PrimaryMedium;
   secondary: SecondaryMedium
 }
+
+export const primaryOptions: PrimaryMedium[] = ["drawing", "painting", "digital art"];
+
+export const secondaryOptions: { [key in PrimaryMedium]: SecondaryMedium[] } = {
+  'drawing': ["sketching", "illustration", "fine art", "other"],
+  'painting': ["acrylic", "oil", "watercolour", "mixed media", "other"],
+  'digital art': ["digital painting", "vector", "3D", "other"],
+};
