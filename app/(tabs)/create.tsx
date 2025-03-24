@@ -1,10 +1,17 @@
+import CustomHeader from '@/components/CustomHeader';
+import TEXT from '@/styles';
 import { StyleSheet, View, Text } from 'react-native';
 
 export default function Create() {
   return (
-    <View style={styles.container}>
-      <Text>Create</Text>
-    </View>
+    <>
+      <CustomHeader
+        hideBackButton
+        children={
+          <Text style={TEXT.h1}>create</Text> 
+        }
+      />
+    </>
   );
 }
 
