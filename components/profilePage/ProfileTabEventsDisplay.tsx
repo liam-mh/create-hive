@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import ProfileTabEventsDisplayViewModel from '@/viewModels/ProfileTabEventsDisplayViewModel';
 import EventCardReel from '../EventCardReel';
 import ContentDropdownContainer from '../ContentDropdownContainer';
-import { DIVS, UNIT } from '@/styles';
+import TEXT, { DIVS, UNIT } from '@/styles';
 import { Event } from '@/models/Event';
 
 interface ProfileTabEventsDisplayProps {
@@ -67,7 +67,7 @@ const ProfileTabEventsDisplay: React.FC<ProfileTabEventsDisplayProps> = ({ userI
           <EventCardReel events={allEvents} />
           {viewModel.lastDocument && (
             <View style={styles.loadMoreContainer}>
-              <Text onPress={loadMoreEvents} style={styles.loadMoreText}>
+              <Text onPress={loadMoreEvents} style={TEXT.regularPrimary}>
                 {isFetchingMore ? 'Loading...' : 'Load More'}
               </Text>
             </View>
@@ -91,10 +91,6 @@ const styles = StyleSheet.create({
   loadMoreContainer: {
     padding: UNIT,
     alignItems: 'center',
-  },
-  loadMoreText: {
-    color: 'blue',
-    fontSize: 16,
   },
 });
 
