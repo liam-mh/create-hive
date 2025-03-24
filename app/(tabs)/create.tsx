@@ -4,52 +4,55 @@ import { getIcon } from '@/utils/iconUtils';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
+import CreateEvent from '@/components/createPage/CreateEvent';
+import { useAuth } from '@/context/authContext';
 
 export default function Create() {
+  const userId = useAuth().user!.userId;
   const bottomSheetRef = useRef<BottomSheet>(null);
-  let createEvent = false;
-  let createArtwork = false;
+
+  const [showCreateEvent, setShowCreateEvent] = useState(false);
+  const [showCreateArtwork, setShowCreateArtwork] = useState(false);
 
   const iconEvent = getIcon('calendarPlus', SIZES.l, COLOURS.white);
   const iconArtwork = getIcon('paletteFill', SIZES.l, COLOURS.white);
 
   const handleEventPress = () => {
-    createArtwork = false;
-    createEvent = true;
-  }
+    setShowCreateEvent(true);
+    setShowCreateArtwork(false);
+    bottomSheetRef.current?.close(); 
+  };
 
   const handleArtworkPress = () => {
-    createEvent = false;
-    createArtwork = true;
-  }
+    setShowCreateEvent(false);
+    setShowCreateArtwork(true);
+    bottomSheetRef.current?.close();
+  };
 
   return (
     <>
-      <CustomHeader
-        hideBackButton
-        children={
-          <Text style={TEXT.h1}>create</Text> 
-        }
-      />
+      <CustomHeader hideBackButton>
+        <Text style={TEXT.h1}>create</Text> 
+      </CustomHeader>
 
       <View style={styles.container}>
-       {createEvent && (<CreateEvent />)}
-       {createArtwork && (<CreateArtwork />)} 
+        {showCreateEvent && <CreateEvent userId={userId} />}
+
       </View>
 
       <GestureHandlerRootView>
         <BottomSheet ref={bottomSheetRef}>
           <BottomSheetView style={styles.sheetContentContainer}>
-            <Text style={TEXT.bold}>what would you like to create?</Text>
+            <Text style={TEXT.bold}>What would you like to create?</Text>
             <View style={styles.buttonContainer}>
               <TouchableOpacity style={styles.panelContainer} onPress={handleEventPress}>
                 {iconEvent}
-                <Text style={TEXT.regularWhite}>host an event</Text>
+                <Text style={TEXT.regularWhite}>Host an event</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.panelContainer} onPress={handleArtworkPress}>
                 {iconArtwork}
-                <Text style={TEXT.regularWhite}>post my artwork</Text>
+                <Text style={TEXT.regularWhite}>Post my artwork</Text>
               </TouchableOpacity>
             </View>
           </BottomSheetView>
@@ -62,6 +65,8 @@ export default function Create() {
 const styles = StyleSheet.create({
   container: {
     flex: 1, 
+    paddingVertical: UNIT,
+    backgroundColor: COLOURS.white
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -70,7 +75,7 @@ const styles = StyleSheet.create({
   },
   panelContainer: {
     flex: 1,
-    gap: UNIT,
+    gap: UNIT/2,
     alignItems: 'center', 
     justifyContent: 'center', 
     padding: UNIT,
