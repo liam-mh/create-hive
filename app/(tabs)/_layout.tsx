@@ -1,4 +1,4 @@
-import { Slot, Tabs, useRouter } from "expo-router";
+import { Tabs, useRouter } from "expo-router";
 import { COLOURS } from '@/styles';
 import { getIcon } from "@/utils/iconUtils";
 import { AuthProvider, useAuth } from "@/context/authContext";
@@ -61,6 +61,7 @@ function InnerTabs() {
         name="create"
         options={{ 
           title: 'Create', 
+          headerShown: false,
           tabBarIcon: ({ color, focused }) => {
             return !focused 
               ? getIcon('plusSquare', undefined, color) 
