@@ -68,7 +68,7 @@ const ProfileTabEventsDisplay: React.FC<ProfileTabEventsDisplayProps> = ({ userI
           {viewModel.lastDocument && (
             <View style={styles.loadMoreContainer}>
               <Text onPress={loadMoreEvents} style={TEXT.regularPrimary}>
-                {isFetchingMore ? 'Loading...' : 'Load More'}
+                {isFetchingMore ? 'loading...' : 'load more'}
               </Text>
             </View>
           )}
