@@ -1,7 +1,7 @@
 import { BaseService } from './baseService';
 import { Artwork, mapArtworkFirestore } from '@/models/Artwork';
 import { ArtworkDetail, mapArtworkDetailFirestore } from '@/models/ArtworkDetails';
-import { orderBy, limit, where } from 'firebase/firestore';
+import { orderBy, limit, where, DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
 
 export const artworkService = new BaseService<Artwork>('artwork', mapArtworkFirestore);
 export const artworkDetailService = new BaseService<ArtworkDetail>('artworkDetail', mapArtworkDetailFirestore);
@@ -21,6 +21,15 @@ export async function getNewArtworkByUserId(userId: string): Promise<Artwork[]> 
     orderBy('timestamp', 'desc'),
     limit(4),
   ]);
+}
+
+export async function getArtworkByUserIdPaginated(
+  userId: string,
+  pageSize: number,
+  lastDocument?: QueryDocumentSnapshot<DocumentData>
+): Promise<{ artwork: Artwork[]; lastDocument: QueryDocumentSnapshot<DocumentData> | null }> {
+  const result = await artworkService.getPaginated([where('userId', '==', userId)], pageSize, lastDocument);
+  return { artwork: result.data, lastDocument: result.lastDocument };
 }
 
 // ArtworkDetail Service functions
