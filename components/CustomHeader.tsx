@@ -7,10 +7,11 @@ import { getIcon } from '@/utils/iconUtils';
 
 interface CustomHeaderProps {
   children: React.ReactNode;
-  settingsIcon?: boolean;
+  showSettingsIcon?: boolean;
+  hideBackButton?: boolean;
 }
 
-const CustomHeader: React.FC<CustomHeaderProps> = ({ children, settingsIcon = false }) => {
+const CustomHeader: React.FC<CustomHeaderProps> = ({ children, showSettingsIcon = false, hideBackButton = false }) => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
@@ -27,13 +28,15 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({ children, settingsIcon = fa
 
   return (
     <View style={[styles.headerContainer, { paddingTop: insets.top }]}>
-      <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-        {icon}
-      </TouchableOpacity>
+      {!hideBackButton && (
+        <TouchableOpacity style={styles.backButton} onPress={handleBack}>
+          {icon}
+        </TouchableOpacity>
+      )}
       <View style={styles.contentContainer}>
         {children}
       </View>
-      {settingsIcon && (
+      {showSettingsIcon && (
         <TouchableOpacity style={styles.settingsButton} onPress={handleSettings}>
           {iconList}
         </TouchableOpacity>
