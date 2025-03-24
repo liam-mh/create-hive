@@ -10,9 +10,8 @@ interface ProfileTabEventsDisplayProps {
   userId: string;
 }
 
-const ProfileTabEventsDisplay: React.FC<ProfileTabEventsDisplayProps> = ({ userId }) => {
-  const [viewModel] = useState(() => new ProfileTabEventsDisplayViewModel(userId));
-
+const ProfileTabEventsDisplay: React.FC<ProfileTabEventsDisplayProps> = ( props ) => {
+  const [viewModel] = useState(() => new ProfileTabEventsDisplayViewModel(props.userId));
   const [loading, setLoading] = useState(viewModel.loading);
   const [error, setError] = useState(viewModel.error);
   const [allEvents, setAllEvents] = useState<Event[]>([]);
@@ -22,16 +21,17 @@ const ProfileTabEventsDisplay: React.FC<ProfileTabEventsDisplayProps> = ({ userI
   useEffect(() => {
     const fetchData = async () => {
       await viewModel.fetchData();
-      setUpcomingEvents(viewModel.upcomingEvents);
-
       await viewModel.fetchInitialEvents();
+      
+      setUpcomingEvents(viewModel.upcomingEvents);
       setAllEvents([...viewModel.events]);
+      
       setLoading(viewModel.loading);
       setError(viewModel.error);
     };
 
     fetchData();
-  }, [userId]);
+  }, [props.userId]);
 
   const loadMoreEvents = async () => {
     if (!viewModel.lastDocument) return; 
