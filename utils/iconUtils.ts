@@ -9,6 +9,7 @@ import BookmarkFill from '@/assets/icons/bookmark-fill.svg';
 import Bookmark from '@/assets/icons/bookmark.svg';
 import BrushFill from '@/assets/icons/brush-fill.svg';
 import Brush from '@/assets/icons/brush.svg';
+import CalendarPlus from '@/assets/icons/calendar-plus.svg';
 import Calendar from '@/assets/icons/calendar.svg';
 import CardHeading from '@/assets/icons/card-heading.svg';
 import ChatFill from '@/assets/icons/chat-fill.svg';
@@ -64,6 +65,7 @@ const iconMap: Record<string, React.ComponentType<SvgProps>> = {
   bookmark: Bookmark,
   brushFill: BrushFill,
   brush: Brush,
+  calendarPlus: CalendarPlus,
   calendar: Calendar,
   cardHeading: CardHeading,
   chatFill: ChatFill,
@@ -120,6 +122,7 @@ export type IconNameType =
   | 'bookmark'
   | 'brushFill'
   | 'brush'
+  | 'calendarPlus'
   | 'calendar'
   | 'cardHeading'
   | 'chatFill'
