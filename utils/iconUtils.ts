@@ -35,6 +35,7 @@ import HouseDoorFill from '@/assets/icons/house-door-fill.svg';
 import HouseDoor from '@/assets/icons/house-door.svg';
 import InfoSquareFill from '@/assets/icons/info-square-fill.svg';
 import InfoSquare from '@/assets/icons/info-square.svg';
+import List from '@/assets/icons/list.svg';
 import LockFill from '@/assets/icons/lock-fill.svg';
 import Lock from '@/assets/icons/lock.svg';
 import PaletteFill from '@/assets/icons/palette-fill.svg';
@@ -50,6 +51,8 @@ import PlusSquareFill from '@/assets/icons/plus-square-fill.svg';
 import PlusSquare from '@/assets/icons/plus-square.svg';
 import Search from '@/assets/icons/search.svg';
 import SlashSquare from '@/assets/icons/slash-square.svg';
+import Tag from '@/assets/icons/tag.svg';
+import TagFill from '@/assets/icons/tag-fill.svg';
 import Telephone from '@/assets/icons/telephone.svg';
 import UnlockFill from '@/assets/icons/unlock-fill.svg';
 import Unlock from '@/assets/icons/unlock.svg';
@@ -87,6 +90,7 @@ const iconMap: Record<string, React.ComponentType<SvgProps>> = {
   houseDoor: HouseDoor,
   infoSquareFill: InfoSquareFill,
   infoSquare: InfoSquare,
+  list: List,
   lockFill: LockFill,
   lock: Lock,
   paletteFill: PaletteFill,
@@ -102,6 +106,8 @@ const iconMap: Record<string, React.ComponentType<SvgProps>> = {
   plusSquare: PlusSquare,
   search: Search,
   slashSquare: SlashSquare,
+  tag: Tag,
+  tagFill: TagFill,
   telephone: Telephone,
   unlockFill: UnlockFill,
   unlock: Unlock,
@@ -140,6 +146,7 @@ export type IconNameType =
   | 'houseDoor'
   | 'infoSquareFill'
   | 'infoSquare'
+  | 'list'
   | 'lockFill'
   | 'lock'
   | 'paletteFill'
@@ -155,6 +162,8 @@ export type IconNameType =
   | 'plusSquare'
   | 'search'
   | 'slashSquare'
+  | 'tag'
+  | 'tagFill'
   | 'telephone'
   | 'unlockFill'
   | 'unlock'

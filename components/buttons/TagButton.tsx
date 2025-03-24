@@ -2,29 +2,27 @@ import React, { useState } from 'react';
 import BaseButton from '@/components/buttons/BaseButton';
 import { useRouter } from 'expo-router';
 
-interface InformationButtonProps {
-  type: 'event' | 'artwork';
-  id: string;
+interface TagButtonProps {
+  tag: string;
 }
 
-const InformationButton: React.FC<InformationButtonProps> = ( props: InformationButtonProps ) => {
+const TagButton: React.FC<TagButtonProps> = ( props ) => {
   const router = useRouter();
 
   const handlePress = () => {
     router.push({
-      pathname: '/eventInformation',
+      pathname: '/search',
       params: {
-        type: props.type,
-        id: props.id
+        tag: props.tag,
       }
     });
   };
 
   return (
     <BaseButton
-      text='more information'
-      icon='infoSquare'
-      iconFill='infoSquareFill'
+      text={props.tag}
+      icon='tag'
+      iconFill='tagFill'
       pending={false}
       onPress={handlePress}
       isSelected={false}
@@ -33,4 +31,4 @@ const InformationButton: React.FC<InformationButtonProps> = ( props: Information
   );
 };
 
-export default InformationButton;
+export default TagButton;

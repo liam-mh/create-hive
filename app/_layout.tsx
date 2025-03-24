@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen'; 
+import { Slot, Stack } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
 import { Rubik_400Regular, Rubik_700Bold } from '@expo-google-fonts/rubik';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { AuthProvider, useAuth } from '@/context/authContext';
 
 export default function RootLayout() {
-
   const [fontsLoaded] = useFonts({
     Rubik_400Regular,
     Rubik_700Bold,
@@ -14,22 +14,33 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (fontsLoaded) {
-      SplashScreen.hideAsync(); 
+      SplashScreen.hideAsync();
     } else {
-      SplashScreen.preventAutoHideAsync(); 
+      SplashScreen.preventAutoHideAsync();
     }
   }, [fontsLoaded]);
 
-  if (!fontsLoaded) {
-    return null; 
-  }
-
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </GestureHandlerRootView>
+    <AuthProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        {fontsLoaded ? (
+          <InnerLayout />
+        ) : (
+          <Slot />
+        )}
+      </GestureHandlerRootView>
+    </AuthProvider>
+  );
+}
+
+function InnerLayout() {
+  const { user } = useAuth();
+  console.log(user);
+  return (
+    <Stack initialRouteName={user ? "(tabs)" : "login"}>
+      <Stack.Screen name="login" options={{ headerShown: false }} />
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="+not-found" />
+    </Stack>
   );
 }

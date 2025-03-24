@@ -1,5 +1,5 @@
 import { db } from '@/config/firebase';
-import { collection, getDocs, doc, getDoc, DocumentData, QueryConstraint, query, addDoc, deleteDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, DocumentData, QueryConstraint, query, addDoc, deleteDoc, setDoc, updateDoc, QueryDocumentSnapshot, limit, orderBy, startAfter } from 'firebase/firestore';
 
 export class BaseService<T> {
   private collectionName: string;
@@ -62,6 +62,49 @@ export class BaseService<T> {
     } catch (error) {
       const parentInfo = this.parentId ? ` from parent ${this.parentId}` : '';
       console.error(`Error creating document in ${this.collectionName}${parentInfo}:`, error);
+      throw error;
+    }
+  }
+
+  async createById(id: string, data: T): Promise<T | null> {
+    try {
+      let docRef;
+      let fullPath: string;
+
+      if (this.parentId && this.subCollectionName) {
+        docRef = doc(db, this.collectionName, this.parentId, this.subCollectionName, id);
+        fullPath = `/${this.collectionName}/${this.parentId}/${this.subCollectionName}/${id}`;
+        console.log(`Creating document with ID: ${id} in subcollection: ${this.subCollectionName} within parent: ${this.parentId} in collection ${this.collectionName}`);
+      } else if (this.parentId) {
+        docRef = doc(db, this.collectionName, this.parentId, id);
+        fullPath = `/${this.collectionName}/${this.parentId}/${id}`;
+        console.log(`Creating document with ID: ${id} in collection: ${this.collectionName} within parent: ${this.parentId}`);
+      } else {
+        docRef = doc(db, this.collectionName, id);
+        fullPath = `/${this.collectionName}/${id}`;
+        console.log(`Creating document with ID: ${id} in collection: ${this.collectionName}`);
+      }
+
+      console.log('Full path:', fullPath);
+      console.log('Data to be saved:', data);
+
+      await setDoc(docRef, data as any);
+
+      console.log(`Document created with ID: ${id}`);
+
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const mappedData = this.mapFunction({ id: docSnap.id, ...docSnap.data() });
+        console.log('Mapped data:', mappedData);
+        return mappedData;
+      } else {
+        console.log('Document snapshot does not exist.');
+        return null;
+      }
+    } catch (error) {
+      const parentInfo = this.parentId ? ` from parent ${this.parentId}` : '';
+      console.error(`Error creating document with ID: ${id} in ${this.collectionName}${parentInfo}:`, error);
       throw error;
     }
   }
@@ -180,6 +223,58 @@ export class BaseService<T> {
     } catch (error) {
       const parentInfo = this.parentId ? ` from parent ${this.parentId}` : '';
       console.error(`Error getting ${this.collectionName}${parentInfo}:`, error);
+      throw error;
+    }
+  }
+
+  async getPaginated(
+    queryConstraints: QueryConstraint[],
+    pageSize: number,
+    lastDocument?: QueryDocumentSnapshot<DocumentData>
+  ): Promise<{ data: T[]; lastDocument: QueryDocumentSnapshot<DocumentData> | null }> {
+    try {
+      let collectionRef;
+      let q;
+  
+      if (this.parentId && this.subCollectionName) {
+        collectionRef = collection(db, this.collectionName, this.parentId, this.subCollectionName);
+      } else if (this.parentId) {
+        collectionRef = collection(db, this.collectionName, this.parentId, this.collectionName);
+      } else {
+        collectionRef = collection(db, this.collectionName);
+      }
+  
+      if (lastDocument) {
+        q = query(
+          collectionRef,
+          ...queryConstraints,
+          startAfter(lastDocument),
+          limit(pageSize)
+        );
+      } else {
+        q = query(
+          collectionRef,
+          ...queryConstraints,
+          limit(pageSize)
+        );
+      }
+  
+      const querySnapshot = await getDocs(q);
+      const data: T[] = [];
+      let newLastDocument: QueryDocumentSnapshot<DocumentData> | null = null;
+  
+      querySnapshot.forEach((doc) => {
+        const mappedData = this.mapFunction({ id: doc.id, ...doc.data() });
+        if(mappedData){
+          data.push(mappedData);
+          newLastDocument = doc;
+        }
+      });
+  
+      return { data, lastDocument: newLastDocument };
+    } catch (error) {
+      const parentInfo = this.parentId ? ` from parent ${this.parentId}` : '';
+      console.error(`Error getting paginated ${this.collectionName}${parentInfo}:`, error);
       throw error;
     }
   }

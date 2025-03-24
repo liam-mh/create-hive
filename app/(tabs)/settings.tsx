@@ -1,18 +1,15 @@
 import { StyleSheet, View, Text } from 'react-native';
-import { useRouter } from 'expo-router';
 
-export default function Index() {
-  const router = useRouter();
-
+export default function Settings() {
   return (
     <View style={styles.container}>
-      <Text>Home</Text>
+      <Text>Settings</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1, 
   },
 });

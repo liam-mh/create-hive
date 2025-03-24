@@ -13,15 +13,19 @@ import { User } from '@/models/User';
 class EventCardViewModel {
   private _eventId: string;
   private _event: Event | null = null;
-  private _loading: boolean = true;
-  private _error: string | null = null;
   private _eventLocation: string | null = null;
   private _imageUri: string | null = null;
   private _icon: React.ReactNode | null = null;
   private _host: User | null = null;
-
-  constructor(eventId: string) {
+  
+  private _loading: boolean = true;
+  private _error: string | null = null;
+  
+  constructor(eventId: string, inputEvent?: Event) {
     this._eventId = eventId;
+    if (inputEvent) {
+      this._event = inputEvent;
+    }
   }
 
   get event(): Event | null {
@@ -71,7 +75,9 @@ class EventCardViewModel {
     this._error = null;
 
     try {
-      await this.fetchEvent();
+      if (!this._event) {
+        await this.fetchEvent();
+      }
       if (this._event) {
         await this.fetchEventLocation();
         await this.fetchEventImage();
@@ -139,7 +145,7 @@ class EventCardViewModel {
     if (this._event) {
       const iconHeaderName: IconNameType = getEventIconName(this._event.eventType);
       const iconHeaderSize = SIZES.l;
-      const iconHeaderColour = COLOURS.primary;
+      const iconHeaderColour = COLOURS.secondary;
       this._icon = getIcon(iconHeaderName, iconHeaderSize, iconHeaderColour);
     } else {
       this._icon = null;

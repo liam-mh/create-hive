@@ -1,13 +1,17 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { COLOURS } from '@/styles';
-import { useAuth } from '@/context/authContext';
+import { useLocalSearchParams } from 'expo-router';
 import ProfilePage from '@/components/profilePage/ProfilePage';
 
-export default function More() {
-  const user = useAuth().user;
+interface UserProfileParams {
+  userId?: string;
+}
 
-  if (!user) {
+export default function UserProfile() {
+  const { userId } = useLocalSearchParams<Partial<UserProfileParams>>(); 
+
+  if (!userId) {
     return (
       <View style={styles.container}>
         <Text>Could not find user</Text>
@@ -15,11 +19,11 @@ export default function More() {
     );
   }
 
-  return <ProfilePage user={user} />;
+  return <ProfilePage userId={userId} />;
 };
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: COLOURS.white,
-  }
+  },
 });

@@ -1,5 +1,6 @@
 import { Timestamp } from "firebase/firestore";
 
+// Output Example: "11/15/2023, 3:30:45 PM" (Locale-dependent)
 export const timestampToDateTime = (timestamp: Timestamp | null | undefined): string | null => {
   if (!timestamp) {
     return null;
@@ -7,7 +8,7 @@ export const timestampToDateTime = (timestamp: Timestamp | null | undefined): st
 
   try {
     const date = timestamp.toDate();
-    const dateTimeString = date.toLocaleString(); 
+    const dateTimeString = date.toLocaleString();
     return dateTimeString;
   } catch (error) {
     console.error("Error converting timestamp to date/time:", error);
@@ -15,6 +16,7 @@ export const timestampToDateTime = (timestamp: Timestamp | null | undefined): st
   }
 };
 
+// Output Example: "11/15/2023" (Locale-dependent)
 export const timestampToDate = (timestamp: Timestamp | null | undefined): string | null => {
   if (!timestamp) {
     return null;
@@ -30,6 +32,7 @@ export const timestampToDate = (timestamp: Timestamp | null | undefined): string
   }
 };
 
+// Output Example: "3:30:45 PM" (Locale-dependent)
 export const timestampToTime = (timestamp: Timestamp | null | undefined): string | null => {
   if (!timestamp) {
     return null;
@@ -45,6 +48,7 @@ export const timestampToTime = (timestamp: Timestamp | null | undefined): string
   }
 };
 
+// Output Example: "15 november"
 export const timestampToFormattedDate = (timestamp: Timestamp | null | undefined): string | null => {
   if (!timestamp) {
     return null;
@@ -53,7 +57,7 @@ export const timestampToFormattedDate = (timestamp: Timestamp | null | undefined
   try {
     const date = timestamp.toDate();
     const day = date.getDate();
-    const month = date.toLocaleString('en-US', { month: 'long' }); 
+    const month = date.toLocaleString('en-US', { month: 'long' });
 
     return `${day} ${month}`.toLowerCase();
   } catch (error) {
@@ -67,6 +71,7 @@ interface EventDateTime {
   time: string | null;
 }
 
+// Output Example: "wednesday 15 november", "03:30 - 04:30"
 export const calculateEventDateTime = (
   startTimestamp: Timestamp | null | undefined,
   endTimestamp: Timestamp | null | undefined
@@ -106,3 +111,27 @@ export const calculateEventDateTime = (
 
   return result;
 };
+
+// Output Example: "November 2023"
+export const timestampToMonthYear = (timestamp: Timestamp | null | undefined): string | null => {
+  if (!timestamp) {
+    return null;
+  }
+
+  try {
+    const date = timestamp.toDate();
+    const month = date.toLocaleString('en-US', { month: 'long' });
+    const year = date.getFullYear();
+
+    return `${month} ${year}`;
+  } catch (error) {
+    console.error("Error converting timestamp to month year:", error);
+    return null;
+  }
+};
+
+export const checkExpired = (comparisonDate: Timestamp): boolean => {
+  const now = new Date(); 
+  const comparison = comparisonDate.toDate(); 
+  return comparison < now;
+}

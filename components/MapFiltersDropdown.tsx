@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
-import { COLOURS, SIZES, UNIT } from "@/styles";
+import { COLOURS, CORNERS, SIZES, UNIT } from "@/styles";
 import MapFilterDetailsPanel from "./MapFilterDetailsPanel";
 import { getIcon } from "@/utils/iconUtils";
 import { MapFiltersDropdownViewModel } from "@/viewModels/MapFiltersDropdownViewModel";
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: COLOURS.white,
-    borderRadius: 2,
+    borderRadius: CORNERS.default,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: UNIT / 2,

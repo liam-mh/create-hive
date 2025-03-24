@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ImageBackground } from 'react-native';
-import TEXT, { UNIT } from '@/styles';
+import TEXT, { CORNERS, UNIT } from '@/styles';
 import EventCardViewModel from '@/viewModels/EventCardViewModel';
 import InformationButton from './buttons/InformationButton';
 import RegisterButton from './buttons/RegisterButton';
@@ -8,13 +8,22 @@ import DetailsContainer from './DetailsContainer';
 import DetailsRow from './DetailsRow';
 import EventPrivacyIcon from './buttons/EventPrivacyIcon';
 import SaveButton from './buttons/Savebutton';
+import { Event } from '@/models/Event';
+import { useAuth } from '@/context/authContext';
+import { checkExpired } from '@/utils/dateTimeUtils';
 
 interface EventCardProps {
   eventId: string;
+  inputEvent?: Event;
 }
 
-const EventCard: React.FC<EventCardProps> = ({ eventId }) => {
-  const viewModel = new EventCardViewModel(eventId);
+const EventCard: React.FC<EventCardProps> = ({ eventId, inputEvent }) => {
+  let viewModel = null;
+  inputEvent
+    ? viewModel = new EventCardViewModel(eventId, inputEvent)
+    : viewModel = new EventCardViewModel(eventId);
+  
+  const userId = useAuth().user!.userId;
   const [loading, setLoading] = useState(viewModel.loading);
   const [error, setError] = useState(viewModel.error);
   const [event, setEvent] = useState(viewModel.event);
@@ -49,10 +58,13 @@ const EventCard: React.FC<EventCardProps> = ({ eventId }) => {
     return <View style={styles.contentContainer}><Text>Event not found.</Text></View>;
   }
 
+  const expired = checkExpired(event.start);
+
   return (
     <ImageBackground
       source={{ uri: imageUri || undefined }}
       style={styles.backgroundImage}
+      resizeMode="cover"
     >
       <View style={styles.overlay} />
       <View style={styles.contentContainer}>
@@ -63,8 +75,7 @@ const EventCard: React.FC<EventCardProps> = ({ eventId }) => {
           </View>
           <View style={styles.innerRow}>
             <EventPrivacyIcon isPrivate={event.private} />
-            <RegisterButton eventId={event.eventId} eventIsPrivate={event.private} userId={'FghLfeUlFYO0RMZYjzI3'} isIconButton={true} />  
-            <SaveButton itemId={event.eventId} itemType={'event'} userId={'FghLfeUlFYO0RMZYjzI3'} isIconButton={true} />
+            <SaveButton itemId={event.eventId} itemType={'event'} userId={userId} isIconButton={true} />
           </View>
         </View>
         
@@ -78,7 +89,11 @@ const EventCard: React.FC<EventCardProps> = ({ eventId }) => {
 
         <View style={styles.buttonsContainer}>
           <InformationButton type={'event'} id={event.eventId} />
-          <RegisterButton eventId={event.eventId} eventIsPrivate={event.private} userId={'FghLfeUlFYO0RMZYjzI3'} />
+          {expired ? (
+            <Text style={TEXT.regularError}>expired</Text>
+          ) : (
+            <RegisterButton eventId={event.eventId} eventIsPrivate={event.private} userId={userId} />
+          )}
         </View>
       </View>
     </ImageBackground>
@@ -87,7 +102,9 @@ const EventCard: React.FC<EventCardProps> = ({ eventId }) => {
 
 const styles = StyleSheet.create({
   backgroundImage: {
-    flex: 1
+    width: '100%',
+    borderRadius: CORNERS.default,
+    overflow: 'hidden',
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
@@ -106,12 +123,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: UNIT,
   },
-  detailsContainer: {
-    gap: UNIT / 2,
-  },
   buttonsContainer: {
     flexDirection: 'row',
     gap: UNIT,
+    alignItems: 'center'
   },
 });
 

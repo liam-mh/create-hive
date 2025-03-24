@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
-import TEXT, { COLOURS, UNIT } from '@/styles';
+import TEXT, { COLOURS, CORNERS, UNIT } from '@/styles';
 import BaseButtonViewModel from '@/viewModels/BaseButtonViewModel';
 import { SharedButtonProps } from '@/types/SharedButtonProps';
 import { getIcon } from '@/utils/iconUtils';
@@ -45,9 +45,10 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: UNIT,
-    borderRadius: 2,
+    gap: UNIT / 2,
+    borderRadius: CORNERS.default,
     padding: UNIT / 2,
+    alignSelf: 'flex-start'
   },
   unselectedContainer: {
     backgroundColor: COLOURS.secondary,

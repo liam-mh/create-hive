@@ -1,10 +1,12 @@
-import { StyleSheet, View, SafeAreaView, Text } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useLocalSearchParams } from 'expo-router';
+import { StyleSheet, View, Text } from 'react-native';
 
 export default function Search() {
+  const { tag } = useLocalSearchParams();
+
   return (
     <View style={styles.container}>
-      <Text>Search</Text>
+      <Text>{tag ? tag : 'no search term'}</Text>
     </View>
   );
 }
