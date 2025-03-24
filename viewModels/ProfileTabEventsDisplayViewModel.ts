@@ -58,11 +58,7 @@ class ProfileTabEventsDisplayViewModel {
         pageSize,
         this._lastDocument || undefined
       );
-  
-      // ✅ Append new events instead of replacing them
       this._events = [...this._events, ...events];
-  
-      // ✅ Update lastDocument properly
       this._lastDocument = lastDocument;
     } catch (err) {
       this._error = 'Failed to load events.';
@@ -71,7 +67,6 @@ class ProfileTabEventsDisplayViewModel {
       this._loading = false;
     }
   }
-  
 
   async fetchInitialEvents(): Promise<void> {
     this._loading = true;
@@ -84,7 +79,6 @@ class ProfileTabEventsDisplayViewModel {
       this._loading = false;
     }
   }
-
 
   async fetchNextPage(): Promise<void> {
     if (!this._lastDocument) return;
