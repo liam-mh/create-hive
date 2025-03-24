@@ -2,7 +2,6 @@ import React from "react";
 import TEXT, { COLOURS, SIZES, UNIT } from "@/styles";
 import { View, Text, StyleSheet } from "react-native"; 
 import EventPrivacyIcon from "./buttons/EventPrivacyIcon";
-import RegisterButton from "./buttons/RegisterButton";
 import SaveButton from "./buttons/Savebutton";
 import { getEventIconName, getIcon, IconNameType } from "@/utils/iconUtils";
 import { EventType } from "@/models/Event";
@@ -26,7 +25,6 @@ const EventHeader: React.FC<EventHeaderProps> = (props) => {
       </View>
       <View style={styles.innerRow}>
         <EventPrivacyIcon isPrivate={props.isPrivate} />
-        <RegisterButton eventId={props.eventId} eventIsPrivate={props.isPrivate} userId={props.userId} isIconButton={true} />
         <SaveButton itemId={props.eventId} itemType={"event"} userId={props.userId} isIconButton={true} />
       </View>
     </View>

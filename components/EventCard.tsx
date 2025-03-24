@@ -10,6 +10,7 @@ import EventPrivacyIcon from './buttons/EventPrivacyIcon';
 import SaveButton from './buttons/Savebutton';
 import { Event } from '@/models/Event';
 import { useAuth } from '@/context/authContext';
+import { checkExpired } from '@/utils/dateTimeUtils';
 
 interface EventCardProps {
   eventId: string;
@@ -57,6 +58,8 @@ const EventCard: React.FC<EventCardProps> = ({ eventId, inputEvent }) => {
     return <View style={styles.contentContainer}><Text>Event not found.</Text></View>;
   }
 
+  const expired = checkExpired(event.start);
+
   return (
     <ImageBackground
       source={{ uri: imageUri || undefined }}
@@ -72,7 +75,6 @@ const EventCard: React.FC<EventCardProps> = ({ eventId, inputEvent }) => {
           </View>
           <View style={styles.innerRow}>
             <EventPrivacyIcon isPrivate={event.private} />
-            <RegisterButton eventId={event.eventId} eventIsPrivate={event.private} userId={userId} isIconButton={true} />  
             <SaveButton itemId={event.eventId} itemType={'event'} userId={userId} isIconButton={true} />
           </View>
         </View>
@@ -87,7 +89,11 @@ const EventCard: React.FC<EventCardProps> = ({ eventId, inputEvent }) => {
 
         <View style={styles.buttonsContainer}>
           <InformationButton type={'event'} id={event.eventId} />
-          <RegisterButton eventId={event.eventId} eventIsPrivate={event.private} userId={userId} />
+          {expired ? (
+            <Text style={TEXT.regularError}>expired</Text>
+          ) : (
+            <RegisterButton eventId={event.eventId} eventIsPrivate={event.private} userId={userId} />
+          )}
         </View>
       </View>
     </ImageBackground>
@@ -120,6 +126,7 @@ const styles = StyleSheet.create({
   buttonsContainer: {
     flexDirection: 'row',
     gap: UNIT,
+    alignItems: 'center'
   },
 });
 
