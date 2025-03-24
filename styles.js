@@ -68,7 +68,7 @@ export const TEXT = StyleSheet.create({
   smallGrey: {
     fontFamily: FONTS.regular,
     fontSize: SIZES.s,
-    color: COLOURS.primary,
+    color: COLOURS.darkgrey,
   },
   smallPrimary: {
     fontFamily: FONTS.regular,
