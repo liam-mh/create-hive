@@ -129,3 +129,9 @@ export const timestampToMonthYear = (timestamp: Timestamp | null | undefined): s
     return null;
   }
 };
+
+export const checkExpired = (comparisonDate: Timestamp): boolean => {
+  const now = new Date(); 
+  const comparison = comparisonDate.toDate(); 
+  return comparison < now;
+}
