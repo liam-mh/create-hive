@@ -9,6 +9,7 @@ import CalendarDateTimeSelection from './CalendarDateTimeSelection';
 import TimeDurationPicker from './TimeDurationPicker';
 import EventTypeSelection from './EventTypeSelection';
 import MediumSelection from './MediumSelection';
+import PrivacySelection from './PrivacySelection';
 
 interface CreateEventProps {
   userId: string;
@@ -21,6 +22,7 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
 
   // Event Type Selection State
   const [selectedEventKind, setSelectedEventKind] = useState<string | null>(null);
+  const [selectedPrivacy, setSelectedPrivacy] = useState<boolean>(false);
 
   // Art Medium Selection States
   const [selectedPrimary, setSelectedPrimary] = useState<PrimaryMedium | null>(null);
@@ -78,6 +80,11 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
     console.log('Time Duration:', duration);
   };
 
+  const handlePrivacyKindSelect = (isPrivate: boolean) => {
+    setSelectedPrivacy(isPrivate);
+    console.log('Selected Event Privacy:', isPrivate); 
+  };
+
   if (loading) {
     return <View style={styles.contentContainer}><Text>Loading...</Text></View>;
   }
@@ -126,6 +133,15 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
       </View>
 
       <View style={DIVS.offwhite} />
+
+      <View style={styles.sectionContainer}>
+        <ContentDropdownContainer title="privacy" addPadding expanded>
+          <PrivacySelection onSelect={handlePrivacyKindSelect} />
+        </ContentDropdownContainer>
+      </View>
+
+      <View style={DIVS.offwhite} />
+
     </View>
   );
 };
