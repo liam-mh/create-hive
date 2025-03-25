@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import ContentDropdownContainer from '../ContentDropdownContainer';
-import TEXT, { COLOURS, CORNERS, DIVS, UNIT } from '@/styles';
+import TEXT, { DIVS, UNIT } from '@/styles';
 import CreateEventViewModel from '@/viewModels/CreateEventViewModel';
 import { PrimaryMedium, SecondaryMedium } from '@/types/Medium';
 import { Timestamp } from 'firebase/firestore';
@@ -19,8 +19,35 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
   const [loading, setLoading] = useState(viewModel.loading);
   const [error, setError] = useState(viewModel.error);
 
+  // Event Type Selection State
+  const [selectedEventKind, setSelectedEventKind] = useState<string | null>(null);
+
+  // Art Medium Selection States
   const [selectedPrimary, setSelectedPrimary] = useState<PrimaryMedium | null>(null);
   const [selectedSecondary, setSelectedSecondary] = useState<SecondaryMedium | null>(null);
+
+  // Date and Time Selection States
+  const [selectedTimestamp, setSelectedTimestamp] = useState<Timestamp | null>(null);
+  const [startTime, setStartTime] = useState<string>('12:00'); 
+  const [timeDuration, setTimeDuration] = useState<number>(0);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null); 
+      // await viewModel.loadData(); 
+      // setLoading(viewModel.loading);
+      setLoading(false);
+      setError(viewModel.error);
+    };
+
+    fetchData();
+  }, [props.userId, viewModel]);
+
+  const handleEventKindSelect = (eventType: string | null) => {
+    setSelectedEventKind(eventType);
+    console.log('Selected Event Kind:', eventType);
+  };
 
   const handlePrimarySelect = (primary: PrimaryMedium | null) => {
     setSelectedPrimary(primary);
@@ -29,21 +56,8 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
 
   const handleSecondarySelect = (secondary: SecondaryMedium | null) => {
     setSelectedSecondary(secondary);
-    console.log("Selected Secondary:", secondary);
+    console.log('Selected Secondary:', secondary);
   };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(viewModel.loading);
-      setError(viewModel.error);
-      setLoading(false);
-    };
-
-    fetchData();
-  }, [props.userId]);
-
-  const [selectedTimestamp, setSelectedTimestamp] = useState<Timestamp | null>(null);
-  const [startTime, setStartTime] = useState<string>('12:00'); 
 
   const handleDateSelection = (timestamp: Timestamp | null) => {
     setSelectedTimestamp(timestamp);
@@ -55,38 +69,21 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
       console.log('Selected Timestamp:', date);
     } else {
       console.log('No Timestamp selected');
-      setStartTime('12:00') 
+      setStartTime('12:00');
     }
   };
-
-  const [timeDuration, setTimeDuration] = useState<number>(0);
 
   const handleTimeDurationChange = (duration: number) => {
     setTimeDuration(duration);
     console.log('Time Duration:', duration);
   };
 
-  const [selectedEventKind, setSelectedEventKind] = useState<string | null>(null);
-
-  const handleEventKindSelect = (eventType: string | null) => {
-    setSelectedEventKind(eventType);
-    console.log("Selected Event Kind:", eventType);
-  };
-
   if (loading) {
-    return (
-      <View style={styles.contentContainer}>
-        <Text>Loading...</Text>
-      </View>
-    );
+    return <View style={styles.contentContainer}><Text>Loading...</Text></View>;
   }
 
   if (error) {
-    return (
-      <View style={styles.contentContainer}>
-        <Text>Error: {error}</Text>
-      </View>
-    );
+    return <View style={styles.contentContainer}><Text>Error: {error}</Text></View>;
   }
 
   return (
@@ -121,9 +118,7 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
               <>
                 <Text style={TEXT.boldGrey}>length</Text>
                 <Text style={TEXT.regularGrey}>how long will the event run for?</Text>
-                <TimeDurationPicker
-                  onTimeDurationChange={handleTimeDurationChange}
-                />
+                <TimeDurationPicker onTimeDurationChange={handleTimeDurationChange} />
               </>
             )}
           </View>
@@ -145,31 +140,8 @@ const styles = StyleSheet.create({
   sectionContainer: {
     paddingHorizontal: UNIT,
   },
-  buttonContainer: {
-    flexDirection: 'row',
-    gap: UNIT,
-    width: '100%',
-    flexWrap: 'wrap',
-  },
-  panelContainer: {
-    flex: 1,
-    gap: UNIT / 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: UNIT,
-    backgroundColor: COLOURS.white,
-    borderRadius: CORNERS.default,
-    borderWidth: 2,
-    borderColor: COLOURS.primary,
-  },
-  wrapPanel: {
-    flex: 0,
-  },
   gapContainer: {
     gap: UNIT,
-  },
-  selectedButton: {
-    backgroundColor: `${COLOURS.primary}30`,
   },
 });
 
