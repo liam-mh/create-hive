@@ -147,3 +147,31 @@ export const formatDateForCalendar = (dateString: string): string => {
     return 'Invalid Date';
   }
 };
+
+export const formatDuration = (minutes: number): string => {
+  if (minutes < 0) {
+    return "0m";
+  }
+
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+
+  let result = "";
+
+  if (hours > 0) {
+    result += `${hours}h`;
+  }
+
+  if (remainingMinutes > 0) {
+    if (hours > 0) {
+      result += " ";
+    }
+    result += `${remainingMinutes}m`;
+  }
+
+  if (result === "") {
+    result = "0m";
+  }
+
+  return result;
+};
