@@ -43,6 +43,7 @@ import PaletteFill from '@/assets/icons/palette-fill.svg';
 import Palette from '@/assets/icons/palette.svg';
 import Passport from '@/assets/icons/passport.svg';
 import People from '@/assets/icons/people.svg';
+import PeopleFill from '@/assets/icons/people-fill.svg';
 import PersonAdd from '@/assets/icons/person-add.svg';
 import PersonCheck from '@/assets/icons/person-check.svg';
 import PersonFillCheck from '@/assets/icons/person-fill-check.svg';
@@ -99,6 +100,7 @@ const iconMap: Record<string, React.ComponentType<SvgProps>> = {
   palette: Palette,
   passport: Passport,
   people: People,
+  peopleFill: PeopleFill,
   personAdd: PersonAdd,
   personCheck: PersonCheck,
   personFillCheck: PersonFillCheck,
@@ -156,6 +158,7 @@ export type IconNameType =
   | 'palette'
   | 'passport'
   | 'people'
+  | 'peopleFill'
   | 'personAdd'
   | 'personCheck'
   | 'personFillCheck'
