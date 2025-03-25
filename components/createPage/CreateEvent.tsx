@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TextInput } from 'react-native';
 import ContentDropdownContainer from '../ContentDropdownContainer';
-import TEXT, { DIVS, UNIT } from '@/styles';
+import TEXT, { COLOURS, CORNERS, DIVS, UNIT } from '@/styles';
 import CreateEventViewModel from '@/viewModels/CreateEventViewModel';
 import { PrimaryMedium, SecondaryMedium } from '@/types/Medium';
 import { Timestamp } from 'firebase/firestore';
@@ -32,6 +32,12 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
   const [selectedTimestamp, setSelectedTimestamp] = useState<Timestamp | null>(null);
   const [startTime, setStartTime] = useState<string>('12:00'); 
   const [timeDuration, setTimeDuration] = useState<number>(0);
+
+  const [venueName, setVenueName] = useState<string>('');
+  const [venueDetails, setVenueDetails] = useState<string>('');
+
+  const [title, setTitle] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -142,6 +148,77 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
 
       <View style={DIVS.offwhite} />
 
+      <View style={styles.sectionContainer}>
+        <ContentDropdownContainer title="location" addPadding expanded>
+          <View style={styles.gapContainer}>
+            <Text style={TEXT.regular}>place a pin where you want the event to be</Text>
+            {/* MAP */}
+            <Text style={TEXT.regularGrey}>ensure you have contacted the venue prior</Text>
+
+            <Text style={TEXT.bold}>venue</Text>
+            <Text style={TEXT.regular}>the name of the location you intend to host at</Text>
+            <TextInput style={[TEXT.regularPrimary, styles.textInput]}
+              placeholder={`"cafe create" / "my house"`}
+              placeholderTextColor={COLOURS.darkgrey}
+              value={venueName} 
+              onChangeText={setVenueName}
+              autoCapitalize='none'
+            />
+
+            <Text style={TEXT.bold}>description</Text>
+            <Text style={TEXT.regular}>detials specific to the venue</Text>
+            <TextInput style={[TEXT.regularPrimary, styles.textInput]}
+              placeholder={`"floor 2, room 5" / "tell reception you are with create-hive" / "message me on arrival"`}
+              placeholderTextColor={COLOURS.darkgrey}
+              value={venueDetails} 
+              onChangeText={setVenueDetails}
+              autoCapitalize='none'
+              multiline={true}
+              textAlignVertical="top" 
+              textAlign='left'
+            />
+
+          </View>
+        </ContentDropdownContainer>
+      </View>
+
+      <View style={DIVS.offwhite} />
+
+      <View style={styles.sectionContainer}>
+        <ContentDropdownContainer title="details" addPadding expanded>
+          <View style={styles.gapContainer}>
+            <Text style={TEXT.regular}>what is the title of the event?</Text>
+            <TextInput style={[TEXT.regularPrimary, styles.textInput]}
+              placeholder={`"back to basics" / "paint the cafe with me"`}
+              placeholderTextColor={COLOURS.darkgrey}
+              value={title} 
+              onChangeText={setTitle}
+              autoCapitalize='none'
+            />
+
+            <Text style={TEXT.bold}>description</Text>
+            <Text style={TEXT.regular}>explain the contents of the event</Text>
+            <TextInput style={[TEXT.regularPrimary, styles.textInput]}
+              placeholder={`"what to bring" / "what to expect" / "suggested experience level"`}
+              placeholderTextColor={COLOURS.darkgrey}
+              value={description} 
+              onChangeText={setDescription}
+              autoCapitalize='none'
+              multiline={true}
+              textAlignVertical="top" 
+              textAlign='left'
+            />
+
+            <Text style={TEXT.bold}>tags</Text>
+            <Text style={TEXT.regular}>help members discover you with related tags</Text>
+            <Text style={TEXT.regularGrey}>the type of medium is automatically added, but try more such as: 'beginner', 'flowers', 'detailing'</Text>
+            {/* TAGS */}
+          </View>
+        </ContentDropdownContainer>
+      </View>
+
+      <View style={DIVS.offwhite} />
+
     </View>
   );
 };
@@ -158,6 +235,14 @@ const styles = StyleSheet.create({
   },
   gapContainer: {
     gap: UNIT,
+  },
+  textInput: {
+    flexDirection: 'row',
+    gap: UNIT,
+    borderWidth: 2,
+    borderColor: COLOURS.offwhite,
+    borderRadius: CORNERS.default,
+    padding: UNIT,
   },
 });
 
