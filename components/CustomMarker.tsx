@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { Marker } from 'react-native-maps';
 import { View, Text, Image, ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
 import { COLOURS, UNIT, TEXT, SHADOWS, CORNERS } from "@/styles";
@@ -98,4 +98,13 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CustomMarker;
+export default memo(CustomMarker, (prevProps, nextProps) => {
+  return (
+    prevProps.coordinate.latitude === nextProps.coordinate.latitude &&
+    prevProps.coordinate.longitude === nextProps.coordinate.longitude &&
+    prevProps.type === nextProps.type &&
+    prevProps.id === nextProps.id &&
+    prevProps.text === nextProps.text &&
+    prevProps.onPress === nextProps.onPress
+  );
+});
