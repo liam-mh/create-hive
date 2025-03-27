@@ -16,55 +16,57 @@ export interface CustomMarkerProps {
   onPress?: () => void;
 }
 
-const CustomMarker: React.FC<CustomMarkerProps> = ({ coordinate, type = 'event', id, text, onPress }) => {
+const CustomMarker: React.FC<CustomMarkerProps> = ({ coordinate, type, id, text, onPress }) => {
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchImage = async () => {
-      try {
-        setLoading(true);
-        const url = await getImageUrl(type, id);
-        setImageUri(url);
-      } catch (error) {
-        console.error("Error fetching image URL:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchImage();
-  }, [type, id]);
 
   const colour = type === "event" ? COLOURS.primary : COLOURS.secondary;
   const corners = type === "event" ? 100 : CORNERS.default;
 
-  if (loading || !imageUri) {
-    return (
-      <Marker coordinate={coordinate} tracksViewChanges={false}>
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="small" color={COLOURS.primary} />
-          <Text style={TEXT.small}>Loading...</Text>
-        </View>
-      </Marker>
-    );
-  }
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchImage = async () => {
+      try {
+        setLoading(true);
+        const url = await getImageUrl(type, id);
+        if (isMounted) {
+          setImageUri(url);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error("Error fetching image URL:", error);
+        if (isMounted) setLoading(false);
+      }
+    };
+
+    fetchImage();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [type, id]);
 
   return (
     <Marker 
       coordinate={coordinate} 
       key={`${type}-${id}`}
-      tracksViewChanges={false}
+      tracksViewChanges={loading}  
     >
       <TouchableOpacity onPress={onPress}> 
-        <View style={[styles.container, [SHADOWS.containerShadow]]}>
+        <View style={[styles.container, SHADOWS.containerShadow]}>
           <View style={[styles.pin, { width: DEFAULT_SIZE + 8, height: DEFAULT_SIZE + 8, backgroundColor: colour, borderRadius: corners }]}>
-            <Image source={{ uri: imageUri }} style={[{ width: DEFAULT_SIZE, height: DEFAULT_SIZE, borderRadius: corners }]} />
+            {imageUri ? (
+              <Image source={{ uri: imageUri }} style={[{ width: DEFAULT_SIZE, height: DEFAULT_SIZE, borderRadius: corners }]} />
+            ) : (
+              <ActivityIndicator size="small" color={COLOURS.white} />
+            )}
           </View>
 
-          <View style={[styles.triangle, {borderTopColor: colour }]} />
+          <View style={[styles.triangle, { borderTopColor: colour }]} />
 
-          <Text style={[TEXT.small, styles.text]}>{text}</Text>
+          {text && <Text style={[TEXT.small, styles.text]}>{text}</Text>}
         </View>
       </TouchableOpacity>
     </Marker>
@@ -73,9 +75,6 @@ const CustomMarker: React.FC<CustomMarkerProps> = ({ coordinate, type = 'event',
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
-  },
-  loadingContainer: {
     alignItems: 'center',
   },
   pin: {
