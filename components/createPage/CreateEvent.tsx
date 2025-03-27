@@ -12,6 +12,7 @@ import MediumSelection from './MediumSelection';
 import PrivacySelection from './PrivacySelection';
 import SmallMap from '../SmallMap';
 import { Coordinate } from '@/types/Coordinate';
+import ImagePickerExample from './ImagePicker';
 
 interface CreateEventProps {
   userId: string;
@@ -220,6 +221,10 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
               textAlignVertical="top" 
               textAlign='left'
             />
+
+            <Text style={TEXT.bold}>cover image</Text>
+            <Text style={TEXT.regular}>upload a photo of the event</Text>
+            <ImagePickerExample />
 
             <Text style={TEXT.bold}>tags</Text>
             <Text style={TEXT.regular}>help members discover you with related tags</Text>
