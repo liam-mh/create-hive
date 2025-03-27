@@ -8,24 +8,24 @@ interface TimeDurationPickerProps {
 }
 
 const TimeDurationPicker: React.FC<TimeDurationPickerProps> = ({ onTimeDurationChange }) => {
-  const [durationMinutes, setDurationMinutes] = useState<number>(0);
-
-  useEffect(() => {
-    onTimeDurationChange(durationMinutes);
-  }, [durationMinutes, onTimeDurationChange]);
-
-  useEffect(() => {
-    setDurationMinutes(60);
-  },[]);
+  const [durationMinutes, setDurationMinutes] = useState<number>(60);
 
   const addMinutes = () => {
-    setDurationMinutes((prevDuration) => prevDuration + 15);
+    setDurationMinutes((prevDuration) => {
+      const newDuration = prevDuration + 15;
+      onTimeDurationChange(newDuration);
+      return newDuration;
+    });
   };
-
+  
   const subtractMinutes = () => {
-    setDurationMinutes((prevDuration) => Math.max(0, prevDuration - 15)); 
+    setDurationMinutes((prevDuration) => {
+      const newDuration = Math.max(0, prevDuration - 15);
+      onTimeDurationChange(newDuration);
+      return newDuration;
+    });
   };
-
+  
   return (
     <View style={styles.buttonContainer}>
       <TouchableOpacity style={[styles.panelContainer,{borderColor: COLOURS.red}]} onPress={subtractMinutes}>
