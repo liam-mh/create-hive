@@ -44,7 +44,6 @@ class SaveButtonViewModel {
   async fetchSavedState(): Promise<void> {
     this._loading = true;
     this._saveInteraction = await getSave(await this.handleSave());
-    console.log('SAVED INTER: ', this._saveInteraction);
     this._loading = false;
   }
 
