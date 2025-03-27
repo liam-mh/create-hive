@@ -15,7 +15,7 @@ import CustomHeader from '@/components/CustomHeader';
 
 const eventInformation = () => {
   const router = useRouter();
-  const { type, id } = useLocalSearchParams();
+  const { type, id } = useLocalSearchParams();;
   const viewModel = new EventCardViewModel(id.toLocaleString());
   
   const [loading, setLoading] = useState(viewModel.loading);
@@ -28,6 +28,15 @@ const eventInformation = () => {
   const [host, setHost] = useState(viewModel.host);
 
   useEffect(() => {
+    setLoading(true);
+    setError(null);
+    setEvent(null);
+    setEventLocation(null);
+    setImageUri(null);
+    setEventDateTime(null);
+    setIcon(null);
+    setHost(null);
+
     const fetchData = async () => {
       await viewModel.fetchEventData();
       setLoading(viewModel.loading);
@@ -42,7 +51,7 @@ const eventInformation = () => {
     fetchData();
   }, [id]);
 
-  if (loading) {
+  if (loading || !event || !event.location || !eventDateTime || !host) {
     return <View style={styles.contentContainer}><Text>Loading...</Text></View>;
   }
   if (error) {
@@ -117,12 +126,16 @@ const eventInformation = () => {
                   <KeyValueRow rowType={'longText'} textData={{key: 'description', value: 'We will be back at the sheffield arts hall this week. In room 5'}} />
                   <ContentDropdownContainer 
                     title={'map'} 
-                    expanded={true}
-                    addPadding={true}
+                    expanded
+                    addPadding
                     isPrimary={false}
                     children={
-                      <SmallMap itemId={event.eventId} itemType={'event'} pinCoordinate={event.location} />
+                      <SmallMap 
+                        initialCoordinate={event.location} 
+                        inputPin={{itemId: event.eventId, itemType: 'event'}}
+                      />
                     } 
+
                   />
                 </DetailsContainer>
               } 

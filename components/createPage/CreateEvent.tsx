@@ -10,6 +10,8 @@ import TimeDurationPicker from './TimeDurationPicker';
 import EventTypeSelection from './EventTypeSelection';
 import MediumSelection from './MediumSelection';
 import PrivacySelection from './PrivacySelection';
+import SmallMap from '../SmallMap';
+import { Coordinate } from '@/types/Coordinate';
 
 interface CreateEventProps {
   userId: string;
@@ -35,6 +37,7 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
 
   const [venueName, setVenueName] = useState<string>('');
   const [venueDetails, setVenueDetails] = useState<string>('');
+  const [venueLocation, setVenueLocation] = useState<Coordinate | null>(null);
 
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
@@ -89,6 +92,11 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
   const handlePrivacyKindSelect = (isPrivate: boolean) => {
     setSelectedPrivacy(isPrivate);
     console.log('Selected Event Privacy:', isPrivate); 
+  };
+
+  const handleLocationSelected = (coordinate: Coordinate | null) => {
+    setVenueLocation(coordinate);
+    console.log('Selected Coordinate:', coordinate);
   };
 
   if (loading) {
@@ -152,7 +160,11 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
         <ContentDropdownContainer title="location" addPadding expanded>
           <View style={styles.gapContainer}>
             <Text style={TEXT.regular}>place a pin where you want the event to be</Text>
-            {/* MAP */}
+              {/* MAP NEEDS USER CONTEXT */}
+              <SmallMap 
+                initialCoordinate={ {latitude: 51.5074, longitude: 0.1278} } 
+                outputPin={{onPinDrop: handleLocationSelected}}            
+              />
             <Text style={TEXT.regularGrey}>ensure you have contacted the venue prior</Text>
 
             <Text style={TEXT.bold}>venue</Text>
