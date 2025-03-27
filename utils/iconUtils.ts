@@ -42,6 +42,7 @@ import Lock from '@/assets/icons/lock.svg';
 import PaletteFill from '@/assets/icons/palette-fill.svg';
 import Palette from '@/assets/icons/palette.svg';
 import Passport from '@/assets/icons/passport.svg';
+import PencilSquare from '@/assets/icons/pencil-square.svg';
 import People from '@/assets/icons/people.svg';
 import PeopleFill from '@/assets/icons/people-fill.svg';
 import PersonAdd from '@/assets/icons/person-add.svg';
@@ -99,6 +100,7 @@ const iconMap: Record<string, React.ComponentType<SvgProps>> = {
   paletteFill: PaletteFill,
   palette: Palette,
   passport: Passport,
+  pencilSquare: PencilSquare,
   people: People,
   peopleFill: PeopleFill,
   personAdd: PersonAdd,
@@ -157,6 +159,7 @@ export type IconNameType =
   | 'paletteFill'
   | 'palette'
   | 'passport'
+  | 'pencilSquare'
   | 'people'
   | 'peopleFill'
   | 'personAdd'
