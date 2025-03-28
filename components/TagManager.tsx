@@ -46,7 +46,9 @@ const TagManager: React.FC<TagManagerProps> = (props) => {
   }, [props.itemId, props.itemType, props.medium]);
 
   const handleAdd = () => {
-    setTags([...tags, ""]);
+    if (tags[tags.length - 1] !== "") {
+      setTags([...tags, ""]);
+    }
   };
 
   const handleTagEdit = (index: number, newTag: string | null) => {
