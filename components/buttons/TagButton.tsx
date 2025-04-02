@@ -8,7 +8,7 @@ interface TagButtonProps {
   tag: string;
   edit?: boolean;
   onEdit?: (text: string) => void;
-  isMedium?: boolean;
+  cannotEdit?: boolean;
 }
 
 const TagButton: React.FC<TagButtonProps> = (props) => {
@@ -51,7 +51,7 @@ const TagButton: React.FC<TagButtonProps> = (props) => {
       />
     );
   } else {
-    if (!props.isMedium) {
+    if (!props.cannotEdit) {
       return (
         <View style={styles.textInput}>
           <TextInput
