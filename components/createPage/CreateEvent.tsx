@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TextInput } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { View, Text, StyleSheet, TextInput, Button, TouchableOpacity } from 'react-native';
 import ContentDropdownContainer from '../ContentDropdownContainer';
 import TEXT, { COLOURS, CORNERS, DIVS, UNIT } from '@/styles';
 import CreateEventViewModel from '@/viewModels/CreateEventViewModel';
-import { PrimaryMedium, SecondaryMedium } from '@/types/Medium';
+import { Medium, PrimaryMedium, SecondaryMedium } from '@/types/Medium';
 import { Timestamp } from 'firebase/firestore';
 import CalendarDateTimeSelection from './CalendarDateTimeSelection';
 import TimeDurationPicker from './TimeDurationPicker';
@@ -13,6 +13,8 @@ import PrivacySelection from './PrivacySelection';
 import SmallMap from '../SmallMap';
 import { Coordinate } from '@/types/Coordinate';
 import ImagePickerExample from './ImagePicker';
+import TagManager, { TagManagerRef } from '../TagManager';
+import { createMedium } from '@/utils/mediumUtils';
 
 interface CreateEventProps {
   userId: string;
@@ -42,6 +44,8 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
 
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
+  const [finalTags, setFinalTags] = useState<string[] | null>(null);
+  const tagManagerRef = useRef<TagManagerRef>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,10 +68,12 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
   const handlePrimarySelect = (primary: PrimaryMedium | null) => {
     setSelectedPrimary(primary);
     setSelectedSecondary(null);
+    setFinalTags(null);
   };
 
   const handleSecondarySelect = (secondary: SecondaryMedium | null) => {
     setSelectedSecondary(secondary);
+    setFinalTags(null);
     console.log('Selected Secondary:', secondary);
   };
 
@@ -99,6 +105,29 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
     setVenueLocation(coordinate);
     console.log('Selected Coordinate:', coordinate);
   };
+
+  const handleReturnTagsPress = () => {
+    if (tagManagerRef.current) {
+      const currentTags = tagManagerRef.current.getFinalTags();
+      setFinalTags(currentTags); 
+      console.log("Returned final tags:", currentTags);
+    } else {
+      console.log("TagManager ref not available yet.");
+        if (!selectedPrimary || !selectedSecondary) {
+          console.log("Please select primary and secondary medium first.");
+        }
+        setFinalTags([]); 
+    }
+  };
+
+  const eventMedium = React.useMemo(() => {
+    if (selectedPrimary && selectedSecondary) {
+      return createMedium(selectedPrimary, selectedSecondary) as Medium;
+    }
+    return null; 
+  }, [selectedPrimary, selectedSecondary]);
+
+
 
   if (loading) {
     return <View style={styles.contentContainer}><Text>Loading...</Text></View>;
@@ -229,13 +258,36 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
             <Text style={TEXT.bold}>tags</Text>
             <Text style={TEXT.regular}>help members discover you with related tags</Text>
             <Text style={TEXT.regularGrey}>the type of medium is automatically added, but try more such as: 'beginner', 'flowers', 'detailing'</Text>
-            {/* TAGS */}
+            {eventMedium ? (
+              <TagManager
+                ref={tagManagerRef}
+                itemId={null} 
+                itemType={'event'}
+                medium={eventMedium} 
+                editTags
+              />
+            ) : (
+                 <Text style={TEXT.regularError}>Select a primary and secondary medium to add tags.</Text>
+            )}
+            <Text style={TEXT.smallGrey}>empty tags will be removed</Text>
           </View>
         </ContentDropdownContainer>
       </View>
 
       <View style={DIVS.offwhite} />
 
+      <View style={styles.sectionContainer}>
+        <TouchableOpacity style={styles.panelContainer} onPress={handleReturnTagsPress}>
+          <Text style={TEXT.regularWhite}>return tags</Text>
+        </TouchableOpacity>
+        <Text>
+          {finalTags !== null
+              ? `Final Tags: ${JSON.stringify(finalTags)}`
+              : 'Press "return tags" to see the final list.'}
+        </Text>
+      </View>
+
+      
     </View>
   );
 };
@@ -260,6 +312,20 @@ const styles = StyleSheet.create({
     borderColor: COLOURS.offwhite,
     borderRadius: CORNERS.default,
     padding: UNIT,
+  },
+  tagsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: UNIT / 2,
+  },
+  panelContainer: {
+    flex: 1,
+    gap: UNIT / 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: UNIT,
+    backgroundColor: COLOURS.primary,
+    borderRadius: CORNERS.default,
   },
 });
 
