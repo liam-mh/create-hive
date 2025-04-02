@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from "react";
 import { COLOURS, SIZES, UNIT } from "@/styles";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import TagButton from "./buttons/TagButton";
@@ -11,33 +11,41 @@ interface TagManagerProps {
   itemType: 'event' | 'artwork';
   medium: Medium;
   editTags?: boolean;
-  onEditTags?: (updatedTags: string[]) => void;
 }
 
-const TagManager: React.FC<TagManagerProps> = (props) => {
-  const [tags, setTags] = useState<string[]>([]);
+export interface TagManagerRef {
+  getFinalTags: () => string[];
+}
 
-  let editTags: boolean = false;
-  props.editTags ? (editTags = props.editTags) : (editTags = false);
+const TagManager = forwardRef<TagManagerRef, TagManagerProps>((props, ref) => {
+  const [tags, setTags] = useState<string[]>([]);
+  const [noneEditTags, setNoneEditTags] = useState<string[]>([
+    props.medium.primary, props.medium.secondary, props.itemType,
+  ]);
 
   const getTags = async () => {
-    // Example tag retrieval method (not immplemented storage yet)
     try {
+      let initialTags: string[] = [];
+
       if (props.itemId && props.itemType) {
+        // Example fetch until tags stored
         const fetchedTags = ['tag1', 'tag2', 'tag3'];
-        const mediumTags = getTagsFromMedium(props.medium);
-        const combinedTags = [...fetchedTags];
-        mediumTags.forEach(mediumTag => {
-          if (!combinedTags.includes(mediumTag)) {
-            combinedTags.unshift(mediumTag); 
+        const combined = [...noneEditTags];
+        fetchedTags.forEach(tag => {
+          if (!combined.includes(tag)) {
+            combined.push(tag);
           }
         });
+        initialTags = combined;
+
       } else {
-        const mediumTags = getTagsFromMedium(props.medium); 
-        setTags(mediumTags);
+        initialTags = [...noneEditTags];
       }
+      setTags(initialTags.filter(tag => tag.trim() !== ''));
+
     } catch (error) {
       console.error('Error fetching tags:', error);
+      setTags(getTagsFromMedium(props.medium).filter(tag => tag.trim() !== ''));
     }
   };
 
@@ -45,33 +53,35 @@ const TagManager: React.FC<TagManagerProps> = (props) => {
     getTags();
   }, [props.itemId, props.itemType, props.medium]);
 
+  useImperativeHandle(ref, () => ({
+    getFinalTags: () => {
+      return tags.filter(tag => tag.trim() !== '');
+    },
+  }));
+
   const handleAdd = () => {
-    if (tags[tags.length - 1] !== "") {
+    if (tags.length === 0 || tags[tags.length - 1].trim() !== "") {
       setTags([...tags, ""]);
     }
   };
 
   const handleTagEdit = (index: number, newTag: string | null) => {
-    const mediumTags = getTagsFromMedium(props.medium); 
+    const mediumTags = getTagsFromMedium(props.medium);
+    const typeTag = props.itemType;
 
-    if (mediumTags.includes(tags[index])) {
+    if (mediumTags.includes(tags[index]) || typeTag === tags[index]) {
+      console.log("Cannot edit or remove medium-derived or item type tags.");
       return;
     }
 
+    let updatedTags;
     if (newTag === null || newTag.trim() === "") {
-      const updatedTags = tags.filter((_, i) => i !== index);
-      setTags(updatedTags);
+      updatedTags = tags.filter((_, i) => i !== index);
     } else {
-      const updatedTags = tags.map((tag, i) => (i === index ? newTag : tag));
-      setTags(updatedTags);
+      updatedTags = tags.map((tag, i) => (i === index ? newTag.trim() : tag));
     }
+    setTags(updatedTags);
   };
-
-  useEffect(() => {
-    if (props.onEditTags) {
-      props.onEditTags(tags);
-    }
-  }, [tags, props.onEditTags]);
 
   const iconAdd = getIcon("plusSquareFill", SIZES.l, COLOURS.offwhite);
 
@@ -81,15 +91,17 @@ const TagManager: React.FC<TagManagerProps> = (props) => {
         <TagButton
           tag={tag}
           key={key}
-          edit={editTags}
+          edit={props.editTags && !getTagsFromMedium(props.medium).includes(tag) && tag !== props.itemType}
           onEdit={(newTag) => handleTagEdit(key, newTag)}
-          isMedium={getTagsFromMedium(props.medium).includes(tag)}
+          cannotEdit={getTagsFromMedium(props.medium).includes(tag) || tag === props.itemType}
         />
       ))}
-      <TouchableOpacity onPress={handleAdd}>{iconAdd}</TouchableOpacity>
+      {props.editTags && (
+        <TouchableOpacity onPress={handleAdd}>{iconAdd}</TouchableOpacity>
+      )}
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   tagsContainer: {
