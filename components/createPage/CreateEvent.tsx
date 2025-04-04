@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-nativ
 import ContentDropdownContainer from '../ContentDropdownContainer';
 import TEXT, { COLOURS, CORNERS, DIVS, UNIT } from '@/styles';
 import CreateEventViewModel from '@/viewModels/CreateEventViewModel';
-import { Timestamp } from 'firebase/firestore';
 import CalendarDateTimeSelection from './CalendarDateTimeSelection';
 import TimeDurationPicker from './TimeDurationPicker';
 import EventTypeSelection from './EventTypeSelection';
@@ -13,11 +12,13 @@ import SmallMap from '../SmallMap';
 import { Coordinate } from '@/types/Coordinate';
 import ImagePickerExample from './ImagePicker';
 import TagManager, { TagManagerRef } from '../TagManager';
+import { Event } from '@/models/Event';
 
 
 interface CreateEventProps {
   userId: string;
   userLocation: Coordinate;
+  onSuccess: (event: Event) => void;
 }
 
 const CreateEvent: React.FC<CreateEventProps> = (props) => {
@@ -27,29 +28,28 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
   const [validationError, setValidationError] = useState<string | null>(null);
   const tagManagerRef = useRef<TagManagerRef>(null);
 
+  const [typeReady, setTypeReady] = useState(false);
+  const [mediumReady, setMediumReady] = useState(false);
+
   const handleCompletePress = async () => {
     setValidationError(null);
     if (tagManagerRef.current) {
       const currentTags = tagManagerRef.current.getFinalTags();
       viewModel.setEventTags(currentTags);
     }
+    setLoading(true);
+    const result = await viewModel.createEvent();
+    setLoading(viewModel.loading); 
 
-    setLoading(true); // Set loading state while completing
-    const result = await viewModel.complete();
-    setLoading(false); // Reset loading state
-
-    if (result === true) {
-      // Event creation was successful, navigate or show success message
-      console.log('Event creation successful!');
-      // You might want to navigate to a success screen or reset the form here
-    } else if (result === false) {
-      // Event creation failed (general error)
-      console.log('Event creation failed:', viewModel.error);
-      setError(viewModel.error || 'Failed to create event.');
-    } else if (typeof result === 'string') {
-      // Validation failed, display the error message
-      console.log('Validation Error:', result);
+    if (typeof result === 'string') {
       setValidationError(result);
+      console.log('Validation Error:', result);
+    } else if (result) {
+      props.onSuccess(result);
+      console.log('Event creation successful!', result);
+    } else {
+      setError(viewModel.error || 'Failed to create event.');
+      console.log('Event creation failed:', viewModel.error);
     }
   };
 
@@ -70,7 +70,14 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
     <View style={styles.contentContainer}>
       <View style={styles.sectionContainer}>
         <ContentDropdownContainer title="event type" addPadding expanded>
-          <EventTypeSelection onSelect={viewModel.setEventKind} />
+          <EventTypeSelection 
+            onSelect={(type) => {
+              viewModel.setEventType(type);
+              if (viewModel.eventType) {
+                setTypeReady(true);
+              }
+            }}
+          />
         </ContentDropdownContainer>
       </View>
 
@@ -80,7 +87,12 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
         <ContentDropdownContainer title="art medium" addPadding expanded>
           <MediumSelection
             onPrimarySelect={viewModel.setPrimaryMedium}
-            onSecondarySelect={viewModel.setSecondaryMedium}
+            onSecondarySelect={(secondary) => {
+              viewModel.setSecondaryMedium(secondary);
+              if (viewModel.eventMedium) {
+                setMediumReady(true);
+              }
+            }}
           />
         </ContentDropdownContainer>
       </View>
@@ -113,9 +125,8 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
         <ContentDropdownContainer title="location" addPadding expanded>
           <View style={styles.gapContainer}>
             <Text style={TEXT.regular}>place a pin where you want the event to be</Text>
-              {/* MAP NEEDS USER CONTEXT */}
               <SmallMap 
-                initialCoordinate={ {latitude: 51.5074, longitude: 0.1278} } 
+                initialCoordinate={props.userLocation} 
                 outputPin={{onPinDrop: viewModel.setVenueLocation}}            
               />
             <Text style={TEXT.regularGrey}>ensure you have contacted the venue prior</Text>
@@ -177,13 +188,13 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
             <Text style={TEXT.bold}>tags</Text>
             <Text style={TEXT.regular}>help members discover you with related tags</Text>
             <Text style={TEXT.regularGrey}>the type of medium is automatically added, but try more such as: 'beginner', 'flowers', 'detailing'</Text>
-            {viewModel.eventMedium ? (
+            {typeReady && mediumReady ? (
               <>
                 <TagManager
                   ref={tagManagerRef}
                   itemId={null} 
                   itemType={'event'}
-                  medium={viewModel.eventMedium} 
+                  medium={viewModel.eventMedium!} 
                   editTags
                 />
                 <Text style={TEXT.smallGrey}>empty tags will be removed</Text>

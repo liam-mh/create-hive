@@ -1,5 +1,8 @@
+import { Event, EventType } from '@/models/Event';
+import { createEvent } from '@/services/eventService';
 import { Coordinate } from '@/types/Coordinate';
 import { Medium, PrimaryMedium, SecondaryMedium } from '@/types/Medium';
+import { createEndTimestamp, createStartTimestamp } from '@/utils/dateTimeUtils';
 import { createMedium } from '@/utils/mediumUtils';
 import { Timestamp } from 'firebase/firestore';
 
@@ -7,7 +10,7 @@ class CreateEventViewModel {
   private _userId: string;
   private _userLocation: Coordinate;
 
-  private _eventKind: string | null = null;
+  private _eventType: EventType | null = null;
   private _eventPrivate: boolean = false;
   private _primaryMedium: PrimaryMedium | null = null;
   private _secondaryMedium: SecondaryMedium | null = null;
@@ -28,7 +31,7 @@ class CreateEventViewModel {
     this._userId = userId;
     this._userLocation = userLocation;
     
-    this.setEventKind = this.setEventKind.bind(this); 
+    this.setEventType = this.setEventType.bind(this); 
     this.setEventPrivate = this.setEventPrivate.bind(this); 
     this.setPrimaryMedium = this.setPrimaryMedium.bind(this); 
     this.setSecondaryMedium = this.setSecondaryMedium.bind(this); 
@@ -50,12 +53,12 @@ class CreateEventViewModel {
     return this._error;
   }
 
-  get eventKind(): string | null {
-    return this._eventKind;
+  get eventType(): EventType | null {
+    return this._eventType;
   }
 
-  setEventKind(value: string | null) {
-    this._eventKind = value;
+  setEventType(value: EventType | null) {
+    this._eventType = value;
   }
 
   get eventPrivate(): boolean {
@@ -178,11 +181,11 @@ class CreateEventViewModel {
     this._error = value;
   }
 
-  async complete(): Promise<boolean | string> {
+  async createEvent(): Promise<Event | string> {
     this._loading = true;
     const missingFields: string[] = [];
 
-    if (!this.eventKind) {
+    if (!this.eventType) {
       missingFields.push('Event Type');
     }
     if (!this.primaryMedium) {
@@ -218,11 +221,30 @@ class CreateEventViewModel {
 
     try {
 
+      const startTimestamp = createStartTimestamp(this._eventTimestamp, this._startTime)
+      const endTimestamp = createEndTimestamp(startTimestamp, this._eventDuration)
 
-      return true;
+      const newEvent = await createEvent({
+        userId: this.userId,
+        title: this.eventTitle!,
+        medium: this.eventMedium!,
+        eventType: this.eventType!,
+        start: startTimestamp!,
+        end: endTimestamp!,
+        private: this._eventPrivate,
+        location: this._venueLocation!,
+        description: this._eventDescription!
+      })
+
+      if (newEvent !== null) {
+        return newEvent as Event;
+      } else {
+        this._error = 'Failed to create event';
+        return 'Failed to create event'; 
+      }
     } catch (err: any) {
       this._error = 'Failed to create event';
-      return false;
+      return 'Failed to create event';
     }
   }
 
@@ -230,7 +252,7 @@ class CreateEventViewModel {
     console.log('--- View Model State ---');
     console.log('userId:', this._userId);
     console.log('userLocation:', this._userLocation);
-    console.log('eventKind:', this._eventKind);
+    console.log('eventType:', this._eventType);
     console.log('eventPrivate:', this._eventPrivate);
     console.log('primaryMedium:', this._primaryMedium);
     console.log('secondaryMedium:', this._secondaryMedium);

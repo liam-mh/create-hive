@@ -6,16 +6,21 @@ import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { useRef, useState } from 'react';
 import CreateEvent from '@/components/createPage/CreateEvent';
 import { useAuth } from '@/context/authContext';
+import { Event } from '@/models/Event';
+import InformationButton from '@/components/buttons/InformationButton';
 
 export default function Create() {
   const userId = useAuth().user!.userId;
+  const userLocation= useAuth().user!.location;
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   const [showCreateEvent, setShowCreateEvent] = useState(false);
+  const [successfulCreateEvent, setSuccessfulCreateEvent] = useState<Event | null>(null);
   const [showCreateArtwork, setShowCreateArtwork] = useState(false);
 
   const iconEvent = getIcon('calendarPlus', SIZES.l, COLOURS.white);
   const iconArtwork = getIcon('paletteFill', SIZES.l, COLOURS.white);
+  const iconSuccess = getIcon('checkCircle', SIZES.l, COLOURS.primary);
 
   const handleEventPress = () => {
     setShowCreateEvent(true);
@@ -35,14 +40,31 @@ export default function Create() {
         <Text style={TEXT.h1}>create</Text>
       </CustomHeader>
 
-      <ScrollView
-        style={[
-          styles.container,
-          (showCreateArtwork || showCreateEvent) && { backgroundColor: COLOURS.white },
-        ]}
-      >
-        {showCreateEvent && <CreateEvent userId={userId} />}
-      </ScrollView>
+      {successfulCreateEvent ? (
+        <View style={{flex: 1, backgroundColor: COLOURS.white, width:'100%'}}>
+          <View style={styles.successContainer}>
+            {iconSuccess}
+            <Text style={TEXT.boldPrimary}>event created</Text>
+            <Text style={TEXT.regularGrey}>view your new event</Text>
+            <InformationButton type={'event'} id={successfulCreateEvent.eventId} />
+          </View>
+        </View>
+      ) : (
+        <ScrollView
+          style={[
+            styles.container,
+            (showCreateArtwork || showCreateEvent) && { backgroundColor: COLOURS.white },
+          ]}
+        >
+          {showCreateEvent && !successfulCreateEvent &&
+            <CreateEvent 
+              userId={userId} 
+              userLocation={userLocation} 
+              onSuccess={setSuccessfulCreateEvent}
+            />
+          }
+        </ScrollView>
+      )}
 
       <BottomSheet ref={bottomSheetRef}>
         <BottomSheetView style={styles.sheetContentContainer}>
@@ -68,6 +90,14 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: UNIT,
     backgroundColor: COLOURS.offwhite,
+  },
+  successContainer: {
+    height: '100%',
+    alignItems: 'center',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    gap: UNIT,
+    backgroundColor: COLOURS.white
   },
   buttonContainer: {
     flexDirection: 'row',
