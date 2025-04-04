@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import TEXT, { COLOURS, CORNERS, SIZES, UNIT } from '@/styles';
 import { getIcon } from '@/utils/iconUtils';
+import { EventType } from '@/models/Event';
 
 interface EventTypeSelectionProps {
-  onSelect: (eventType: string | null) => void;
+  onSelect: (eventType: EventType | null) => void;
 }
 
 const EventTypeSelection: React.FC<EventTypeSelectionProps> = ( props ) => {
@@ -14,7 +15,7 @@ const EventTypeSelection: React.FC<EventTypeSelectionProps> = ( props ) => {
   const iconWorkshop = getIcon('brushFill', SIZES.l, COLOURS.primary);
   const iconExhibition = getIcon('easel2Fill', SIZES.l, COLOURS.primary);
 
-  const handleEventTypeSelect = (eventType: string) => {
+  const handleEventTypeSelect = (eventType: EventType) => {
     setSelectedEventType(eventType);
     props.onSelect(eventType);
   };
