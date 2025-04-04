@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Button, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import ContentDropdownContainer from '../ContentDropdownContainer';
 import TEXT, { COLOURS, CORNERS, DIVS, UNIT } from '@/styles';
 import CreateEventViewModel from '@/viewModels/CreateEventViewModel';
-import { Medium, PrimaryMedium, SecondaryMedium } from '@/types/Medium';
 import { Timestamp } from 'firebase/firestore';
 import CalendarDateTimeSelection from './CalendarDateTimeSelection';
 import TimeDurationPicker from './TimeDurationPicker';
@@ -14,120 +13,50 @@ import SmallMap from '../SmallMap';
 import { Coordinate } from '@/types/Coordinate';
 import ImagePickerExample from './ImagePicker';
 import TagManager, { TagManagerRef } from '../TagManager';
-import { createMedium } from '@/utils/mediumUtils';
+
 
 interface CreateEventProps {
   userId: string;
+  userLocation: Coordinate;
 }
 
 const CreateEvent: React.FC<CreateEventProps> = (props) => {
-  const [viewModel] = useState(() => new CreateEventViewModel(props.userId));
+  const [viewModel] = useState(() => new CreateEventViewModel(props.userId, props.userLocation));
   const [loading, setLoading] = useState(viewModel.loading);
   const [error, setError] = useState(viewModel.error);
-
-  // Event Type Selection State
-  const [selectedEventKind, setSelectedEventKind] = useState<string | null>(null);
-  const [selectedPrivacy, setSelectedPrivacy] = useState<boolean>(false);
-
-  // Art Medium Selection States
-  const [selectedPrimary, setSelectedPrimary] = useState<PrimaryMedium | null>(null);
-  const [selectedSecondary, setSelectedSecondary] = useState<SecondaryMedium | null>(null);
-
-  // Date and Time Selection States
-  const [selectedTimestamp, setSelectedTimestamp] = useState<Timestamp | null>(null);
-  const [startTime, setStartTime] = useState<string>('12:00'); 
-  const [timeDuration, setTimeDuration] = useState<number>(0);
-
-  const [venueName, setVenueName] = useState<string>('');
-  const [venueDetails, setVenueDetails] = useState<string>('');
-  const [venueLocation, setVenueLocation] = useState<Coordinate | null>(null);
-
-  const [title, setTitle] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
-  const [finalTags, setFinalTags] = useState<string[] | null>(null);
+  const [validationError, setValidationError] = useState<string | null>(null);
   const tagManagerRef = useRef<TagManagerRef>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      setError(null); 
-      // await viewModel.loadData(); 
-      // setLoading(viewModel.loading);
-      setLoading(false);
-      setError(viewModel.error);
-    };
-
-    fetchData();
-  }, [props.userId, viewModel]);
-
-  const handleEventKindSelect = (eventType: string | null) => {
-    setSelectedEventKind(eventType);
-    console.log('Selected Event Kind:', eventType);
-  };
-
-  const handlePrimarySelect = (primary: PrimaryMedium | null) => {
-    setSelectedPrimary(primary);
-    setSelectedSecondary(null);
-    setFinalTags(null);
-  };
-
-  const handleSecondarySelect = (secondary: SecondaryMedium | null) => {
-    setSelectedSecondary(secondary);
-    setFinalTags(null);
-    console.log('Selected Secondary:', secondary);
-  };
-
-  const handleDateSelection = (timestamp: Timestamp | null) => {
-    setSelectedTimestamp(timestamp);
-    if (timestamp) {
-      const date = timestamp.toDate();
-      const hours = date.getHours().toString().padStart(2, '0');
-      const minutes = date.getMinutes().toString().padStart(2, '0');
-      setStartTime(`${hours}:${minutes}`);
-      console.log('Selected Timestamp:', date);
-    } else {
-      console.log('No Timestamp selected');
-      setStartTime('12:00');
-    }
-  };
-
-  const handleTimeDurationChange = (duration: number) => {
-    setTimeDuration(duration);
-    console.log('Time Duration:', duration);
-  };
-
-  const handlePrivacyKindSelect = (isPrivate: boolean) => {
-    setSelectedPrivacy(isPrivate);
-    console.log('Selected Event Privacy:', isPrivate); 
-  };
-
-  const handleLocationSelected = (coordinate: Coordinate | null) => {
-    setVenueLocation(coordinate);
-    console.log('Selected Coordinate:', coordinate);
-  };
-
-  const handleReturnTagsPress = () => {
+  const handleCompletePress = async () => {
+    setValidationError(null);
     if (tagManagerRef.current) {
       const currentTags = tagManagerRef.current.getFinalTags();
-      setFinalTags(currentTags); 
-      console.log("Returned final tags:", currentTags);
-    } else {
-      console.log("TagManager ref not available yet.");
-        if (!selectedPrimary || !selectedSecondary) {
-          console.log("Please select primary and secondary medium first.");
-        }
-        setFinalTags([]); 
+      viewModel.setEventTags(currentTags);
+    }
+
+    setLoading(true); // Set loading state while completing
+    const result = await viewModel.complete();
+    setLoading(false); // Reset loading state
+
+    if (result === true) {
+      // Event creation was successful, navigate or show success message
+      console.log('Event creation successful!');
+      // You might want to navigate to a success screen or reset the form here
+    } else if (result === false) {
+      // Event creation failed (general error)
+      console.log('Event creation failed:', viewModel.error);
+      setError(viewModel.error || 'Failed to create event.');
+    } else if (typeof result === 'string') {
+      // Validation failed, display the error message
+      console.log('Validation Error:', result);
+      setValidationError(result);
     }
   };
 
-  const eventMedium = React.useMemo(() => {
-    if (selectedPrimary && selectedSecondary) {
-      return createMedium(selectedPrimary, selectedSecondary) as Medium;
-    }
-    return null; 
-  }, [selectedPrimary, selectedSecondary]);
-
-
+  useEffect(() => {
+    setLoading(viewModel.loading);
+    setError(viewModel.error);
+  }, [viewModel.loading, viewModel.error]);
 
   if (loading) {
     return <View style={styles.contentContainer}><Text>Loading...</Text></View>;
@@ -141,7 +70,7 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
     <View style={styles.contentContainer}>
       <View style={styles.sectionContainer}>
         <ContentDropdownContainer title="event type" addPadding expanded>
-          <EventTypeSelection onSelect={handleEventKindSelect} />
+          <EventTypeSelection onSelect={viewModel.setEventKind} />
         </ContentDropdownContainer>
       </View>
 
@@ -150,10 +79,8 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
       <View style={styles.sectionContainer}>
         <ContentDropdownContainer title="art medium" addPadding expanded>
           <MediumSelection
-            onPrimarySelect={handlePrimarySelect}
-            onSecondarySelect={handleSecondarySelect}
-            selectedPrimary={selectedPrimary}
-            selectedSecondary={selectedSecondary}
+            onPrimarySelect={viewModel.setPrimaryMedium}
+            onSecondarySelect={viewModel.setSecondaryMedium}
           />
         </ContentDropdownContainer>
       </View>
@@ -164,14 +91,10 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
         <ContentDropdownContainer title="date" addPadding expanded>
           <View style={styles.gapContainer}>
             <Text style={TEXT.regular}>when will you be hosting the event?</Text>
-            <CalendarDateTimeSelection onDateSelection={handleDateSelection} />
-            {selectedTimestamp && (
-              <>
-                <Text style={TEXT.boldGrey}>length</Text>
-                <Text style={TEXT.regularGrey}>how long will the event run for?</Text>
-                <TimeDurationPicker onTimeDurationChange={handleTimeDurationChange} />
-              </>
-            )}
+            <CalendarDateTimeSelection onDateSelection={viewModel.setEventTimestamp} />
+            <Text style={TEXT.boldGrey}>length</Text>
+            <Text style={TEXT.regularGrey}>how long will the event run for?</Text>
+            <TimeDurationPicker onTimeDurationChange={viewModel.setEventDuration} />
           </View>
         </ContentDropdownContainer>
       </View>
@@ -180,7 +103,7 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
 
       <View style={styles.sectionContainer}>
         <ContentDropdownContainer title="privacy" addPadding expanded>
-          <PrivacySelection onSelect={handlePrivacyKindSelect} />
+          <PrivacySelection onSelect={viewModel.setEventPrivate} />
         </ContentDropdownContainer>
       </View>
 
@@ -193,7 +116,7 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
               {/* MAP NEEDS USER CONTEXT */}
               <SmallMap 
                 initialCoordinate={ {latitude: 51.5074, longitude: 0.1278} } 
-                outputPin={{onPinDrop: handleLocationSelected}}            
+                outputPin={{onPinDrop: viewModel.setVenueLocation}}            
               />
             <Text style={TEXT.regularGrey}>ensure you have contacted the venue prior</Text>
 
@@ -202,8 +125,7 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
             <TextInput style={[TEXT.regularPrimary, styles.textInput]}
               placeholder={`"cafe create" / "my house"`}
               placeholderTextColor={COLOURS.darkgrey}
-              value={venueName} 
-              onChangeText={setVenueName}
+              onChangeText={viewModel.setVenueName}
               autoCapitalize='none'
             />
 
@@ -212,8 +134,7 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
             <TextInput style={[TEXT.regularPrimary, styles.textInput]}
               placeholder={`"floor 2, room 5" / "tell reception you are with create-hive" / "message me on arrival"`}
               placeholderTextColor={COLOURS.darkgrey}
-              value={venueDetails} 
-              onChangeText={setVenueDetails}
+              onChangeText={viewModel.setVenueDetails}
               autoCapitalize='none'
               multiline={true}
               textAlignVertical="top" 
@@ -233,8 +154,7 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
             <TextInput style={[TEXT.regularPrimary, styles.textInput]}
               placeholder={`"back to basics" / "paint the cafe with me"`}
               placeholderTextColor={COLOURS.darkgrey}
-              value={title} 
-              onChangeText={setTitle}
+              onChangeText={viewModel.setEventTitle}
               autoCapitalize='none'
             />
 
@@ -243,8 +163,7 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
             <TextInput style={[TEXT.regularPrimary, styles.textInput]}
               placeholder={`"what to bring" / "what to expect" / "suggested experience level"`}
               placeholderTextColor={COLOURS.darkgrey}
-              value={description} 
-              onChangeText={setDescription}
+              onChangeText={viewModel.setEventDescription}
               autoCapitalize='none'
               multiline={true}
               textAlignVertical="top" 
@@ -258,18 +177,21 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
             <Text style={TEXT.bold}>tags</Text>
             <Text style={TEXT.regular}>help members discover you with related tags</Text>
             <Text style={TEXT.regularGrey}>the type of medium is automatically added, but try more such as: 'beginner', 'flowers', 'detailing'</Text>
-            {eventMedium ? (
-              <TagManager
-                ref={tagManagerRef}
-                itemId={null} 
-                itemType={'event'}
-                medium={eventMedium} 
-                editTags
-              />
+            {viewModel.eventMedium ? (
+              <>
+                <TagManager
+                  ref={tagManagerRef}
+                  itemId={null} 
+                  itemType={'event'}
+                  medium={viewModel.eventMedium} 
+                  editTags
+                />
+                <Text style={TEXT.smallGrey}>empty tags will be removed</Text>
+              </>
             ) : (
-                 <Text style={TEXT.regularError}>Select a primary and secondary medium to add tags.</Text>
+                <Text style={TEXT.regularError}>Select a primary and secondary medium to add tags.</Text>
             )}
-            <Text style={TEXT.smallGrey}>empty tags will be removed</Text>
+            
           </View>
         </ContentDropdownContainer>
       </View>
@@ -277,14 +199,16 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
       <View style={DIVS.offwhite} />
 
       <View style={styles.sectionContainer}>
-        <TouchableOpacity style={styles.panelContainer} onPress={handleReturnTagsPress}>
-          <Text style={TEXT.regularWhite}>return tags</Text>
+        <TouchableOpacity 
+          style={styles.panelContainer} 
+          onPress={handleCompletePress}
+          disabled={loading}
+        >
+          <Text style={TEXT.regularWhite}>{loading ? 'submitting...' : 'submit event information'}</Text>
         </TouchableOpacity>
-        <Text>
-          {finalTags !== null
-              ? `Final Tags: ${JSON.stringify(finalTags)}`
-              : 'Press "return tags" to see the final list.'}
-        </Text>
+        {validationError && (
+          <Text style={TEXT.regularError}>{validationError}</Text>
+        )}
       </View>
 
       
