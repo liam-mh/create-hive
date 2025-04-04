@@ -1,5 +1,5 @@
 import { Timestamp } from "firebase/firestore";
-import { format, parseISO } from 'date-fns';
+import { addHours, format, parseISO, set } from 'date-fns';
 
 // Output Example: "11/15/2023, 3:30:45 PM" (Locale-dependent)
 export const timestampToDateTime = (timestamp: Timestamp | null | undefined): string | null => {
@@ -174,4 +174,40 @@ export const formatDuration = (minutes: number): string => {
   }
 
   return result;
+};
+
+export const createStartTimestamp = (dateTimestamp: Timestamp | null, startTime: string): Timestamp | null => {
+  if (!dateTimestamp || !startTime) {
+    return null;
+  }
+
+  try {
+    const date = dateTimestamp.toDate();
+    const [hoursStr, minutesStr] = startTime.split(':');
+    const hours = parseInt(hoursStr, 10);
+    const minutes = parseInt(minutesStr, 10);
+
+    const newDate = set(date, { hours, minutes, seconds: 0, milliseconds: 0 });
+
+    return Timestamp.fromDate(newDate);
+  } catch (error) {
+    console.error('Error converting date and time string to Timestamp:', error);
+    return null;
+  }
+};
+
+export const createEndTimestamp = (startTimestamp: Timestamp | null, durationHours: number): Timestamp | null => {
+  if (!startTimestamp || typeof durationHours !== 'number') {
+    return null;
+  }
+
+  try {
+    const startDate = startTimestamp.toDate();
+    const endDate = addHours(startDate, durationHours);
+
+    return Timestamp.fromDate(endDate);
+  } catch (error) {
+    console.error('Error creating end timestamp:', error);
+    return null;
+  }
 };
