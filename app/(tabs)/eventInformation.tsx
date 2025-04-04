@@ -61,7 +61,7 @@ const eventInformation = () => {
     return <View style={styles.contentContainer}><Text>Event not found.</Text></View>;
   }
 
-  const defaultImage = require('@/assets/images/default-profile-photo.jpg');
+  const defaultImage = require('@/assets/images/default-event-photo.jpg');
   const privacyText = event.private ? 'private' : 'public';
   const tags = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5']
 
@@ -80,7 +80,7 @@ const eventInformation = () => {
 
       <ScrollView style={styles.container}>
         <View style={styles.contentContainer}>
-          <View>
+          <View style={{ alignItems: 'center' }}>
             <Image
               source={imageUri ? { uri: imageUri } : defaultImage}
               style={styles.image} 
