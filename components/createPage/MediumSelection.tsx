@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import TEXT, { COLOURS, CORNERS, UNIT } from '@/styles';
 import { PrimaryMedium, primaryOptions, SecondaryMedium, secondaryOptions } from '@/types/Medium';
@@ -6,16 +6,24 @@ import { PrimaryMedium, primaryOptions, SecondaryMedium, secondaryOptions } from
 interface MediumSelectionProps {
   onPrimarySelect: (primary: PrimaryMedium | null) => void;
   onSecondarySelect: (secondary: SecondaryMedium | null) => void;
-  selectedPrimary: PrimaryMedium | null;
-  selectedSecondary: SecondaryMedium | null;
 }
 
-const MediumSelection: React.FC<MediumSelectionProps> = ({
-  onPrimarySelect,
-  onSecondarySelect,
-  selectedPrimary,
-  selectedSecondary,
-}) => {
+const MediumSelection: React.FC<MediumSelectionProps> = ( props ) => {
+  const [selectedPrimary, setSelectedPrimary] = useState<PrimaryMedium | null>(null);
+  const [selectedSecondary, setSelectedSecondary] = useState<SecondaryMedium | null>(null);
+
+  const handlePrimarySelect = (primary: PrimaryMedium) => {
+    setSelectedPrimary(primary);
+    props.onPrimarySelect(primary);
+    setSelectedSecondary(null);
+    props.onSecondarySelect(null);
+  }
+
+  const handleSecondarySelect = (secondary: SecondaryMedium) => {
+    setSelectedSecondary(secondary);
+    props.onSecondarySelect(secondary);
+  }
+
   return (
     <View style={styles.gapContainer}>
       <Text style={TEXT.regular}>what medium will you be using? pick the most dominant one.</Text>
@@ -27,7 +35,7 @@ const MediumSelection: React.FC<MediumSelectionProps> = ({
               styles.panelContainer,
               selectedPrimary === primary && styles.selectedButton,
             ]}
-            onPress={() => onPrimarySelect(primary)}
+            onPress={() => handlePrimarySelect(primary)}
           >
             <Text style={TEXT.regularPrimary}>{primary}</Text>
           </TouchableOpacity>
@@ -46,7 +54,7 @@ const MediumSelection: React.FC<MediumSelectionProps> = ({
                   styles.wrapPanel,
                   selectedSecondary === secondary && styles.selectedButton,
                 ]}
-                onPress={() => onSecondarySelect(secondary)}
+                onPress={() => handleSecondarySelect(secondary)}
               >
                 <Text style={TEXT.regularPrimary}>{secondary}</Text>
               </TouchableOpacity>
