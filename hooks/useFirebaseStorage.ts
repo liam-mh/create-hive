@@ -9,7 +9,7 @@ export const getImageUrl = async (folder: folderOptions, id: string): Promise<st
     const url = await getDownloadURL(fileRef);
     return url;
   } catch (error) {
-    console.error("Error retrieving image from Firebase Storage:", error);
+    console.log("Error retrieving image from Firebase Storage:", error);
     return null;
   }
 };
