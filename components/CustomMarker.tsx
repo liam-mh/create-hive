@@ -16,28 +16,38 @@ export interface CustomMarkerProps {
   onPress?: () => void;
 }
 
-const CustomMarker: React.FC<CustomMarkerProps> = ({ coordinate, type, id, text, onPress }) => {
+const CustomMarker: React.FC<CustomMarkerProps> = ( props ) => {
   const [imageUri, setImageUri] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
-  const colour = type === "event" ? COLOURS.primary : COLOURS.secondary;
-  const corners = type === "event" ? 100 : CORNERS.default;
-
+  let defaultImage = null;
+  if (props.type === 'event') {
+    defaultImage = require('@/assets/images/default-event-pin.jpg');
+  } else {
+    defaultImage = require('@/assets/images/default-artwork-photo.jpg');
+  }
+  const colour = props.type === "event" ? COLOURS.primary : COLOURS.secondary;
+  const corners = props.type === "event" ? 100 : CORNERS.default;
 
   useEffect(() => {
     let isMounted = true;
+    setHasError(false); // Reset error state on re-fetch
 
     const fetchImage = async () => {
       try {
         setLoading(true);
-        const url = await getImageUrl(type, id);
+        const url = await getImageUrl(props.type, props.id);
         if (isMounted) {
           setImageUri(url);
           setLoading(false);
         }
       } catch (error) {
-        console.error("Error fetching image URL:", error);
-        if (isMounted) setLoading(false);
+        console.log("Error fetching image URL:", error);
+        if (isMounted) {
+          setLoading(false);
+          setHasError(true); 
+        }
       }
     };
 
@@ -46,27 +56,34 @@ const CustomMarker: React.FC<CustomMarkerProps> = ({ coordinate, type, id, text,
     return () => {
       isMounted = false;
     };
-  }, [type, id]);
+  }, [props.type, props.id]);
 
   return (
-    <Marker 
-      coordinate={coordinate} 
-      key={`${type}-${id}`}
-      tracksViewChanges={loading}  
+    <Marker
+      coordinate={props.coordinate}
+      key={`${props.type}-${props.id}`}
+      tracksViewChanges={loading}
     >
-      <TouchableOpacity onPress={onPress}> 
+      <TouchableOpacity onPress={props.onPress}>
         <View style={[styles.container, SHADOWS.containerShadow]}>
           <View style={[styles.pin, { width: DEFAULT_SIZE + 8, height: DEFAULT_SIZE + 8, backgroundColor: colour, borderRadius: corners }]}>
-            {imageUri ? (
-              <Image source={{ uri: imageUri }} style={[{ width: DEFAULT_SIZE, height: DEFAULT_SIZE, borderRadius: corners }]} />
-            ) : (
+            {loading ? (
               <ActivityIndicator size="small" color={COLOURS.white} />
+            ) : (
+              <Image
+                source={imageUri ? { uri: imageUri } : defaultImage}
+                style={[{ width: DEFAULT_SIZE, height: DEFAULT_SIZE, borderRadius: corners }]}
+                onError={() => {
+                  console.log("Error loading image from URI, falling back to default.");
+                  setImageUri(null); // Clear the URI so the default image is shown
+                }}
+              />
             )}
           </View>
 
           <View style={[styles.triangle, { borderTopColor: colour }]} />
 
-          {text && <Text style={[TEXT.small, styles.text]}>{text}</Text>}
+          {props.text && <Text style={[TEXT.small, styles.text]}>{props.text}</Text>}
         </View>
       </TouchableOpacity>
     </Marker>
