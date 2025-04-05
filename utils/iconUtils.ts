@@ -206,7 +206,7 @@ export const getIcon = (
 export const getEventIconName = (eventType: EventType): IconNameType => {
   if (eventType === 'workshop') {
     return 'brushFill';
-  } else if (eventType === 'exhibiton') {
+  } else if (eventType === 'exhibition') {
     return 'easel2Fill';
   } else {
     return 'cupHotFill'; 
