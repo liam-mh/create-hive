@@ -32,7 +32,7 @@ const CustomMarker: React.FC<CustomMarkerProps> = ( props ) => {
 
   useEffect(() => {
     let isMounted = true;
-    setHasError(false); // Reset error state on re-fetch
+    setHasError(false);
 
     const fetchImage = async () => {
       try {
@@ -46,7 +46,7 @@ const CustomMarker: React.FC<CustomMarkerProps> = ( props ) => {
         console.log("Error fetching image URL:", error);
         if (isMounted) {
           setLoading(false);
-          setHasError(true); 
+          setHasError(true);
         }
       }
     };
@@ -63,27 +63,49 @@ const CustomMarker: React.FC<CustomMarkerProps> = ( props ) => {
       coordinate={props.coordinate}
       key={`${props.type}-${props.id}`}
       tracksViewChanges={loading}
+      testID={`custom-marker-${props.type}-${props.id}`} 
     >
-      <TouchableOpacity onPress={props.onPress}>
-        <View style={[styles.container, SHADOWS.containerShadow]}>
-          <View style={[styles.pin, { width: DEFAULT_SIZE + 8, height: DEFAULT_SIZE + 8, backgroundColor: colour, borderRadius: corners }]}>
+      <TouchableOpacity 
+        onPress={props.onPress} 
+        testID="marker-touchable"
+      >
+        <View 
+          style={[styles.container, SHADOWS.containerShadow]} 
+          testID="marker-container"
+        >
+          <View 
+            style={[styles.pin, { width: DEFAULT_SIZE + 8, height: DEFAULT_SIZE + 8, backgroundColor: colour, borderRadius: corners }]} 
+            testID={`pin-${props.type}`}
+          >
             {loading ? (
-              <ActivityIndicator size="small" color={COLOURS.white} />
+              <ActivityIndicator 
+                size="small" 
+                color={COLOURS.white} 
+                testID="loading-indicator" 
+              />
             ) : (
               <Image
                 source={imageUri ? { uri: imageUri } : defaultImage}
                 style={[{ width: DEFAULT_SIZE, height: DEFAULT_SIZE, borderRadius: corners }]}
                 onError={() => {
                   console.log("Error loading image from URI, falling back to default.");
-                  setImageUri(null); // Clear the URI so the default image is shown
+                  setImageUri(null); 
                 }}
+                testID={imageUri ? 'fetched-image' : `default-image-${props.type}`}
               />
             )}
           </View>
 
-          <View style={[styles.triangle, { borderTopColor: colour }]} />
-
-          {props.text && <Text style={[TEXT.small, styles.text]}>{props.text}</Text>}
+          <View 
+            style={[styles.triangle, { borderTopColor: colour }]} 
+            testID={`triangle-${props.type}`} 
+          />
+          {props.text && 
+            <Text 
+              style={[TEXT.small, styles.text]} 
+              testID="marker-text">{props.text}
+            </Text>
+          }
         </View>
       </TouchableOpacity>
     </Marker>
