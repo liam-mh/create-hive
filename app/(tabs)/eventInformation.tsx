@@ -39,6 +39,7 @@ const eventInformation = () => {
 
     const fetchData = async () => {
       await viewModel.fetchEventData();
+      console.log("Image URI:", viewModel.imageUri);
       setLoading(viewModel.loading);
       setError(viewModel.error);
       setEvent(viewModel.event);
@@ -188,6 +189,7 @@ const styles = StyleSheet.create({
   },
   image: {
     height: UNIT*15,
+    width: '100%'
   },
   sectionContainer: {
     paddingInline: UNIT,
