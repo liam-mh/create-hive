@@ -10,9 +10,9 @@ import MediumSelection from './MediumSelection';
 import PrivacySelection from './PrivacySelection';
 import SmallMap from '../SmallMap';
 import { Coordinate } from '@/types/Coordinate';
-import ImagePickerExample from './ImagePicker';
 import TagManager, { TagManagerRef } from '../TagManager';
 import { Event } from '@/models/Event';
+import ImageUpload from './ImageUpload';
 
 
 interface CreateEventProps {
@@ -183,7 +183,7 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
 
             <Text style={TEXT.bold}>cover image</Text>
             <Text style={TEXT.regular}>upload a photo of the event</Text>
-            <ImagePickerExample />
+            <ImageUpload onUpload={viewModel.setImage} />
 
             <Text style={TEXT.bold}>tags</Text>
             <Text style={TEXT.regular}>help members discover you with related tags</Text>
@@ -200,7 +200,7 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
                 <Text style={TEXT.smallGrey}>empty tags will be removed</Text>
               </>
             ) : (
-                <Text style={TEXT.regularError}>Select a primary and secondary medium to add tags.</Text>
+              <Text style={TEXT.regularError}>Select a primary and secondary medium to add tags.</Text>
             )}
             
           </View>

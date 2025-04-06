@@ -1,3 +1,4 @@
+import { uploadImageAsJPG } from '@/hooks/useFirebaseStorage';
 import { Event, EventType } from '@/models/Event';
 import { createEvent } from '@/services/eventService';
 import { Coordinate } from '@/types/Coordinate';
@@ -23,6 +24,7 @@ class CreateEventViewModel {
   private _eventTitle: string | null = null;
   private _eventDescription: string | null = null;
   private _eventTags: string[] | null = null;
+  private _image: string | null = null;
 
   private _loading: boolean = false;
   private _error: string | null = null;
@@ -43,6 +45,7 @@ class CreateEventViewModel {
     this.setEventTitle = this.setEventTitle.bind(this);
     this.setEventDescription = this.setEventDescription.bind(this);
     this.setEventTags = this.setEventTags.bind(this);
+    this.setImage = this.setImage.bind(this);
   }
 
   get loading(): boolean {
@@ -173,12 +176,27 @@ class CreateEventViewModel {
     return null;
   }
 
+  setImage(value: string | null) {
+    this._image = value;
+  }
+
   setLoading(value: boolean) {
     this._loading = value;
   }
 
   setError(value: string | null) {
     this._error = value;
+  }
+
+  private async uploadImage(eventId: string) {
+    if (eventId && this._image) {
+      const upload = await uploadImageAsJPG(
+        this._image,
+        'event',
+        eventId
+      )
+      return upload;
+    }
   }
 
   async createEvent(): Promise<Event | string> {
@@ -212,6 +230,9 @@ class CreateEventViewModel {
     if (!this.eventDescription) {
       missingFields.push('Event Description');
     }
+    if (!this._image) {
+      missingFields.push('Event Image');
+    }
 
     this._loading = false;
 
@@ -220,7 +241,6 @@ class CreateEventViewModel {
     }
 
     try {
-
       const startTimestamp = createStartTimestamp(this._eventTimestamp, this._startTime)
       const endTimestamp = createEndTimestamp(startTimestamp, this._eventDuration)
 
@@ -237,6 +257,8 @@ class CreateEventViewModel {
       })
 
       if (newEvent !== null) {
+        const upload = this.uploadImage(newEvent.eventId);
+        if (!upload) console.warn('Failed to upload image: ', newEvent.eventId);
         return newEvent as Event;
       } else {
         this._error = 'Failed to create event';

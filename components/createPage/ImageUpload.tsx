@@ -3,7 +3,11 @@ import { Image, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import TEXT, { COLOURS, CORNERS, UNIT } from '@/styles';
 
-export default function ImagePickerExample() {
+interface ImageUploadProps {
+  onUpload: (image: string | null) => void;
+}
+
+const ImageUpload: React.FC<ImageUploadProps> = ( props ) => {
   const [image, setImage] = useState<string | null>(null);
 
   const pickImage = async () => {
@@ -14,10 +18,10 @@ export default function ImagePickerExample() {
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      const selectedUri = result.assets[0].uri;
+      setImage(selectedUri);
+      props.onUpload(selectedUri);  
     }
   };
 
@@ -29,7 +33,9 @@ export default function ImagePickerExample() {
       {image && <Image source={{ uri: image }} style={styles.image} resizeMode="cover"/>}
     </View>
   );
-}
+}  
+
+export default ImageUpload;
 
 const styles = StyleSheet.create({
   container: {
