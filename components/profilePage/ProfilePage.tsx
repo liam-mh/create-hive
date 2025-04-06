@@ -39,7 +39,8 @@ const ProfilePage: React.FC<ProfilePageProps> = ( props ) => {
   return (
     <>
       <CustomHeader
-        settingsIcon={props.user ? true : false}
+        showSettingsIcon={props.user ? true : false}
+        hideBackButton
         children={
           <Text style={TEXT.h1}>{`${user.firstName} ${user.lastName}`}</Text> 
         }

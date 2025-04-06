@@ -1,4 +1,5 @@
 import { Timestamp } from "firebase/firestore";
+import { addHours, format, parseISO, set } from 'date-fns';
 
 // Output Example: "11/15/2023, 3:30:45 PM" (Locale-dependent)
 export const timestampToDateTime = (timestamp: Timestamp | null | undefined): string | null => {
@@ -135,3 +136,78 @@ export const checkExpired = (comparisonDate: Timestamp): boolean => {
   const comparison = comparisonDate.toDate(); 
   return comparison < now;
 }
+
+// Output Example: "monday 24 march"
+export const formatDateForCalendar = (dateString: string): string => {
+  try {
+    const parsedDate = parseISO(dateString);
+    return format(parsedDate, 'EEEE d MMMM');
+  } catch (error) {
+    console.error('Error formatting date:', error);
+    return 'Invalid Date';
+  }
+};
+
+export const formatDuration = (minutes: number): string => {
+  if (minutes < 0) {
+    return "0m";
+  }
+
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+
+  let result = "";
+
+  if (hours > 0) {
+    result += `${hours}h`;
+  }
+
+  if (remainingMinutes > 0) {
+    if (hours > 0) {
+      result += " ";
+    }
+    result += `${remainingMinutes}m`;
+  }
+
+  if (result === "") {
+    result = "0m";
+  }
+
+  return result;
+};
+
+export const createStartTimestamp = (dateTimestamp: Timestamp | null, startTime: string): Timestamp | null => {
+  if (!dateTimestamp || !startTime) {
+    return null;
+  }
+
+  try {
+    const date = dateTimestamp.toDate();
+    const [hoursStr, minutesStr] = startTime.split(':');
+    const hours = parseInt(hoursStr, 10);
+    const minutes = parseInt(minutesStr, 10);
+
+    const newDate = set(date, { hours, minutes, seconds: 0, milliseconds: 0 });
+
+    return Timestamp.fromDate(newDate);
+  } catch (error) {
+    console.error('Error converting date and time string to Timestamp:', error);
+    return null;
+  }
+};
+
+export const createEndTimestamp = (startTimestamp: Timestamp | null, durationHours: number): Timestamp | null => {
+  if (!startTimestamp || typeof durationHours !== 'number') {
+    return null;
+  }
+
+  try {
+    const startDate = startTimestamp.toDate();
+    const endDate = addHours(startDate, durationHours);
+
+    return Timestamp.fromDate(endDate);
+  } catch (error) {
+    console.error('Error creating end timestamp:', error);
+    return null;
+  }
+};

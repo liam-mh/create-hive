@@ -9,6 +9,7 @@ import BookmarkFill from '@/assets/icons/bookmark-fill.svg';
 import Bookmark from '@/assets/icons/bookmark.svg';
 import BrushFill from '@/assets/icons/brush-fill.svg';
 import Brush from '@/assets/icons/brush.svg';
+import CalendarPlus from '@/assets/icons/calendar-plus.svg';
 import Calendar from '@/assets/icons/calendar.svg';
 import CardHeading from '@/assets/icons/card-heading.svg';
 import ChatFill from '@/assets/icons/chat-fill.svg';
@@ -41,7 +42,9 @@ import Lock from '@/assets/icons/lock.svg';
 import PaletteFill from '@/assets/icons/palette-fill.svg';
 import Palette from '@/assets/icons/palette.svg';
 import Passport from '@/assets/icons/passport.svg';
+import PencilSquare from '@/assets/icons/pencil-square.svg';
 import People from '@/assets/icons/people.svg';
+import PeopleFill from '@/assets/icons/people-fill.svg';
 import PersonAdd from '@/assets/icons/person-add.svg';
 import PersonCheck from '@/assets/icons/person-check.svg';
 import PersonFillCheck from '@/assets/icons/person-fill-check.svg';
@@ -64,6 +67,7 @@ const iconMap: Record<string, React.ComponentType<SvgProps>> = {
   bookmark: Bookmark,
   brushFill: BrushFill,
   brush: Brush,
+  calendarPlus: CalendarPlus,
   calendar: Calendar,
   cardHeading: CardHeading,
   chatFill: ChatFill,
@@ -96,7 +100,9 @@ const iconMap: Record<string, React.ComponentType<SvgProps>> = {
   paletteFill: PaletteFill,
   palette: Palette,
   passport: Passport,
+  pencilSquare: PencilSquare,
   people: People,
+  peopleFill: PeopleFill,
   personAdd: PersonAdd,
   personCheck: PersonCheck,
   personFillCheck: PersonFillCheck,
@@ -120,6 +126,7 @@ export type IconNameType =
   | 'bookmark'
   | 'brushFill'
   | 'brush'
+  | 'calendarPlus'
   | 'calendar'
   | 'cardHeading'
   | 'chatFill'
@@ -152,7 +159,9 @@ export type IconNameType =
   | 'paletteFill'
   | 'palette'
   | 'passport'
+  | 'pencilSquare'
   | 'people'
+  | 'peopleFill'
   | 'personAdd'
   | 'personCheck'
   | 'personFillCheck'
@@ -197,7 +206,7 @@ export const getIcon = (
 export const getEventIconName = (eventType: EventType): IconNameType => {
   if (eventType === 'workshop') {
     return 'brushFill';
-  } else if (eventType === 'exhibiton') {
+  } else if (eventType === 'exhibition') {
     return 'easel2Fill';
   } else {
     return 'cupHotFill'; 

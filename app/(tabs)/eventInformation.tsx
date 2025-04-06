@@ -15,7 +15,7 @@ import CustomHeader from '@/components/CustomHeader';
 
 const eventInformation = () => {
   const router = useRouter();
-  const { type, id } = useLocalSearchParams();
+  const { type, id } = useLocalSearchParams();;
   const viewModel = new EventCardViewModel(id.toLocaleString());
   
   const [loading, setLoading] = useState(viewModel.loading);
@@ -28,8 +28,18 @@ const eventInformation = () => {
   const [host, setHost] = useState(viewModel.host);
 
   useEffect(() => {
+    setLoading(true);
+    setError(null);
+    setEvent(null);
+    setEventLocation(null);
+    setImageUri(null);
+    setEventDateTime(null);
+    setIcon(null);
+    setHost(null);
+
     const fetchData = async () => {
       await viewModel.fetchEventData();
+      console.log("Image URI:", viewModel.imageUri);
       setLoading(viewModel.loading);
       setError(viewModel.error);
       setEvent(viewModel.event);
@@ -42,7 +52,7 @@ const eventInformation = () => {
     fetchData();
   }, [id]);
 
-  if (loading) {
+  if (loading || !event || !event.location || !eventDateTime || !host) {
     return <View style={styles.contentContainer}><Text>Loading...</Text></View>;
   }
   if (error) {
@@ -52,7 +62,7 @@ const eventInformation = () => {
     return <View style={styles.contentContainer}><Text>Event not found.</Text></View>;
   }
 
-  const defaultImage = require('@/assets/images/default-profile-photo.jpg');
+  const defaultImage = require('@/assets/images/default-event-photo.jpg');
   const privacyText = event.private ? 'private' : 'public';
   const tags = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5']
 
@@ -71,7 +81,7 @@ const eventInformation = () => {
 
       <ScrollView style={styles.container}>
         <View style={styles.contentContainer}>
-          <View>
+          <View style={{ alignItems: 'center' }}>
             <Image
               source={imageUri ? { uri: imageUri } : defaultImage}
               style={styles.image} 
@@ -117,12 +127,16 @@ const eventInformation = () => {
                   <KeyValueRow rowType={'longText'} textData={{key: 'description', value: 'We will be back at the sheffield arts hall this week. In room 5'}} />
                   <ContentDropdownContainer 
                     title={'map'} 
-                    expanded={true}
-                    addPadding={true}
+                    expanded
+                    addPadding
                     isPrimary={false}
                     children={
-                      <SmallMap itemId={event.eventId} itemType={'event'} pinCoordinate={event.location} />
+                      <SmallMap 
+                        initialCoordinate={event.location} 
+                        inputPin={{itemId: event.eventId, itemType: 'event'}}
+                      />
                     } 
+
                   />
                 </DetailsContainer>
               } 
@@ -175,6 +189,7 @@ const styles = StyleSheet.create({
   },
   image: {
     height: UNIT*15,
+    width: '100%'
   },
   sectionContainer: {
     paddingInline: UNIT,

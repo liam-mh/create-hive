@@ -3,7 +3,7 @@ import { Medium, PrimaryMedium, SecondaryMedium } from "@/types/Medium";
 import { Coordinate } from "@/types/Coordinate";
 import { Attendee } from "@/models/Attendee";
 
-export type EventType = "casual" | "workshop" | "exhibiton";
+export type EventType = "casual" | "workshop" | "exhibition";
 
 export interface Event {
   eventId: string;
