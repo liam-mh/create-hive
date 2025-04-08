@@ -33,7 +33,7 @@ export default function RootLayout() {
   );
 }
 
-function InnerLayout() {
+export function InnerLayout() {
   const { user } = useAuth();
   console.log(user);
   return (

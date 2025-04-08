@@ -1,0 +1,1 @@
+export const createEvent = jest.fn().mockResolvedValue({ eventId: 'abc123' });
