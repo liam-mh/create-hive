@@ -3,33 +3,16 @@ import { createEvent } from '@/services/eventService';
 import { uploadImageAsJPG } from '@/hooks/useFirebaseStorage';
 import { Timestamp } from 'firebase/firestore';
 
-jest.mock('@/services/eventService', () => ({
-  createEvent: jest.fn().mockResolvedValue({ eventId: 'abc123' }),
-}));
-
-jest.mock('@/hooks/useFirebaseStorage', () => ({
-  uploadImageAsJPG: jest.fn().mockResolvedValue('https://fake.url/image.jpg'),
-  getImageUrl: jest.fn().mockResolvedValue('https://fake.url/image.jpg'),
-}));
-jest.mock('firebase/storage', () => ({
-  getStorage: jest.fn(),
-  ref: jest.fn(),
-  uploadBytes: jest.fn(),
-  getDownloadURL: jest.fn().mockResolvedValue('https://mocked-download-url'),
-}));
-jest.mock('firebase/firestore', () => ({
-  getFirestore: jest.fn(),
-  Timestamp: jest.fn().mockImplementation(() => ({
-    seconds: 1672531200, 
-    nanoseconds: 0,
-    toDate: jest.fn().mockReturnValue(new Date('2025-01-01T00:00:00Z')),  
-  })),
-}));
+jest.mock('@/services/eventService');
+jest.mock('@/hooks/useFirebaseStorage');
+jest.mock('firebase/firestore');
+jest.mock('firebase/storage');
+jest.mock('@react-native-async-storage/async-storage');
 
 describe('CreateEventViewModel', () => {
   const mockUserId = 'test-user-id';
   const mockLocation = { latitude: 10, longitude: 20 };
-  const mockTimestamp = new Timestamp(1672531200, 0);
+  const mockTimestamp = Timestamp.now();
 
   let vm: CreateEventViewModel;
 
