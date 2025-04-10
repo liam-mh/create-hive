@@ -53,6 +53,7 @@ import Person from '@/assets/icons/person.svg';
 import PlusSquareFill from '@/assets/icons/plus-square-fill.svg';
 import PlusSquare from '@/assets/icons/plus-square.svg';
 import Search from '@/assets/icons/search.svg';
+import Send from '@/assets/icons/send.svg';
 import SlashSquare from '@/assets/icons/slash-square.svg';
 import Tag from '@/assets/icons/tag.svg';
 import TagFill from '@/assets/icons/tag-fill.svg';
@@ -111,6 +112,7 @@ const iconMap: Record<string, React.ComponentType<SvgProps>> = {
   plusSquareFill: PlusSquareFill,
   plusSquare: PlusSquare,
   search: Search,
+  send: Send,
   slashSquare: SlashSquare,
   tag: Tag,
   tagFill: TagFill,
@@ -170,6 +172,7 @@ export type IconNameType =
   | 'plusSquareFill'
   | 'plusSquare'
   | 'search'
+  | 'send'
   | 'slashSquare'
   | 'tag'
   | 'tagFill'
