@@ -6,6 +6,7 @@ import DetailsRow from '../DetailsRow';
 import ProfileCardViewModel from '@/viewModels/ProfileCardViewModel';
 import MessageButton from '../buttons/MessageButton';
 import FollowButton from '../buttons/FollowButton';
+import EditButton from '../buttons/EditButton';
 
 interface ProfileCardProps {
   sessionUserId: string;
@@ -69,17 +70,26 @@ const ProfileCard: React.FC<ProfileCardProps> = ( props ) => {
       </View>
       <Text style={TEXT.regularGrey}>{userProfile.bio}</Text>
       <View style={styles.innerRow}>
-        <FollowButton 
-          userId={props.sessionUserId} 
-          userToFollowId={user.userId} 
-        />
-        <MessageButton
-          params={{
-            primaryUserId: props.sessionUserId,
-            secondaryUserId: user.userId, 
-            secondaryUserName: user.firstName,
-          }}
-        />
+        {props.sessionUserId == props.profileUserId ? (
+          <EditButton 
+            type={'profile'} 
+            id={props.sessionUserId}
+          />        
+        ) : (
+          <>
+            <FollowButton 
+              userId={props.sessionUserId} 
+              userToFollowId={user.userId} 
+            />
+            <MessageButton
+              params={{
+                primaryUserId: props.sessionUserId,
+                secondaryUserId: user.userId, 
+                secondaryUserName: user.firstName,
+              }}
+            />
+          </>
+        )}
       </View>
     </View>
   );
