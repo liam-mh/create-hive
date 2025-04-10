@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ImageBackground } from 'react-native';
-import TEXT, { CORNERS, UNIT } from '@/styles';
+import { View, Text, StyleSheet, Image } from 'react-native';
+import TEXT, { UNIT } from '@/styles';
 
 import InformationButton from './buttons/InformationButton';
 import DetailsContainer from './DetailsContainer';
@@ -53,52 +53,51 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ( props ) => {
     return <View style={styles.contentContainer}><Text>Artwork not found.</Text></View>;
   }
 
-  return (
-    <ImageBackground
-      source={{ uri: imageUri || undefined }}
-      style={styles.backgroundImage}
-      resizeMode="cover"
-    >
-      <View style={styles.overlay} />
-      <View style={styles.contentContainer}>
-        <View style={styles.titleContainer}>
-          <View style={styles.innerRow}>
-            <Text style={TEXT.h1}>{artwork.medium.primary}</Text>
-            {icon}
-          </View>
-          <View style={styles.innerRow}>
-            <SaveButton itemId={artwork.artworkId} itemType={'artwork'} userId={userId} isIconButton={true} />
-          </View>
-        </View>
-        
-        <DetailsContainer>
-          <DetailsRow iconName='cardHeading' text={`${artwork.title}`} />
-          <DetailsRow iconName='palette' text={`${artwork.medium.primary} - ${artwork.medium.secondary}`} />
-          <DetailsRow iconName='person' text={`${artist?.userAt.toLocaleLowerCase()}`} profileLink={artist?.userId} />
-        </DetailsContainer>
+  const defaultImage = require('@/assets/images/default-artwork-photo.jpg')
 
-        <View style={styles.buttonsContainer}>
-          <InformationButton type={'artwork'} id={artwork.artworkId} />
-          <VisitProfileButton id={artwork.userId} />
+  return (
+    <View style={styles.contentContainer}>
+      <View style={styles.titleContainer}>
+        <View style={styles.innerRow}>
+          <Text style={TEXT.h1}>{artwork.medium.primary}</Text>
+          {icon}
+        </View>
+        <View style={styles.innerRow}>
+          <SaveButton itemId={artwork.artworkId} itemType={'artwork'} userId={userId} isIconButton={true} />
         </View>
       </View>
-    </ImageBackground>
+      
+      <DetailsContainer>
+        <DetailsRow iconName='cardHeading' text={`${artwork.title}`} />
+        <DetailsRow iconName='palette' text={`${artwork.medium.primary} - ${artwork.medium.secondary}`} />
+        <DetailsRow iconName='person' text={`${artist?.userAt.toLocaleLowerCase()}`} profileLink={artist?.userId} />
+      </DetailsContainer>
+
+      <View style={styles.imageContainer}>
+        <Image
+          source={imageUri ? { uri: imageUri } : defaultImage}
+          resizeMode="cover"
+          style={{ width: '100%', height: '100%' }}
+        />
+      </View>
+
+      <View style={styles.buttonsContainer}>
+        <InformationButton type={'artwork'} id={artwork.artworkId} />
+        <VisitProfileButton id={artwork.userId} />
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  backgroundImage: {
+  imageContainer: {
     width: '100%',
-    borderRadius: CORNERS.default,
-    overflow: 'hidden',
-  },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)', 
+    height: UNIT * 15,
   },
   contentContainer: {
     padding: UNIT,
     gap: UNIT,
+    width: '100%'
   },
   titleContainer: {
     flexDirection: 'row',
