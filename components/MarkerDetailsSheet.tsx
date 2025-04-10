@@ -1,31 +1,26 @@
 import React, { useMemo } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { CustomMarkerProps } from '@/components/CustomMarker';
 import EventCard from './EventCard';
+import ArtworkCard from './ArtworkCard';
+import { UNIT } from '@/styles';
 
 interface MarkerDetailsSheetProps {
   bottomSheetRef: React.RefObject<BottomSheet>;
   selectedMarkerData: CustomMarkerProps | null;
 }
 
-const MarkerDetailsSheet: React.FC<MarkerDetailsSheetProps> = ({ bottomSheetRef, selectedMarkerData }) => {
-  const snapPoints = useMemo(() => ['12%', '37%'], []);
+const MarkerDetailsSheet: React.FC<MarkerDetailsSheetProps> = ( props ) => {
+  if (!props.selectedMarkerData) return null;
 
   return (
-    <BottomSheet
-      ref={bottomSheetRef}
-      index={-1}
-      snapPoints={snapPoints}
-      enablePanDownToClose={true} 
-    >
+    <BottomSheet ref={props.bottomSheetRef}>
       <BottomSheetView style={styles.contentContainer}>
-        {selectedMarkerData?.type == 'event' ? (
-          <EventCard eventId={selectedMarkerData.id} />
+        {props.selectedMarkerData?.type == 'event' ? (
+          <EventCard eventId={props.selectedMarkerData.id} />
         ) : (
-          <View>
-            <Text>Artwork</Text>
-          </View>
+          <ArtworkCard artworkId={props.selectedMarkerData.id} />
         )}
       </BottomSheetView>
     </BottomSheet>
@@ -34,7 +29,8 @@ const MarkerDetailsSheet: React.FC<MarkerDetailsSheetProps> = ({ bottomSheetRef,
 
 const styles = StyleSheet.create({
   contentContainer: {
-    flex: 1,
+    alignItems: 'center',
+    paddingBottom: UNIT / 2
   },
 });
 
