@@ -1,12 +1,21 @@
 import ContentDropdownContainer from '@/components/ContentDropdownContainer';
 import CustomHeader from '@/components/CustomHeader';
 import DetailsContainer from '@/components/DetailsContainer';
+import { useAuth } from '@/context/authContext';
 import TEXT, { COLOURS, DIVS, SIZES, UNIT } from '@/styles';
 import { getIcon } from '@/utils/iconUtils';
+import { useRouter } from 'expo-router';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 
 export default function Settings() {
+  const router = useRouter();
+  const { signOut } = useAuth();
   const iconChevronRight = getIcon('chevronRight', SIZES.m, COLOURS.primary);
+
+  const handleLogout = () => {
+    signOut();
+    router.replace('/login');
+  }
   
   return (
     <>
@@ -101,7 +110,7 @@ export default function Settings() {
           <TouchableOpacity style={styles.optionContainer}>
             <Text style={TEXT.regularPrimary}>add account</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.optionContainer}>
+          <TouchableOpacity style={styles.optionContainer} onPress={handleLogout} >
             <Text style={TEXT.regularError}>log out</Text>
           </TouchableOpacity>
         </View>
