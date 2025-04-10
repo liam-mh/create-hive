@@ -1,18 +1,25 @@
 import { StyleSheet, View, Text } from 'react-native';
-import { useRouter } from 'expo-router';
+import CustomHeader from '@/components/CustomHeader';
+import { UNIT } from '@/styles';
 
 export default function Index() {
-  const router = useRouter();
-
   return (
-    <View style={styles.container}>
-      <Text>Home</Text>
-    </View>
+    <>
+      <CustomHeader 
+        hideBackButton
+        showLogo
+      />
+
+      <View style={styles.container}>
+        <Text>Home</Text>
+      </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
+    padding: UNIT
+  }
 });
