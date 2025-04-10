@@ -14,6 +14,11 @@ export async function addInteraction(interaction: InteractionServicePost): Promi
   return service.create(interaction);
 }
 
+export async function deleteInteraction(userId: string, itemType: ItemType, interactionId: string): Promise<void> {
+  const service = createService(userId, itemType);
+  service.delete(interactionId);
+}
+
 export async function getInteraction(
   userId: string, itemType: ItemType, itemId: string, interactionType: InteractionType 
 ): Promise<Interaction | null> {

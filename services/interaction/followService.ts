@@ -1,6 +1,6 @@
 import { Timestamp } from 'firebase/firestore';
 import { Interaction, ItemType, InteractionType } from '@/models/Interaction';
-import { InteractionServicePost, addInteraction, getInteraction } from '@/services/interaction/interactionService';
+import { InteractionServicePost, addInteraction, deleteInteraction, getInteraction } from '@/services/interaction/interactionService';
 
 const type: InteractionType = 'follow';
 const itemType: ItemType = 'user'
@@ -18,6 +18,15 @@ export async function followUser( props: FollowServiceProps ): Promise<Interacti
     timestamp: Timestamp.now()
   }
   return addInteraction(follow);
+}
+
+export async function unfollowUser( props: FollowServiceProps ): Promise<boolean> {
+  const isFollowing = await getFollow(props);
+  if (isFollowing) {
+    await deleteInteraction(props.userId, itemType, isFollowing.id);
+    return true;
+  }
+  return false;
 }
 
 export async function getFollow( props: FollowServiceProps ): Promise<Interaction | null> {
