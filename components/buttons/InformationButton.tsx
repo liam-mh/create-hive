@@ -22,7 +22,7 @@ const InformationButton: React.FC<InformationButtonProps> = ( props: Information
 
   return (
     <BaseButton
-      text='more information'
+      text={props.type == 'event' ? 'more information' : 'view post'}
       icon='infoSquare'
       iconFill='infoSquareFill'
       pending={false}
