@@ -21,7 +21,6 @@ import { getIcon } from '@/utils/iconUtils';
 
 export interface messageParams {
   primaryUserId: string,
-  primaryUserName: string,
   secondaryUserId: string,
   secondaryUserName: string
 }
@@ -29,7 +28,6 @@ export interface messageParams {
 function isMessageParams(params: Record<string, any>): params is messageParams {
   return (
     typeof params.primaryUserId === 'string' &&
-    typeof params.primaryUserName === 'string' &&
     typeof params.secondaryUserId === 'string' &&
     typeof params.secondaryUserName === 'string'
   );
@@ -94,7 +92,7 @@ const Message = () => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={{ flex: 1 }}>
           <CustomHeader 
-            children={<Text style={TEXT.h1}>{params.secondaryUserName}</Text>} 
+            children={<Text style={TEXT.h1}>{params.secondaryUserName.toLowerCase()}</Text>} 
           />
 
           <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
@@ -105,7 +103,7 @@ const Message = () => {
               </View>
               ))
             ) : (
-              <Text style={TEXT.regular}>say hi to {params.secondaryUserName}</Text>
+              <Text style={TEXT.regular}>say hi to {params.secondaryUserName.toLowerCase()}</Text>
             )}
           </ScrollView>
 

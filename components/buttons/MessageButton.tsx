@@ -15,7 +15,6 @@ const MessageButton: React.FC<MessageButtonProps> = ( props ) => {
       pathname: '/message',
       params: {
         primaryUserId: props.params.primaryUserId,
-        primaryUserName: props.params.primaryUserName,
         secondaryUserId: props.params.secondaryUserId,
         secondaryUserName: props.params.secondaryUserName,
       }
