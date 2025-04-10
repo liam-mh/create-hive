@@ -136,11 +136,23 @@ export class BaseService<T> {
   async delete(id: string): Promise<void> {
     try {
       let docRef;
-      if (this.parentId) {
-        docRef = doc(db, this.collectionName, this.parentId, this.collectionName, id);
+      let fullPath: string;
+
+      if (this.parentId && this.subCollectionName) {
+        docRef = doc(db, this.collectionName, this.parentId, this.subCollectionName, id);
+        fullPath = `/${this.collectionName}/${this.parentId}/${this.subCollectionName}/${id}`;
+        console.log(`Deleting document with ID: ${id} in subcollection: ${this.subCollectionName} within parent: ${this.parentId} in collection ${this.collectionName}`);
+      } else if (this.parentId) {
+        docRef = doc(db, this.collectionName, this.parentId, id);
+        fullPath = `/${this.collectionName}/${this.parentId}/${id}`;
+        console.log(`Deleting document with ID: ${id} in collection: ${this.collectionName} within parent: ${this.parentId}`);
       } else {
         docRef = doc(db, this.collectionName, id);
+        fullPath = `/${this.collectionName}/${id}`;
+        console.log(`Deleting document with ID: ${id} in collection: ${this.collectionName}`);
       }
+
+      console.log('Full path:', fullPath);
 
       await deleteDoc(docRef);
     } catch (error) {
@@ -151,27 +163,27 @@ export class BaseService<T> {
   }
 
   async set(id: string, data: Omit<T, 'id'>): Promise<T | null> {
-      try {
-          let docRef;
-          if (this.parentId) {
-              docRef = doc(db, this.collectionName, this.parentId, this.collectionName, id);
-          } else {
-              docRef = doc(db, this.collectionName, id);
-          }
+    try {
+        let docRef;
+        if (this.parentId) {
+            docRef = doc(db, this.collectionName, this.parentId, this.collectionName, id);
+        } else {
+            docRef = doc(db, this.collectionName, id);
+        }
 
-          await setDoc(docRef, data);
-          const docSnap = await getDoc(docRef);
+        await setDoc(docRef, data);
+        const docSnap = await getDoc(docRef);
 
-          if (docSnap.exists()) {
-              return this.mapFunction({ id: docSnap.id, ...docSnap.data() });
-          } else {
-              return null;
-          }
-      } catch (error) {
-          const parentInfo = this.parentId ? ` from parent ${this.parentId}` : '';
-          console.error(`Error setting document ${id} in ${this.collectionName}${parentInfo}:`, error);
-          throw error;
-      }
+        if (docSnap.exists()) {
+            return this.mapFunction({ id: docSnap.id, ...docSnap.data() });
+        } else {
+            return null;
+        }
+    } catch (error) {
+        const parentInfo = this.parentId ? ` from parent ${this.parentId}` : '';
+        console.error(`Error setting document ${id} in ${this.collectionName}${parentInfo}:`, error);
+        throw error;
+    }
   }
 
   async get(queryConstraints?: QueryConstraint[]): Promise<T[]> {
