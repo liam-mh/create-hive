@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import TEXT, { COLOURS, CORNERS, UNIT } from '@/styles';
-import InformationButton from '../buttons/InformationButton';
 import DetailsContainer from '../DetailsContainer';
 import DetailsRow from '../DetailsRow';
 import ProfileCardViewModel from '@/viewModels/ProfileCardViewModel';
+import MessageButton from '../buttons/MessageButton';
+import FollowButton from '../buttons/FollowButton';
 
 interface ProfileCardProps {
   userId: string;
@@ -67,7 +68,18 @@ const ProfileCard: React.FC<ProfileCardProps> = ( props ) => {
       </View>
       <Text style={TEXT.regularGrey}>{userProfile.bio}</Text>
       <View style={styles.innerRow}>
-        <InformationButton type={'event'} id={user.userId} /> 
+        <FollowButton 
+          userId={user.userId} 
+          userToFollowId={props.userId} 
+        />
+        <MessageButton
+          params={{
+            primaryUserId: user.userId,
+            primaryUserName: user.firstName,
+            secondaryUserId: user.userId, 
+            secondaryUserName: user.firstName,
+          }}
+        />
       </View>
     </View>
   );
