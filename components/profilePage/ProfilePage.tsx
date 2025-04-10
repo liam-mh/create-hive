@@ -16,7 +16,7 @@ interface ProfilePageProps {
 const ProfilePage: React.FC<ProfilePageProps> = ( props ) => {
   const sessionUser = useAuth().user;
   const [ user, setUser ] = useState<User | null>(null); 
-  const ownProfile: boolean = sessionUser?.userId === props.userId;
+  const ownProfile: boolean = sessionUser?.userId === (props.userId || props.user?.userId);
 
   useEffect(() => {
     const fetchData = async () => {
