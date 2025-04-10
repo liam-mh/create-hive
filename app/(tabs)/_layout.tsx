@@ -123,6 +123,14 @@ function InnerTabs() {
           tabBarStyle: { display: 'none' },
         }}
       />
+      <Tabs.Screen 
+        name='message'
+        options={{ 
+          headerShown: false,
+          href: null,
+          tabBarStyle: { display: 'none' },
+        }}
+      />
     </Tabs>
   );
 };
