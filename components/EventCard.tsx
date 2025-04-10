@@ -84,7 +84,7 @@ const EventCard: React.FC<EventCardProps> = ({ eventId, inputEvent }) => {
           <DetailsRow iconName='calendar' text={`${eventDateTime?.date}`} />
           <DetailsRow iconName='clock' text={`${eventDateTime?.time}`} />
           <DetailsRow iconName='geoAlt' text={`${eventLocation?.toLocaleLowerCase()}`} />
-          <DetailsRow iconName='person' text={`${host?.userAt.toLocaleLowerCase()}`} />
+          <DetailsRow iconName='person' text={`${host?.userAt.toLocaleLowerCase()}`} profileLink={event.userId} />
         </DetailsContainer>
 
         <View style={styles.buttonsContainer}>

@@ -96,7 +96,7 @@ const eventInformation = () => {
               <DetailsRow iconName='calendar' text={`${eventDateTime?.date}`} />
               <DetailsRow iconName='clock' text={`${eventDateTime?.time}`} />
               <DetailsRow iconName='geoAlt' text={`${eventLocation?.toLocaleLowerCase()}`} />
-              <DetailsRow iconName='person' text={`${host?.userAt.toLocaleLowerCase()}`} />
+              <DetailsRow iconName='person' text={`${host?.userAt.toLocaleLowerCase()}`} profileLink={host.userId}/>
             </DetailsContainer>
           </View>
 
