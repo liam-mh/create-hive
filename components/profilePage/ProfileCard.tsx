@@ -8,11 +8,12 @@ import MessageButton from '../buttons/MessageButton';
 import FollowButton from '../buttons/FollowButton';
 
 interface ProfileCardProps {
-  userId: string;
+  sessionUserId: string;
+  profileUserId: string;
 }
 
 const ProfileCard: React.FC<ProfileCardProps> = ( props ) => {
-  const viewModel = new ProfileCardViewModel(props.userId);
+  const viewModel = new ProfileCardViewModel(props.profileUserId);
   const [loading, setLoading] = useState(viewModel.loading);
   const [error, setError] = useState(viewModel.error);
 
@@ -33,7 +34,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ( props ) => {
       setCity(viewModel.city);
     };
     fetchData();
-  }, [props.userId]);
+  }, [props]);
 
   if (loading) {
     return <View style={styles.contentContainer}><Text>Loading...</Text></View>;
@@ -69,13 +70,12 @@ const ProfileCard: React.FC<ProfileCardProps> = ( props ) => {
       <Text style={TEXT.regularGrey}>{userProfile.bio}</Text>
       <View style={styles.innerRow}>
         <FollowButton 
-          userId={user.userId} 
-          userToFollowId={props.userId} 
+          userId={props.sessionUserId} 
+          userToFollowId={user.userId} 
         />
         <MessageButton
           params={{
-            primaryUserId: user.userId,
-            primaryUserName: user.firstName,
+            primaryUserId: props.sessionUserId,
             secondaryUserId: user.userId, 
             secondaryUserName: user.firstName,
           }}
