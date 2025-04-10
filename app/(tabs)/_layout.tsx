@@ -39,6 +39,7 @@ function InnerTabs() {
         name="index"
         options={{ 
           title: 'Home', 
+          headerShown: false,
           tabBarIcon: ({ color, focused }) => {
             return !focused 
               ? getIcon('houseDoor', undefined, color) 
@@ -50,6 +51,7 @@ function InnerTabs() {
         name="search"
         options={{ 
           title: 'Search', 
+          headerShown: false,
           tabBarIcon: ({ color, focused }) => {
             return !focused 
               ? getIcon('search', undefined, color) 
