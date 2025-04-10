@@ -15,7 +15,7 @@ import CustomHeader from '@/components/CustomHeader';
 
 const eventInformation = () => {
   const router = useRouter();
-  const { type, id } = useLocalSearchParams();;
+  const { type, id } = useLocalSearchParams();
   const viewModel = new EventCardViewModel(id.toLocaleString());
   
   const [loading, setLoading] = useState(viewModel.loading);
