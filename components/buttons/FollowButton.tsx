@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import BaseButton from '@/components/buttons/BaseButton';
 import FollowButtonViewModel from '@/viewModels/FollowButtonViewModel';
 
@@ -9,7 +9,7 @@ interface FollowButtonProps {
 }
 
 const FollowButton: React.FC<FollowButtonProps> = ( props ) => {
-  const viewModel = new FollowButtonViewModel(props.userId, props.userToFollowId);
+  const viewModel = useRef<FollowButtonViewModel>(new FollowButtonViewModel(props.userId, props.userToFollowId)).current;
   const [buttonState, setButtonState] = useState(viewModel.buttonState);
   
   useEffect(() => {
