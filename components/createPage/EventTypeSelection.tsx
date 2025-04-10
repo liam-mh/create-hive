@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     gap: UNIT / 2,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: UNIT,
+    paddingVertical: UNIT,
     backgroundColor: COLOURS.white,
     borderRadius: CORNERS.default,
     borderWidth: 2,
