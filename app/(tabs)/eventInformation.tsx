@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import DetailsContainer from '@/components/DetailsContainer';
 import DetailsRow from '@/components/DetailsRow';
 import TEXT, { COLOURS, DIVS, UNIT } from '@/styles';
@@ -12,10 +12,11 @@ import SmallMap from '@/components/SmallMap';
 import EventHeader from '@/components/EventHeader';
 import { EventType } from '@/models/Event';
 import CustomHeader from '@/components/CustomHeader';
+import { useAuth } from '@/context/authContext';
 
 const eventInformation = () => {
-  const router = useRouter();
   const { type, id } = useLocalSearchParams();
+  const userId = useAuth().user!.userId;
   const viewModel = new EventCardViewModel(id.toLocaleString());
   
   const [loading, setLoading] = useState(viewModel.loading);
@@ -74,7 +75,7 @@ const eventInformation = () => {
             eventId={id as string}
             eventType={event.eventType as EventType}
             isPrivate={event.private}
-            userId={'FghLfeUlFYO0RMZYjzI3'}
+            userId={userId}
           />
         } 
       />
