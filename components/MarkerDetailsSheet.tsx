@@ -15,7 +15,7 @@ const MarkerDetailsSheet: React.FC<MarkerDetailsSheetProps> = ( props ) => {
   if (!props.selectedMarkerData) return null;
 
   return (
-    <BottomSheet ref={props.bottomSheetRef}>
+    <BottomSheet ref={props.bottomSheetRef} enablePanDownToClose={true} index={0} >
       <BottomSheetView style={styles.contentContainer}>
         {props.selectedMarkerData?.type == 'event' ? (
           <EventCard eventId={props.selectedMarkerData.id} />
