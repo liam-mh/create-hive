@@ -1,5 +1,5 @@
-import React, { useRef, useState, useEffect } from 'react';
-import MapView, { Region, PROVIDER_DEFAULT } from 'react-native-maps';
+import React, { useEffect, useRef, useState } from 'react';
+import MapView, { PROVIDER_DEFAULT } from 'react-native-maps';
 import { StyleSheet, View, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TEXT, SHADOWS, SIZES } from '@/styles';
@@ -9,12 +9,38 @@ import BottomSheet from '@gorhom/bottom-sheet';
 import MarkerDetailsSheet from './MarkerDetailsSheet';
 import { CustomMarkerProps } from '@/components/CustomMarker';
 import { MapViewModel } from '@/viewModels/MapViewModel';
+import { Coordinate } from '@/types/Coordinate';
+import { getCityFromCoordinates } from '@/utils/locationUtils';
 
-const Map = () => {
-  const viewModel = new MapViewModel(); 
+interface MapProps {
+  inputLocation: Coordinate;
+}
+
+const Map: React.FC<MapProps> = ( props ) => {
+  const viewModel = new MapViewModel(props.inputLocation); 
   const mapRef = useRef<MapView>(null);
   const bottomSheetRef = useRef<BottomSheet>(null);
+
   const [selectedMarkerData, setSelectedMarkerData] = useState<CustomMarkerProps | null>(null);
+  const [city, setCity] = useState<string>();
+
+  const handleRegionChange = async ( region: Coordinate ) => {
+    const fetchedCity = await getCityFromCoordinates(region);
+    if (fetchedCity) {
+      setCity(fetchedCity)
+    }
+  }
+
+  useEffect(() => {
+    const fetchCity = async () => {
+      const fetchedCity = await getCityFromCoordinates(props.inputLocation);
+      if (fetchedCity) {
+        setCity(fetchedCity);
+      }
+    };
+  
+    fetchCity();
+  }, []);  
 
   return (
     <View style={{ flex: 1 }}>
@@ -23,7 +49,7 @@ const Map = () => {
         style={styles.map}
         provider={PROVIDER_DEFAULT}
         initialRegion={viewModel.currentRegion}
-        onRegionChangeComplete={(region) => viewModel.setCurrentRegion(region)}
+        onRegionChangeComplete={(region) => handleRegionChange(region)}
         showsPointsOfInterest={false}
         userInterfaceStyle={'light'}
         showsCompass={false}
@@ -37,7 +63,7 @@ const Map = () => {
         />
         <SafeAreaView style={[styles.headerContainer, [SHADOWS.containerShadow]]}>
           <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={TEXT.h1}>{viewModel.city?.toLocaleLowerCase()}</Text>
+            <Text style={TEXT.h1}>{city}</Text>
             <MapFiltersDropdown />
           </View>
         </SafeAreaView>
