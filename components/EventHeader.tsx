@@ -5,15 +5,18 @@ import EventPrivacyIcon from "./buttons/EventPrivacyIcon";
 import SaveButton from "./buttons/Savebutton";
 import { getEventIconName, getIcon, IconNameType } from "@/utils/iconUtils";
 import { EventType } from "@/models/Event";
+import EditButton from "./buttons/EditButton";
+import EventAttendeesButton from "./buttons/EventAttendeesButton";
 
 interface EventHeaderProps {
   eventId: string;
   eventType: EventType;
   isPrivate: boolean;
   userId: string;
+  editButton?: boolean;
 }
 
-const EventHeader: React.FC<EventHeaderProps> = (props) => {
+const EventHeader: React.FC<EventHeaderProps> = ( props ) => {
   const iconHeaderName: IconNameType = getEventIconName(props.eventType);
   const icon = getIcon(iconHeaderName, SIZES.l, COLOURS.secondary);
 
@@ -24,8 +27,17 @@ const EventHeader: React.FC<EventHeaderProps> = (props) => {
         {icon}
       </View>
       <View style={styles.innerRow}>
-        <EventPrivacyIcon isPrivate={props.isPrivate} />
-        <SaveButton itemId={props.eventId} itemType={"event"} userId={props.userId} isIconButton={true} />
+        {props.editButton ? (
+          <>
+            <EventAttendeesButton sessionUserId={props.userId} eventId={props.eventId} iconButton/>
+            <EditButton type={'event'} id={props.eventId} iconButton/>
+          </>
+        ) : (
+          <>
+            <EventPrivacyIcon isPrivate={props.isPrivate} />
+            <SaveButton itemId={props.eventId} itemType={"event"} userId={props.userId} isIconButton={true} />  
+          </>
+        )}
       </View>
     </View>
   );
