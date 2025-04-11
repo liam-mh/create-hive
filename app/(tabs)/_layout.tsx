@@ -134,6 +134,14 @@ function InnerTabs() {
           tabBarStyle: { display: 'none' },
         }}
       />
+      <Tabs.Screen 
+        name='eventAttendees'
+        options={{ 
+          headerShown: false,
+          href: null,
+          tabBarStyle: { display: 'none' },
+        }}
+      />
     </Tabs>
   );
 };
