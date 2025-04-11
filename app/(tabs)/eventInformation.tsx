@@ -76,6 +76,7 @@ const eventInformation = () => {
             eventType={event.eventType as EventType}
             isPrivate={event.private}
             userId={userId}
+            editButton={userId == event.userId ? true : false}
           />
         } 
       />
@@ -137,7 +138,6 @@ const eventInformation = () => {
                         inputPin={{itemId: event.eventId, itemType: 'event'}}
                       />
                     } 
-
                   />
                 </DetailsContainer>
               } 
