@@ -5,6 +5,7 @@ import { useRouter } from 'expo-router';
 interface EditButtonProps {
   type: 'event' | 'artwork' | 'profile';
   id: string;
+  iconButton?: boolean;
 }
 
 const EditButton: React.FC<EditButtonProps> = ( props ) => {
@@ -20,7 +21,7 @@ const EditButton: React.FC<EditButtonProps> = ( props ) => {
       pending={false}
       onPress={handlePress}
       isSelected={false}
-      isIconButton={false}
+      isIconButton={props.iconButton ? true : false}
     />
   );
 };
