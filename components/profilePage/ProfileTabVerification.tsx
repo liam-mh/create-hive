@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity  } from 'react-native';
 import ContentDropdownContainer from '../ContentDropdownContainer';
-import { DIVS, UNIT } from '@/styles';
+import TEXT, { DIVS, UNIT } from '@/styles';
 import ProfileTabVerificationViewModel from '@/viewModels/ProfileTabVerificationViewModel';
 import DetailsContainer from '../DetailsContainer';
 import KeyValueRow from '../KeyValueRow';
@@ -48,56 +48,64 @@ const ProfileTabVerification: React.FC<ProfileTabVerificationProps> = ( props ) 
   if (error) {
     return <View style={styles.contentContainer}><Text>Error: {error}</Text></View>;
   }
-  if (!verification || !formattedDate) {
-    return <View style={styles.contentContainer}><Text>No verification to show.</Text></View>;
-  }
 
   return (
     <View style={styles.contentContainer}>
-      <View style={styles.sectionContainer}>
-        <ContentDropdownContainer 
-          title={'details'} 
-          addPadding={true}
-          expanded={true}
-          children={
-            <DetailsContainer>
-              <KeyValueRow rowType={'text'} textData={{key: 'joined', value: formattedDate.toLowerCase()}} />
-              <KeyValueRow rowType={'text'} textData={{key: 'events', value: verification.events.toString()}} />
-            </DetailsContainer>
-          }
-        />
-      </View>
-      <View style={DIVS.offwhite} />
-      <View style={styles.sectionContainer}>
-        <ContentDropdownContainer 
-          title={'reviews'} 
-          addPadding={true}
-          expanded={true}
-          children={
-            <DetailsContainer>
-              <KeyValueRow rowType={'text'} textData={{key: 'rating', value: verification.rating.toString()}} />
-              <KeyValueRow rowType={'text'} textData={{key: 'reviews', value: verification.reviews.toString()}} />
-            </DetailsContainer>
-          }
-        />
-      </View>
-      <View style={DIVS.offwhite} />
-      <View style={styles.sectionContainer}>
-        <ContentDropdownContainer 
-          title={'confirmed information'} 
-          addPadding={true}
-          expanded={true}
-          children={
-            <DetailsContainer>
-              <DetailsRow iconName={'passport'} text={'identity'} verificationTick={verification.identity} />
-              <DetailsRow iconName={'envelopeAt'} text={'email address'} verificationTick={verification.email} />
-              <DetailsRow iconName={'telephone'} text={'phone number'} verificationTick={verification.mobile} />
-              <DetailsRow iconName={'geoAlt'} text={'location'} verificationTick={verification.location} />
-            </DetailsContainer>
-          }
-        />
-      </View>
-      <View style={DIVS.offwhite} />
+      {verification && formattedDate ? (
+        <>
+          <View style={styles.sectionContainer}>
+            <ContentDropdownContainer 
+              title={'details'} 
+              addPadding={true}
+              expanded={true}
+              children={
+                <DetailsContainer>
+                  <KeyValueRow rowType={'text'} textData={{key: 'joined', value: formattedDate.toLowerCase()}} />
+                  <KeyValueRow rowType={'text'} textData={{key: 'events', value: verification.events.toString()}} />
+                </DetailsContainer>
+              }
+            />
+          </View>
+          <View style={DIVS.offwhite} />
+          <View style={styles.sectionContainer}>
+            <ContentDropdownContainer 
+              title={'reviews'} 
+              addPadding={true}
+              expanded={true}
+              children={
+                <DetailsContainer>
+                  <KeyValueRow rowType={'text'} textData={{key: 'rating', value: verification.rating.toString()}} />
+                  <KeyValueRow rowType={'text'} textData={{key: 'reviews', value: verification.reviews.toString()}} />
+                </DetailsContainer>
+              }
+            />
+          </View>
+          <View style={DIVS.offwhite} />
+          <View style={styles.sectionContainer}>
+            <ContentDropdownContainer 
+              title={'confirmed information'} 
+              addPadding={true}
+              expanded={true}
+              children={
+                <DetailsContainer>
+                  <DetailsRow iconName={'passport'} text={'identity'} verificationTick={verification.identity} />
+                  <DetailsRow iconName={'envelopeAt'} text={'email address'} verificationTick={verification.email} />
+                  <DetailsRow iconName={'telephone'} text={'phone number'} verificationTick={verification.mobile} />
+                  <DetailsRow iconName={'geoAlt'} text={'location'} verificationTick={verification.location} />
+                </DetailsContainer>
+              }
+            />
+          </View>
+          <View style={DIVS.offwhite} />
+        </>
+      ) : (
+        <>
+          <View style={styles.sectionContainer}>
+          <Text style={TEXT.regularError}>no verification information to show</Text> 
+          </View>
+          <View style={DIVS.offwhite} />
+        </>
+      )}
       <View style={styles.sectionContainer}>
         <ContentDropdownContainer 
           title={'report'} 
