@@ -92,7 +92,9 @@ const EventCard: React.FC<EventCardProps> = ({ eventId, inputEvent }) => {
           {expired ? (
             <Text style={TEXT.regularError}>expired</Text>
           ) : (
-            <RegisterButton eventId={event.eventId} eventIsPrivate={event.private} userId={userId} />
+            userId != event.userId && (
+              <RegisterButton eventId={event.eventId} eventIsPrivate={event.private} userId={userId} />
+            )
           )}
         </View>
       </View>
