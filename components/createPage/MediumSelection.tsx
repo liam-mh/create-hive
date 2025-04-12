@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import TEXT, { COLOURS, CORNERS, UNIT } from '@/styles';
 import { PrimaryMedium, primaryOptions, SecondaryMedium, secondaryOptions } from '@/types/Medium';
 
 interface MediumSelectionProps {
   onPrimarySelect: (primary: PrimaryMedium | null) => void;
   onSecondarySelect: (secondary: SecondaryMedium | null) => void;
+  regularHeading?: boolean;
 }
 
 const MediumSelection: React.FC<MediumSelectionProps> = ( props ) => {
@@ -26,40 +27,52 @@ const MediumSelection: React.FC<MediumSelectionProps> = ( props ) => {
 
   return (
     <View style={styles.gapContainer}>
-      <Text style={TEXT.regular}>what medium will you be using? pick the most dominant one.</Text>
-      <View style={styles.buttonContainer}>
-        {primaryOptions.map((primary) => (
-          <TouchableOpacity
-            key={primary}
-            style={[
-              styles.panelContainer,
-              selectedPrimary === primary && styles.selectedButton,
-            ]}
-            onPress={() => handlePrimarySelect(primary)}
-          >
-            <Text style={TEXT.regularPrimary}>{primary}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={{ marginHorizontal: -UNIT }} 
+        contentContainerStyle={{ paddingHorizontal: UNIT }}
+      >
+        <View style={styles.buttonContainer}>
+          {primaryOptions.map((primary) => (
+            <TouchableOpacity
+              key={primary}
+              style={[
+                styles.panelContainer,
+                selectedPrimary === primary && styles.selectedButton,
+              ]}
+              onPress={() => handlePrimarySelect(primary)}
+            >
+              <Text style={TEXT.regularPrimary}>{primary}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </ScrollView>
 
       {selectedPrimary && (
         <>
-          <Text style={TEXT.boldGrey}>sub medium</Text>
-          <View style={styles.buttonContainer}>
-            {secondaryOptions[selectedPrimary].map((secondary) => (
-              <TouchableOpacity
-                key={secondary}
-                style={[
-                  styles.panelContainer,
-                  styles.wrapPanel,
-                  selectedSecondary === secondary && styles.selectedButton,
-                ]}
-                onPress={() => handleSecondarySelect(secondary)}
-              >
-                <Text style={TEXT.regularPrimary}>{secondary}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
+          <Text style={props.regularHeading ? TEXT.regularGrey : TEXT.boldGrey}>sub medium</Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={{ marginHorizontal: -UNIT }} 
+            contentContainerStyle={{ paddingHorizontal: UNIT }} 
+          >
+            <View style={styles.buttonContainer}>
+              {secondaryOptions[selectedPrimary].map((secondary) => (
+                <TouchableOpacity
+                  key={secondary}
+                  style={[
+                    styles.panelContainer,
+                    selectedSecondary === secondary && styles.selectedButton,
+                  ]}
+                  onPress={() => handleSecondarySelect(secondary)}
+                >
+                  <Text style={TEXT.regularPrimary}>{secondary}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </ScrollView>
         </>
       )}
     </View>
@@ -71,21 +84,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: UNIT,
     width: '100%',
-    flexWrap: 'wrap',
+    overflow: 'visible'
   },
   panelContainer: {
-    flex: 1,
     gap: UNIT / 2,
     alignItems: 'center',
-    justifyContent: 'center',
+
     padding: UNIT,
     backgroundColor: COLOURS.white,
     borderRadius: CORNERS.default,
     borderWidth: 2,
     borderColor: COLOURS.primary,
-  },
-  wrapPanel: {
-    flex: 0,
   },
   gapContainer: {
     gap: UNIT,
