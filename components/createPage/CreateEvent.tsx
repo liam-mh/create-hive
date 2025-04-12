@@ -70,6 +70,7 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
     <View style={styles.contentContainer}>
       <View style={styles.sectionContainer}>
         <ContentDropdownContainer title="event type" addPadding expanded>
+          <Text style={[TEXT.regular, {paddingBottom: UNIT}]}>what kind of event would you be hosting?</Text>
           <EventTypeSelection 
             onSelect={(type) => {
               viewModel.setEventType(type);
@@ -85,6 +86,7 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
 
       <View style={styles.sectionContainer}>
         <ContentDropdownContainer title="art medium" addPadding expanded>
+          <Text style={[TEXT.regular, {paddingBottom: UNIT}]}>what medium will you be using? pick the most dominant one.</Text>
           <MediumSelection
             onPrimarySelect={viewModel.setPrimaryMedium}
             onSecondarySelect={(secondary) => {
@@ -236,6 +238,7 @@ const styles = StyleSheet.create({
   },
   sectionContainer: {
     paddingHorizontal: UNIT,
+    overflow: 'visible'
   },
   gapContainer: {
     gap: UNIT,
