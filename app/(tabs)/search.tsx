@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Keyboard } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Keyboard, ActivityIndicator } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import BottomSheet, { BottomSheetTextInput, BottomSheetView } from '@gorhom/bottom-sheet';
 import CustomHeader from '@/components/CustomHeader';
@@ -62,7 +62,8 @@ export default function Search() {
   };
 
   const handleSearchPress = () => {
-    throw new Error('Function not implemented.');
+    setLoading(true);
+
   };
 
   const SearchOptionButton = ({
@@ -88,6 +89,13 @@ export default function Search() {
       <CustomHeader hideBackButton>
         <Text style={TEXT.h1}>search</Text>
       </CustomHeader>
+
+      {/* Overlay to block interactions during loading */}
+      {loading && (
+        <View style={styles.overlay}>
+          <ActivityIndicator size="large" color={COLOURS.primary} />
+        </View>
+      )}
 
       <View style={{ flex: 1, backgroundColor: COLOURS.offwhite, width: '100%' }} />
 
@@ -129,6 +137,7 @@ export default function Search() {
               autoCapitalize="none"
               onSubmitEditing={handleSearchPress}
               returnKeyType="search"
+              editable={!loading}
             />
           )}
 
@@ -181,5 +190,16 @@ const styles = StyleSheet.create({
     borderColor: COLOURS.offwhite,
     borderRadius: CORNERS.default,
     padding: UNIT,
+  },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 999,
   },
 });
