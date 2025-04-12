@@ -4,6 +4,7 @@ export const UNIT = 16;
 
 export const COLOURS = {
   primary: '#00626B', 
+  primaryDark: '#00464C',
   secondary: '#83C5BE',
   offwhite: '#DDE8ED',  
   darkgrey: '#505050', 
