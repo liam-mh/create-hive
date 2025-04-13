@@ -8,6 +8,7 @@ import CreateEvent from '@/components/createPage/CreateEvent';
 import { useAuth } from '@/context/authContext';
 import { Event } from '@/models/Event';
 import InformationButton from '@/components/buttons/InformationButton';
+import CreateArtwork from '@/components/createPage/CreateArtwork';
 
 export default function Create() {
   const userId = useAuth().user!.userId;
@@ -16,6 +17,7 @@ export default function Create() {
 
   const [showCreateEvent, setShowCreateEvent] = useState(false);
   const [successfulCreateEvent, setSuccessfulCreateEvent] = useState<Event | null>(null);
+  const [successfulCreateArtwork, setSuccessfulCreateArtwork] = useState<Event | null>(null);
   const [showCreateArtwork, setShowCreateArtwork] = useState(false);
 
   const iconEvent = getIcon('calendarPlus', SIZES.l, COLOURS.white);
@@ -34,9 +36,15 @@ export default function Create() {
     bottomSheetRef.current?.close();
   };
 
+  const handleResetCreate = () => {
+    setShowCreateEvent(false);
+    setShowCreateArtwork(false);
+    bottomSheetRef.current?.expand();
+  };
+
   return (
     <>
-      <CustomHeader hideBackButton>
+      <CustomHeader hideBackButton showCreateIcon={handleResetCreate}>
         <Text style={TEXT.h1}>create</Text>
       </CustomHeader>
 
@@ -61,6 +69,15 @@ export default function Create() {
               userId={userId} 
               userLocation={userLocation} 
               onSuccess={setSuccessfulCreateEvent}
+              onRefresh={handleResetCreate}
+            />
+          }
+          {showCreateArtwork && !successfulCreateArtwork &&
+            <CreateArtwork 
+              userId={userId} 
+              userLocation={userLocation} 
+              onSuccess={setSuccessfulCreateEvent}
+              onRefresh={handleResetCreate}
             />
           }
         </ScrollView>
