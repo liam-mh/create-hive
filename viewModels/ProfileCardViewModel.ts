@@ -12,11 +12,14 @@ class ProfileCardViewModel {
   private _imageUri: string | null = null;
   private _city: string | null = null;
 
+  private _minimal: boolean = false;
   private _loading: boolean = true;
   private _error: string | null = null;
 
-  constructor(userId: string) {
+  constructor(userId: string, inputUser?: User, minimal?: boolean) {
     this._userId = userId;
+    if (inputUser) this._user = inputUser;
+    if (minimal) this._minimal = minimal
   }
 
   get user(): User | null {
@@ -44,13 +47,14 @@ class ProfileCardViewModel {
   }
 
   private async fetchUser(): Promise<void> {
+    if (this._user) return;
     this._loading = true;
     try {
       this._user = await getUserById(this._userId);
     } catch (err) {
       this._error = 'Failed to load user.';
       console.error(err);
-    }finally {
+    } finally {
       this._loading = false;
     }
   }
@@ -103,8 +107,8 @@ class ProfileCardViewModel {
     try {
       await this.fetchUser();
       if (this._user) {
-        await this.fetchUserProfile();
-        await this.fetchLocation();
+        !this._minimal ? await this.fetchUserProfile() : null;
+        !this._minimal ? await this.fetchLocation() : null;
         await this.fetchProfileImage();
       }
     } catch (err) {
