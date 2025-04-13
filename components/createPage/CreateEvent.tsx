@@ -13,12 +13,14 @@ import { Coordinate } from '@/types/Coordinate';
 import TagManager, { TagManagerRef } from '../TagManager';
 import { Event } from '@/models/Event';
 import ImageUpload from './ImageUpload';
+import RefreshButton from '../buttons/RefreshButton';
 
 
 interface CreateEventProps {
   userId: string;
   userLocation: Coordinate;
   onSuccess: (event: Event) => void;
+  onRefresh: () => void;
 }
 
 const CreateEvent: React.FC<CreateEventProps> = (props) => {
@@ -63,13 +65,19 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
   }
 
   if (error) {
-    return <View style={styles.contentContainer}><Text>Error: {error}</Text></View>;
+    return (
+      <View style={styles.errorContainer}>
+        <Text style={TEXT.regularError}>{error}</Text>
+        <RefreshButton onRefresh={props.onRefresh} />
+      </View>
+    );
   }
 
   return (
     <View style={styles.contentContainer}>
       <View style={styles.sectionContainer}>
         <ContentDropdownContainer title="event type" addPadding expanded>
+          <Text style={[TEXT.regular, {paddingBottom: UNIT}]}>what kind of event would you be hosting?</Text>
           <EventTypeSelection 
             onSelect={(type) => {
               viewModel.setEventType(type);
@@ -85,6 +93,7 @@ const CreateEvent: React.FC<CreateEventProps> = (props) => {
 
       <View style={styles.sectionContainer}>
         <ContentDropdownContainer title="art medium" addPadding expanded>
+          <Text style={[TEXT.regular, {paddingBottom: UNIT}]}>what medium will you be using? pick the most dominant one.</Text>
           <MediumSelection
             onPrimarySelect={viewModel.setPrimaryMedium}
             onSecondarySelect={(secondary) => {
@@ -236,6 +245,7 @@ const styles = StyleSheet.create({
   },
   sectionContainer: {
     paddingHorizontal: UNIT,
+    overflow: 'visible'
   },
   gapContainer: {
     gap: UNIT,
@@ -261,6 +271,13 @@ const styles = StyleSheet.create({
     padding: UNIT,
     backgroundColor: COLOURS.primary,
     borderRadius: CORNERS.default,
+  },
+  errorContainer: {
+    flex: 1,
+    gap: UNIT,
+    backgroundColor: COLOURS.white,
+    justifyContent: 'center', 
+    alignItems: 'center',     
   },
 });
 

@@ -6,6 +6,7 @@ import ProfileTabSelector from '@/components/profilePage/ProfileTabSelector';
 import { getUserById } from '@/services/userService';
 import TEXT, { COLOURS, DIVS, UNIT } from '@/styles';
 import { User } from '@/models/User';
+import { useAuth } from '@/context/authContext';
 
 interface ProfilePageProps {
   userId?: string;
@@ -13,7 +14,9 @@ interface ProfilePageProps {
 }
 
 const ProfilePage: React.FC<ProfilePageProps> = ( props ) => {
+  const sessionUser = useAuth().user;
   const [ user, setUser ] = useState<User | null>(null); 
+  const ownProfile: boolean = sessionUser?.userId === (props.userId || props.user?.userId);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,17 +42,20 @@ const ProfilePage: React.FC<ProfilePageProps> = ( props ) => {
   return (
     <>
       <CustomHeader
-        showSettingsIcon={props.user ? true : false}
-        hideBackButton
+        showSettingsIcon={ownProfile}
+        hideBackButton={ownProfile}
         children={
-          <Text style={TEXT.h1}>{`${user.firstName} ${user.lastName}`}</Text> 
+          <Text style={TEXT.h1}>{`${user.firstName.toLowerCase()}`}</Text> 
         }
       />
 
       <ScrollView style={styles.container}>
         <View style={styles.content}>
           <View style={styles.sectionContainer}>
-            <ProfileCard userId={user.userId} /> 
+            <ProfileCard 
+              sessionUserId={sessionUser!.userId}
+              profileUserId={user.userId} 
+            /> 
           </View>
           <View style={DIVS.offwhite} />
           <ProfileTabSelector userId={user.userId}/>

@@ -84,7 +84,7 @@ const EventCard: React.FC<EventCardProps> = ({ eventId, inputEvent }) => {
           <DetailsRow iconName='calendar' text={`${eventDateTime?.date}`} />
           <DetailsRow iconName='clock' text={`${eventDateTime?.time}`} />
           <DetailsRow iconName='geoAlt' text={`${eventLocation?.toLocaleLowerCase()}`} />
-          <DetailsRow iconName='person' text={`${host?.userAt.toLocaleLowerCase()}`} />
+          <DetailsRow iconName='person' text={`${host?.userAt.toLocaleLowerCase()}`} profileLink={event.userId} />
         </DetailsContainer>
 
         <View style={styles.buttonsContainer}>
@@ -92,7 +92,9 @@ const EventCard: React.FC<EventCardProps> = ({ eventId, inputEvent }) => {
           {expired ? (
             <Text style={TEXT.regularError}>expired</Text>
           ) : (
-            <RegisterButton eventId={event.eventId} eventIsPrivate={event.private} userId={userId} />
+            userId != event.userId && (
+              <RegisterButton eventId={event.eventId} eventIsPrivate={event.private} userId={userId} />
+            )
           )}
         </View>
       </View>

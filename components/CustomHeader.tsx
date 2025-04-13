@@ -1,17 +1,20 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { COLOURS, SIZES, UNIT } from '@/styles';
 import { getIcon } from '@/utils/iconUtils';
 
 interface CustomHeaderProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   showSettingsIcon?: boolean;
   hideBackButton?: boolean;
+  showLogo?: boolean;
+  showSearchIcon?: () => void;
+  showCreateIcon?: () => void;
 }
 
-const CustomHeader: React.FC<CustomHeaderProps> = ({ children, showSettingsIcon = false, hideBackButton = false }) => {
+const CustomHeader: React.FC<CustomHeaderProps> = ( props ) => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
@@ -25,21 +28,42 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({ children, showSettingsIcon 
 
   const icon = getIcon('chevronLeft', SIZES.l, COLOURS.primary);
   const iconList = getIcon('list', SIZES.l, COLOURS.primary);
+  const iconSearch = getIcon('search', SIZES.l, COLOURS.primary);
+  const iconCreate = getIcon('plusSquare', SIZES.l, COLOURS.primary);
+  const logo = require('@/assets/images/create-hive-logo.png');
 
   return (
     <View style={[styles.headerContainer, { paddingTop: insets.top }]}>
-      {!hideBackButton && (
-        <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-          {icon}
-        </TouchableOpacity>
-      )}
-      <View style={styles.contentContainer}>
-        {children}
-      </View>
-      {showSettingsIcon && (
-        <TouchableOpacity style={styles.settingsButton} onPress={handleSettings}>
-          {iconList}
-        </TouchableOpacity>
+      {props.showLogo ? (
+        <View style={styles.logoWrapper}>
+          <Image source={logo} style={styles.logo} />
+        </View>
+      ) : (
+        <>
+          {!props.hideBackButton && (
+            <TouchableOpacity style={styles.backButton} onPress={handleBack}>
+              {icon}
+            </TouchableOpacity>
+          )}
+          <View style={styles.contentContainer}>
+            {props.children}
+          </View>
+          {props.showSettingsIcon && (
+            <TouchableOpacity style={styles.settingsButton} onPress={handleSettings}>
+              {iconList}
+            </TouchableOpacity>
+          )}
+          {props.showSearchIcon && (
+            <TouchableOpacity style={styles.settingsButton} onPress={props.showSearchIcon}>
+              {iconSearch}
+            </TouchableOpacity>
+          )}
+          {props.showCreateIcon && (
+            <TouchableOpacity style={styles.settingsButton} onPress={props.showCreateIcon}>
+              {iconCreate}
+            </TouchableOpacity>
+          )}
+        </>
       )}
     </View>
   );
@@ -64,6 +88,18 @@ const styles = StyleSheet.create({
   settingsButton: {
     paddingLeft: UNIT,
   },
+  logoWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    paddingBottom: UNIT / 3,
+    paddingTop: UNIT / 4
+  },
+  logo: {
+    height: UNIT * 1.8,
+    width: UNIT * 10.5, 
+    resizeMode: 'contain',
+  }
 });
 
 export default CustomHeader;

@@ -1,6 +1,7 @@
 import React from 'react';
 import BaseButton from '@/components/buttons/BaseButton';
 import { useRouter } from 'expo-router';
+import { navigateToUserProfile } from '@/utils/routerUtils';
 
 interface VisitProfileButtonProps {
   id: string;
@@ -10,12 +11,7 @@ const VisitProfileButton: React.FC<VisitProfileButtonProps> = ( props ) => {
   const router = useRouter();
 
   const handlePress = () => {
-    router.push({
-      pathname: '/(tabs)/userProfile',
-      params: {
-        userId: props.id
-      }
-    });
+    navigateToUserProfile({ router, userId: props.id });
   };
 
   return (

@@ -4,6 +4,7 @@ import { COLOURS, SIZES } from '@/styles';
 import { EventType } from '@/models/Event';
 
 // Icon imports
+import ArrowClockwise from '@/assets/icons/arrow-clockwise.svg';
 import At from '@/assets/icons/at.svg';
 import BookmarkFill from '@/assets/icons/bookmark-fill.svg';
 import Bookmark from '@/assets/icons/bookmark.svg';
@@ -53,6 +54,7 @@ import Person from '@/assets/icons/person.svg';
 import PlusSquareFill from '@/assets/icons/plus-square-fill.svg';
 import PlusSquare from '@/assets/icons/plus-square.svg';
 import Search from '@/assets/icons/search.svg';
+import Send from '@/assets/icons/send.svg';
 import SlashSquare from '@/assets/icons/slash-square.svg';
 import Tag from '@/assets/icons/tag.svg';
 import TagFill from '@/assets/icons/tag-fill.svg';
@@ -62,6 +64,7 @@ import Unlock from '@/assets/icons/unlock.svg';
 import XCircle from '@/assets/icons/x-circle.svg';
 
 const iconMap: Record<string, React.ComponentType<SvgProps>> = {
+  arrowClockwise: ArrowClockwise,
   at: At,
   bookmarkFill: BookmarkFill,
   bookmark: Bookmark,
@@ -111,6 +114,7 @@ const iconMap: Record<string, React.ComponentType<SvgProps>> = {
   plusSquareFill: PlusSquareFill,
   plusSquare: PlusSquare,
   search: Search,
+  send: Send,
   slashSquare: SlashSquare,
   tag: Tag,
   tagFill: TagFill,
@@ -121,6 +125,7 @@ const iconMap: Record<string, React.ComponentType<SvgProps>> = {
 };
 
 export type IconNameType =
+  | 'arrowClockwise'
   | 'at'
   | 'bookmarkFill'
   | 'bookmark'
@@ -170,6 +175,7 @@ export type IconNameType =
   | 'plusSquareFill'
   | 'plusSquare'
   | 'search'
+  | 'send'
   | 'slashSquare'
   | 'tag'
   | 'tagFill'

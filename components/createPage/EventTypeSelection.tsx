@@ -6,6 +6,7 @@ import { EventType } from '@/models/Event';
 
 interface EventTypeSelectionProps {
   onSelect: (eventType: EventType | null) => void;
+  hideDescription?: boolean;
 }
 
 const EventTypeSelection: React.FC<EventTypeSelectionProps> = ( props ) => {
@@ -35,7 +36,6 @@ const EventTypeSelection: React.FC<EventTypeSelectionProps> = ( props ) => {
 
   return (
     <View style={styles.gapContainer}>
-      <Text style={TEXT.regular}>what kind of event would you be hosting?</Text>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={[
@@ -68,7 +68,7 @@ const EventTypeSelection: React.FC<EventTypeSelectionProps> = ( props ) => {
           <Text style={TEXT.regularPrimary}>exhibition</Text>
         </TouchableOpacity>
       </View>
-      {selectedEventType && (
+      {selectedEventType && !props.hideDescription && (
         <Text style={TEXT.regularGrey}>{getDescription(selectedEventType)}</Text>
       )}
     </View>
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     gap: UNIT / 2,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: UNIT,
+    paddingVertical: UNIT,
     backgroundColor: COLOURS.white,
     borderRadius: CORNERS.default,
     borderWidth: 2,

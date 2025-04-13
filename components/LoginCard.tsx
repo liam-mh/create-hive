@@ -14,13 +14,13 @@ const LoginCard = () => {
       <View style={styles.textInput}>
         {iconAt}
         <TextInput 
-        placeholder="username" 
-        placeholderTextColor={COLOURS.darkgrey}
-        value={userAtInput} 
-        onChangeText={setUserAtInput}
-        autoCapitalize='none'
-        style={TEXT.regular}
-      />
+          placeholder="username" 
+          placeholderTextColor={COLOURS.darkgrey}
+          value={userAtInput} 
+          onChangeText={setUserAtInput}
+          autoCapitalize='none'
+          style={TEXT.regular}
+        />
       </View>
       {loginError && 
         <View style={styles.centralContainer}>

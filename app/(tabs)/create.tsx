@@ -8,14 +8,16 @@ import CreateEvent from '@/components/createPage/CreateEvent';
 import { useAuth } from '@/context/authContext';
 import { Event } from '@/models/Event';
 import InformationButton from '@/components/buttons/InformationButton';
+import CreateArtwork from '@/components/createPage/CreateArtwork';
 
 export default function Create() {
   const userId = useAuth().user!.userId;
-  const userLocation= useAuth().user!.location;
+  const userLocation = useAuth().user!.location;
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   const [showCreateEvent, setShowCreateEvent] = useState(false);
   const [successfulCreateEvent, setSuccessfulCreateEvent] = useState<Event | null>(null);
+  const [successfulCreateArtwork, setSuccessfulCreateArtwork] = useState<Event | null>(null);
   const [showCreateArtwork, setShowCreateArtwork] = useState(false);
 
   const iconEvent = getIcon('calendarPlus', SIZES.l, COLOURS.white);
@@ -34,9 +36,15 @@ export default function Create() {
     bottomSheetRef.current?.close();
   };
 
+  const handleResetCreate = () => {
+    setShowCreateEvent(false);
+    setShowCreateArtwork(false);
+    bottomSheetRef.current?.expand();
+  };
+
   return (
     <>
-      <CustomHeader hideBackButton>
+      <CustomHeader hideBackButton showCreateIcon={handleResetCreate}>
         <Text style={TEXT.h1}>create</Text>
       </CustomHeader>
 
@@ -61,6 +69,15 @@ export default function Create() {
               userId={userId} 
               userLocation={userLocation} 
               onSuccess={setSuccessfulCreateEvent}
+              onRefresh={handleResetCreate}
+            />
+          }
+          {showCreateArtwork && !successfulCreateArtwork &&
+            <CreateArtwork 
+              userId={userId} 
+              userLocation={userLocation} 
+              onSuccess={setSuccessfulCreateEvent}
+              onRefresh={handleResetCreate}
             />
           }
         </ScrollView>
@@ -68,15 +85,15 @@ export default function Create() {
 
       <BottomSheet ref={bottomSheetRef}>
         <BottomSheetView style={styles.sheetContentContainer}>
-          <Text style={TEXT.bold}>What would you like to create?</Text>
+          <Text style={TEXT.bold}>what would you like to create?</Text>
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.panelContainer} onPress={handleEventPress}>
               {iconEvent}
-              <Text style={TEXT.regularWhite}>Host an event</Text>
+              <Text style={TEXT.regularWhite}>host an event</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.panelContainer} onPress={handleArtworkPress}>
               {iconArtwork}
-              <Text style={TEXT.regularWhite}>Post my artwork</Text>
+              <Text style={TEXT.regularWhite}>post my artwork</Text>
             </TouchableOpacity>
           </View>
         </BottomSheetView>
