@@ -45,7 +45,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ( props ) => {
         showSettingsIcon={ownProfile}
         hideBackButton={ownProfile}
         children={
-          <Text style={TEXT.h1}>{`${user.firstName.toLowerCase()} ${user.lastName.toLowerCase()}`}</Text> 
+          <Text style={TEXT.h1}>{`${user.firstName.toLowerCase()}`}</Text> 
         }
       />
 
