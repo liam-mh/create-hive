@@ -10,13 +10,15 @@ import { useAuth } from '@/context/authContext';
 import TEXT, { SIZES, UNIT, COLOURS, CORNERS } from '@/styles';
 import { EventType } from '@/models/Event';
 import { PrimaryMedium, SecondaryMedium } from '@/types/Medium';
+import SearchResultsPage from '@/components/searchPage/SearchResultsPage';
+
+export type SearchOptions = 'event' | 'artwork' | 'user' | 'tag';
 
 export default function Search() {
   const { tag } = useLocalSearchParams();
   const bottomSheetRef = useRef<BottomSheet>(null);
   const userLocation = useAuth().user!.location;
 
-  type SearchOptions = 'event' | 'artwork' | 'user' | 'tag';
   const [searchOption, setSearchOption] = useState<SearchOptions | null>(null);
   const [searchText, setSearchText] = useState<string | null>(null);
   const [eventType, setEventType] = useState<EventType | null>(null);
@@ -25,13 +27,13 @@ export default function Search() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [keyboardVisible, setKeyboardVisible] = useState(false);
+  const [keyboardVisible, setKeyboardVisible] = useState<boolean>(false);
+  const [displaySearchResults, setDisplaySearchResults] = useState<boolean>(false);
 
   const iconEvent = getIcon('calendarPlus', SIZES.l, COLOURS.white);
   const iconArtwork = getIcon('paletteFill', SIZES.l, COLOURS.white);
   const iconPeople = getIcon('peopleFill', SIZES.l, COLOURS.white);
   const iconTag = getIcon('tagFill', SIZES.l, COLOURS.white);
-  const iconSuccess = getIcon('checkCircle', SIZES.l, COLOURS.primary);
 
   useEffect(() => {
     setEventType(null);
@@ -63,8 +65,21 @@ export default function Search() {
 
   const handleSearchPress = () => {
     setLoading(true);
-
+    bottomSheetRef.current?.close();
+    setDisplaySearchResults(true);
+    setLoading(false);
   };
+
+  const handleResetSearch = () => {
+    setDisplaySearchResults(false);
+    setSearchOption(null);
+    setEventType(null);
+    setPrimaryMedium(null);
+    setSecondaryMedium(null);
+    setSearchText(null);
+    bottomSheetRef.current?.expand();
+  };
+  
 
   const SearchOptionButton = ({
     value,
@@ -97,7 +112,17 @@ export default function Search() {
         </View>
       )}
 
-      <View style={{ flex: 1, backgroundColor: COLOURS.offwhite, width: '100%' }} />
+      <View style={{ flex: 1, backgroundColor: COLOURS.offwhite, width: '100%' }}>
+        {displaySearchResults && (
+          <SearchResultsPage 
+            searchOption={searchOption!} 
+            searchEventType={eventType!}
+            searchMedium={{primary: primaryMedium!, secondary: secondaryMedium!}} 
+            searchTerm={searchText!}
+            onRefresh={handleResetSearch}
+          />
+        )}
+      </View>
 
       <BottomSheet ref={bottomSheetRef} keyboardBlurBehavior="restore">
         <BottomSheetView style={styles.sheetContentContainer}>
