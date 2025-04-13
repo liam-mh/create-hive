@@ -1,12 +1,12 @@
 import React from 'react';
 import BaseButton from '@/components/buttons/BaseButton';
 
-interface SearchRefreshButtonProps {
+interface RefreshButtonProps {
   onRefresh: () => void;
   iconButton?: boolean;
 }
 
-const SearchRefreshButton: React.FC<SearchRefreshButtonProps> = ( props ) => {
+const RefreshButton: React.FC<RefreshButtonProps> = ( props ) => {
   return (
     <BaseButton
       text='refresh'
@@ -20,4 +20,4 @@ const SearchRefreshButton: React.FC<SearchRefreshButtonProps> = ( props ) => {
   );
 };
 
-export default SearchRefreshButton;
+export default RefreshButton;
