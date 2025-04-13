@@ -106,6 +106,11 @@ export const TEXT = StyleSheet.create({
     fontSize: SIZES.m,
     color: COLOURS.black,
   },
+  boldWhite: {
+    fontFamily: FONTS.bold,
+    fontSize: SIZES.m,
+    color: COLOURS.white,
+  },
   boldGrey: {
     fontFamily: FONTS.bold,
     fontSize: SIZES.m,
@@ -121,6 +126,16 @@ export const TEXT = StyleSheet.create({
     fontSize: SIZES.xl,
     color: COLOURS.primary,
     letterSpacing: SPACING.reduced,
+  },
+  h1White: {
+    fontFamily: FONTS.bold,
+    fontSize: SIZES.xl,
+    color: COLOURS.white,
+  },
+  h1Black: {
+    fontFamily: FONTS.bold,
+    fontSize: SIZES.xl,
+    color: COLOURS.black,
   },
   h2: {
     fontFamily: FONTS.bold, 
