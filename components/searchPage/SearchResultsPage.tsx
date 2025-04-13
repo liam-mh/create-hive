@@ -1,5 +1,5 @@
 import TEXT, { COLOURS, DIVS, UNIT } from "@/styles";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { SearchOptions } from "@/app/(tabs)/search";
 import { EventType } from "@/models/Event";
 import { Medium } from "@/types/Medium";
@@ -7,6 +7,11 @@ import { useEffect, useState } from "react";
 import { getNewArtworkByMedium } from "@/services/artworkService";
 import ArtworkCard from "../ArtworkCard";
 import SearchRefreshButton from "../buttons/SearchRefreshButton";
+import { getUpcomingEventsByTypeAndMedium } from "@/services/eventService";
+import { getUserBySearch } from "@/services/userService";
+import ProfileCard from "../profilePage/ProfileCard";
+import { useAuth } from "@/context/authContext";
+import EventCard from "../EventCard";
 
 interface SearchResultsPageProps {
   searchOption: SearchOptions;
@@ -31,6 +36,7 @@ function verifyProps( props: SearchResultsPageProps ): boolean {
 
 const SearchResultsPage: React.FC<SearchResultsPageProps> = ( props ) => {
 
+  const sessionUserId = useAuth().user!.userId;
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -49,13 +55,13 @@ const SearchResultsPage: React.FC<SearchResultsPageProps> = ( props ) => {
   
         switch (props.searchOption) {
           case 'event':
-            // TODO: implement event fetching
+            results = await getUpcomingEventsByTypeAndMedium(props.searchEventType!, props.searchMedium!);
             break;
           case 'artwork':
             results = await getNewArtworkByMedium(props.searchMedium!);
             break;
           case 'user':
-            // TODO: implement user search
+            results = await getUserBySearch(props.searchTerm!);
             break;
           case 'tag':
             // TODO: implement tag search
@@ -86,26 +92,45 @@ const SearchResultsPage: React.FC<SearchResultsPageProps> = ( props ) => {
       <View style={styles.errorContainer}>
         <Text style={TEXT.regularError}>{error}</Text>
         <SearchRefreshButton onRefresh={props.onRefresh} />
-
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
-      {props.searchOption === 'artwork' && searchResults.length > 0 && (
+    <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 }}> 
+
+      {props.searchOption === 'event' && (
+        searchResults.map((event) => (
+          <View key={event.eventId}>
+            <EventCard eventId={event.eventId} inputEvent={event} />
+            <View style={DIVS.offwhite} />
+          </View>
+        ))
+      )}
+
+      {props.searchOption === 'artwork' && (
         searchResults.map((artwork) => (
-          <>
-            <ArtworkCard 
-              inputArtwork={artwork} 
-              artworkId={artwork.artworkId} 
-              key={artwork.artworkId} 
+          <View key={artwork.artworkId}>
+            <ArtworkCard
+              inputArtwork={artwork}
+              artworkId={artwork.artworkId}
             />
+            <View style={DIVS.offwhite} />
+          </View>
+        ))
+      )}
+
+      {props.searchOption === 'user' && (
+        searchResults.map((user) => (
+          <>
+            <View key={user.userId} style={styles.userResultContainer}>
+              <ProfileCard sessionUserId={sessionUserId} profileUserId={user.userId} minimalCard/>
+            </View>
             <View style={DIVS.offwhite} />
           </>
         ))
       )}
-    </View>
+    </ScrollView>
   );
 };
 
@@ -122,7 +147,12 @@ const styles = StyleSheet.create({
     backgroundColor: COLOURS.white,
     justifyContent: 'center', 
     alignItems: 'center',     
-  }
+  },
+  userResultContainer: {
+    gap: UNIT,
+    paddingInline: UNIT
+  },
+  
 });
 
 export default SearchResultsPage;
