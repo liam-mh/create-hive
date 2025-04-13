@@ -6,12 +6,13 @@ import { Medium } from "@/types/Medium";
 import { useEffect, useState } from "react";
 import { getNewArtworkByMedium } from "@/services/artworkService";
 import ArtworkCard from "../ArtworkCard";
-import SearchRefreshButton from "../buttons/SearchRefreshButton";
+
 import { getUpcomingEventsByTypeAndMedium } from "@/services/eventService";
 import { getUserBySearch } from "@/services/userService";
 import ProfileCard from "../profilePage/ProfileCard";
 import { useAuth } from "@/context/authContext";
 import EventCard from "../EventCard";
+import RefreshButton from "../buttons/RefreshButton";
 
 interface SearchResultsPageProps {
   searchOption: SearchOptions;
@@ -91,7 +92,7 @@ const SearchResultsPage: React.FC<SearchResultsPageProps> = ( props ) => {
     return (
       <View style={styles.errorContainer}>
         <Text style={TEXT.regularError}>{error}</Text>
-        <SearchRefreshButton onRefresh={props.onRefresh} />
+        <RefreshButton onRefresh={props.onRefresh} />
       </View>
     );
   }
@@ -141,7 +142,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLOURS.white
   },
   errorContainer: {
-    padding: UNIT,
     flex: 1,
     gap: UNIT,
     backgroundColor: COLOURS.white,
