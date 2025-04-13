@@ -6,7 +6,6 @@ import CustomHeader from '@/components/CustomHeader';
 import EventTypeSelection from '@/components/createPage/EventTypeSelection';
 import MediumSelection from '@/components/createPage/MediumSelection';
 import { getIcon } from '@/utils/iconUtils';
-import { useAuth } from '@/context/authContext';
 import TEXT, { SIZES, UNIT, COLOURS, CORNERS } from '@/styles';
 import { EventType } from '@/models/Event';
 import { PrimaryMedium, SecondaryMedium } from '@/types/Medium';
@@ -17,7 +16,6 @@ export type SearchOptions = 'event' | 'artwork' | 'user' | 'tag';
 export default function Search() {
   const { tag } = useLocalSearchParams();
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const userLocation = useAuth().user!.location;
 
   const [searchOption, setSearchOption] = useState<SearchOptions | null>(null);
   const [searchText, setSearchText] = useState<string | null>(null);
