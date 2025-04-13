@@ -48,7 +48,6 @@ const styles = StyleSheet.create({
     gap: UNIT / 2,
     borderRadius: CORNERS.default,
     padding: UNIT / 2,
-    alignSelf: 'flex-start'
   },
   unselectedContainer: {
     backgroundColor: COLOURS.secondary,
