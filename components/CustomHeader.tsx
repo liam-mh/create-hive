@@ -9,10 +9,11 @@ interface CustomHeaderProps {
   children?: React.ReactNode;
   showSettingsIcon?: boolean;
   hideBackButton?: boolean;
-  showLogo?: boolean
+  showLogo?: boolean;
+  showSearchIcon?: () => void;
 }
 
-const CustomHeader: React.FC<CustomHeaderProps> = ({ children, showSettingsIcon = false, hideBackButton = false, showLogo = false }) => {
+const CustomHeader: React.FC<CustomHeaderProps> = ( props ) => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
@@ -26,27 +27,33 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({ children, showSettingsIcon 
 
   const icon = getIcon('chevronLeft', SIZES.l, COLOURS.primary);
   const iconList = getIcon('list', SIZES.l, COLOURS.primary);
+  const iconSearch = getIcon('search', SIZES.l, COLOURS.primary);
   const logo = require('@/assets/images/create-hive-logo.png');
 
   return (
     <View style={[styles.headerContainer, { paddingTop: insets.top }]}>
-      {showLogo ? (
+      {props.showLogo ? (
         <View style={styles.logoWrapper}>
           <Image source={logo} style={styles.logo} />
         </View>
       ) : (
         <>
-          {!hideBackButton && (
+          {!props.hideBackButton && (
             <TouchableOpacity style={styles.backButton} onPress={handleBack}>
               {icon}
             </TouchableOpacity>
           )}
           <View style={styles.contentContainer}>
-            {children}
+            {props.children}
           </View>
-          {showSettingsIcon && (
+          {props.showSettingsIcon && (
             <TouchableOpacity style={styles.settingsButton} onPress={handleSettings}>
               {iconList}
+            </TouchableOpacity>
+          )}
+          {props.showSearchIcon && (
+            <TouchableOpacity style={styles.settingsButton} onPress={props.showSearchIcon}>
+              {iconSearch}
             </TouchableOpacity>
           )}
         </>

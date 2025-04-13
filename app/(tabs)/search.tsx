@@ -80,7 +80,6 @@ export default function Search() {
     bottomSheetRef.current?.expand();
   };
   
-
   const SearchOptionButton = ({
     value,
     icon,
@@ -101,7 +100,7 @@ export default function Search() {
 
   return (
     <>
-      <CustomHeader hideBackButton>
+      <CustomHeader hideBackButton showSearchIcon={handleResetSearch}>
         <Text style={TEXT.h1}>search</Text>
       </CustomHeader>
 
