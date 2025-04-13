@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
-import TEXT, { UNIT } from '@/styles';
+import TEXT, { COLOURS, UNIT } from '@/styles';
 
 import InformationButton from './buttons/InformationButton';
 import DetailsContainer from './DetailsContainer';
@@ -97,7 +97,8 @@ const styles = StyleSheet.create({
   contentContainer: {
     padding: UNIT,
     gap: UNIT,
-    width: '100%'
+    width: '100%',
+    backgroundColor: COLOURS.white
   },
   titleContainer: {
     flexDirection: 'row',
