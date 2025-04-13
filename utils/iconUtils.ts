@@ -4,6 +4,7 @@ import { COLOURS, SIZES } from '@/styles';
 import { EventType } from '@/models/Event';
 
 // Icon imports
+import ArrowClockwise from '@/assets/icons/arrow-clockwise.svg';
 import At from '@/assets/icons/at.svg';
 import BookmarkFill from '@/assets/icons/bookmark-fill.svg';
 import Bookmark from '@/assets/icons/bookmark.svg';
@@ -63,6 +64,7 @@ import Unlock from '@/assets/icons/unlock.svg';
 import XCircle from '@/assets/icons/x-circle.svg';
 
 const iconMap: Record<string, React.ComponentType<SvgProps>> = {
+  arrowClockwise: ArrowClockwise,
   at: At,
   bookmarkFill: BookmarkFill,
   bookmark: Bookmark,
@@ -123,6 +125,7 @@ const iconMap: Record<string, React.ComponentType<SvgProps>> = {
 };
 
 export type IconNameType =
+  | 'arrowClockwise'
   | 'at'
   | 'bookmarkFill'
   | 'bookmark'
