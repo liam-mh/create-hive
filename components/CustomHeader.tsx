@@ -11,6 +11,7 @@ interface CustomHeaderProps {
   hideBackButton?: boolean;
   showLogo?: boolean;
   showSearchIcon?: () => void;
+  showCreateIcon?: () => void;
 }
 
 const CustomHeader: React.FC<CustomHeaderProps> = ( props ) => {
@@ -28,6 +29,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ( props ) => {
   const icon = getIcon('chevronLeft', SIZES.l, COLOURS.primary);
   const iconList = getIcon('list', SIZES.l, COLOURS.primary);
   const iconSearch = getIcon('search', SIZES.l, COLOURS.primary);
+  const iconCreate = getIcon('plusSquare', SIZES.l, COLOURS.primary);
   const logo = require('@/assets/images/create-hive-logo.png');
 
   return (
@@ -54,6 +56,11 @@ const CustomHeader: React.FC<CustomHeaderProps> = ( props ) => {
           {props.showSearchIcon && (
             <TouchableOpacity style={styles.settingsButton} onPress={props.showSearchIcon}>
               {iconSearch}
+            </TouchableOpacity>
+          )}
+          {props.showCreateIcon && (
+            <TouchableOpacity style={styles.settingsButton} onPress={props.showCreateIcon}>
+              {iconCreate}
             </TouchableOpacity>
           )}
         </>
