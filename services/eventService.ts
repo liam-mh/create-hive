@@ -1,5 +1,6 @@
 import { BaseService } from './baseService';
 import { Event, mapEventFirestore, EventType } from '@/models/Event';
+import { Medium } from '@/types/Medium';
 import { DocumentData, limit, orderBy, QueryDocumentSnapshot, Timestamp, where } from 'firebase/firestore';
 
 export type EventServicePost = Omit<Event, 'eventId'>; 
@@ -33,6 +34,17 @@ export async function getEventsByUserIdPaginated(
 
 export async function getEventsByType(eventType: EventType): Promise<Event[]> {
   return eventService.get([where('eventType', '==', eventType)]);
+}
+
+export async function getUpcomingEventsByTypeAndMedium(eventType: EventType, medium: Medium): Promise<Event[]> {
+  const nowTimestamp = Timestamp.fromDate(new Date());
+  return eventService.get([
+    where('eventType', '==', eventType),
+    where('medium.primary', '==', medium.primary),
+    where('medium.secondary', '==', medium.secondary),
+    where('start', '>=', nowTimestamp),
+    orderBy('start', 'asc'),
+  ]);
 }
 
 export async function getUpcomingEventsByUserId(userId: string): Promise<Event[]> {
