@@ -55,7 +55,7 @@ const EventAttendees = () => {
               <View style={styles.sectionContainer}>
                 <TouchableOpacity style={styles.optionContainer}>
                   <Text style={TEXT.regular}>{attendee.attendeeId}</Text>
-                  {!attendee.approved ? (
+                  {attendee.approved ? (
                     iconApproved
                   ) : (
                     <View style={{ flexDirection: 'row', gap: UNIT * 2 }}>

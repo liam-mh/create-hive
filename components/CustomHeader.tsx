@@ -36,12 +36,20 @@ const CustomHeader: React.FC<CustomHeaderProps> = ( props ) => {
     <View style={[styles.headerContainer, { paddingTop: insets.top }]}>
       {props.showLogo ? (
         <View style={styles.logoWrapper}>
-          <Image source={logo} style={styles.logo} />
+          <Image 
+            source={logo} 
+            style={styles.logo} 
+            testID='logo-image' 
+          />
         </View>
       ) : (
         <>
           {!props.hideBackButton && (
-            <TouchableOpacity style={styles.backButton} onPress={handleBack}>
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={handleBack}
+              testID="back-button"
+            >
               {icon}
             </TouchableOpacity>
           )}
@@ -49,17 +57,29 @@ const CustomHeader: React.FC<CustomHeaderProps> = ( props ) => {
             {props.children}
           </View>
           {props.showSettingsIcon && (
-            <TouchableOpacity style={styles.settingsButton} onPress={handleSettings}>
+            <TouchableOpacity
+              style={styles.settingsButton}
+              onPress={handleSettings}
+              testID="settings-button"
+            >
               {iconList}
             </TouchableOpacity>
           )}
           {props.showSearchIcon && (
-            <TouchableOpacity style={styles.settingsButton} onPress={props.showSearchIcon}>
+            <TouchableOpacity
+              style={styles.settingsButton}
+              onPress={props.showSearchIcon}
+              testID="search-button"
+            >
               {iconSearch}
             </TouchableOpacity>
           )}
           {props.showCreateIcon && (
-            <TouchableOpacity style={styles.settingsButton} onPress={props.showCreateIcon}>
+            <TouchableOpacity
+              style={styles.settingsButton}
+              onPress={props.showCreateIcon}
+              testID="create-button"
+            >
               {iconCreate}
             </TouchableOpacity>
           )}
