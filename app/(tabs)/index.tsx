@@ -4,6 +4,7 @@ import TEXT, { COLOURS, SIZES, UNIT } from '@/styles';
 import { useAuth } from '@/context/authContext';
 import { getIcon } from '@/utils/iconUtils';
 import { Href, router } from 'expo-router';
+import { createUserProfile } from '@/services/userService';
 
 export default function Index() {
   const userFirstname = useAuth().user!.firstName;
@@ -36,8 +37,18 @@ export default function Index() {
       <View style={styles.container}>
 
         <View style={styles.centralSectionContainer}>
-          <Text style={TEXT.h1}>hey there, {userFirstname}</Text>
-          <Text style={TEXT.regular}>lets get you started</Text>
+          <Text 
+            style={TEXT.h1} 
+            testID='header-text' 
+          >
+            hey there, {userFirstname}
+          </Text>
+          <Text 
+            style={TEXT.regular}
+            testID='subheader-text' 
+          >
+            lets get you started
+          </Text>
         </View>
 
         <View> 
@@ -46,6 +57,7 @@ export default function Index() {
             source={topCurve}
             style={{ width: '100%', height: UNIT * 4 }}
             resizeMode='stretch'
+            testID='top-image'
           />
 
           <View>
@@ -53,6 +65,7 @@ export default function Index() {
               style={styles.option} 
               onPress={() => handlePress('create')}
               activeOpacity={1}
+              testID='create-navigation'
             >
               {iconCreate}
               <View>
@@ -64,11 +77,13 @@ export default function Index() {
               source={middleCurveFirst}
               style={{ width: '100%', height: UNIT * 4 }}
               resizeMode='stretch'
+              testID='middle-first-image'
             />
             <TouchableOpacity 
               style={[styles.option, styles.backgroundSecondary]} 
               onPress={() => handlePress('explore')}
               activeOpacity={1}
+              testID='explore-navigation'
             >
               {iconExplore}
               <View>
@@ -80,11 +95,13 @@ export default function Index() {
               source={middleCurveSecond}
               style={{ width: '100%', height: UNIT * 4 }}
               resizeMode='stretch'
+              testID='middle-second-image'
             />
             <TouchableOpacity 
               style={styles.option} 
               onPress={() => handlePress('search')}
               activeOpacity={1}
+              testID='discover-navigation'
             >
               {iconSearch}
               <View>
@@ -98,6 +115,7 @@ export default function Index() {
             source={bottomCurve}
             style={{ width: '100%', height: UNIT * 4 }}
             resizeMode='stretch'
+            testID='bottom-image'
           />
 
         </View>

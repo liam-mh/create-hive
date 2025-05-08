@@ -9,6 +9,7 @@
     "ios": "expo run:ios",
     "web": "expo start --web",
     "test": "jest --watchAll",
+    "test:coverage": "jest --coverage",
     "lint": "expo lint"
   },
   "jest": {
@@ -54,7 +55,8 @@
     "react-native-svg-transformer": "^1.5.0",
     "react-native-web": "~0.19.13",
     "react-native-webview": "13.12.5",
-    "react-native-wheel-pick": "^1.2.4"
+    "react-native-wheel-pick": "^1.2.4",
+    "expo-dev-client": "~5.0.20"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

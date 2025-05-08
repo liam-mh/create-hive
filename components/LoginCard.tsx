@@ -14,12 +14,15 @@ const LoginCard = () => {
       <View style={styles.textInput}>
         {iconAt}
         <TextInput 
-          placeholder="username" 
+          style={TEXT.regular}
+          placeholder={'your username'} 
           placeholderTextColor={COLOURS.darkgrey}
           value={userAtInput} 
           onChangeText={setUserAtInput}
-          autoCapitalize='none'
-          style={TEXT.regular}
+          autoCapitalize={'none'}
+          autoCorrect={false}
+          returnKeyType={'none'}
+          textContentType={'username'}
         />
       </View>
       {loginError && 
