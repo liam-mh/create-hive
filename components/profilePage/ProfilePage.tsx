@@ -15,7 +15,7 @@ interface ProfilePageProps {
 
 const ProfilePage: React.FC<ProfilePageProps> = ( props ) => {
   const sessionUser = useAuth().user;
-  const [ user, setUser ] = useState<User | null>(null); 
+  const [user, setUser] = useState<User | null>(null); 
   const ownProfile: boolean = sessionUser?.userId === (props.userId || props.user?.userId);
 
   useEffect(() => {
@@ -33,7 +33,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ( props ) => {
     };
 
     fetchData();
-  }, [props]);
+  }, [props.user, props.userId]);
 
   if (!user) {
     return <View style={styles.container}><Text>Could not find user</Text></View>;
@@ -52,10 +52,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ( props ) => {
       <ScrollView style={styles.container}>
         <View style={styles.content}>
           <View style={styles.sectionContainer}>
-            <ProfileCard 
-              sessionUserId={sessionUser!.userId}
-              profileUserId={user.userId} 
-            /> 
+            <ProfileCard inputUser={user}/> 
           </View>
           <View style={DIVS.offwhite} />
           <ProfileTabSelector userId={user.userId}/>
