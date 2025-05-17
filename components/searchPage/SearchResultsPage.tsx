@@ -123,12 +123,12 @@ const SearchResultsPage: React.FC<SearchResultsPageProps> = ( props ) => {
 
       {props.searchOption === 'user' && (
         searchResults.map((user) => (
-          <>
-            <View key={user.userId} style={styles.userResultContainer}>
-              <ProfileCard sessionUserId={sessionUserId} profileUserId={user.userId} minimalCard/>
+          <View key={user.userId}>
+            <View style={styles.userResultContainer}>
+              <ProfileCard inputUser={user.userId} minimalCard />
             </View>
             <View style={DIVS.offwhite} />
-          </>
+          </View>
         ))
       )}
     </ScrollView>
@@ -150,7 +150,8 @@ const styles = StyleSheet.create({
   },
   userResultContainer: {
     gap: UNIT,
-    paddingInline: UNIT
+    paddingInline: UNIT,
+    paddingBottom: UNIT
   },
   
 });
