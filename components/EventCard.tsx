@@ -16,7 +16,10 @@ interface EventCardProps {
   inputEvent?: Event;
 }
 
-const EventCard: React.FC<EventCardProps> = ({ eventId, inputEvent }) => {
+const EventCard: React.FC<EventCardProps> = ({ 
+  eventId, 
+  inputEvent 
+}) => {
   const {
     userId,
     event,
