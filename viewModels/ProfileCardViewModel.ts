@@ -33,10 +33,8 @@ export const useProfileCardViewModel = (
     const fetchData = async () => {
       setLoading(true);
       setError(null);
-
       try {
         let resolvedUser = user;
-
         if (!resolvedUser) {
           resolvedUser = await getUserById(userId);
           if (!resolvedUser) {
@@ -47,15 +45,12 @@ export const useProfileCardViewModel = (
         }
 
         const promises = [];
-
         if (!getProfileData) {
           promises.push(fetchUserProfile(resolvedUser.userId));
           promises.push(fetchLocation(resolvedUser.location));
           promises.push(checkPersonalProfile(resolvedUser.userId));
         }
-
         promises.push(fetchImage(resolvedUser.userId));
-
         await Promise.all(promises);
       } catch (err) {
         console.error(err);
@@ -66,7 +61,7 @@ export const useProfileCardViewModel = (
     };
 
     fetchData();
-  }, [userId]);
+  }, [inputUser]);
 
   const checkPersonalProfile = async (profileUserId: string) => {
     setPersonalProfile(sessionUser?.userId === profileUserId);
@@ -77,10 +72,16 @@ export const useProfileCardViewModel = (
     setUserProfile(profile);
   };
 
-  const fetchLocation = async (coordinate: Coordinate) => {
-    const address = await getAddressFromCoordinates(coordinate);
-    setCity(formatDistrictCity(address));
+  const fetchLocation = async (coordinate: any) => {
+  const normalisedCoordinate = {
+    latitude: coordinate.latitude ?? coordinate._lat,
+    longitude: coordinate.longitude ?? coordinate._long,
   };
+
+  const address = await getAddressFromCoordinates(normalisedCoordinate);
+  setCity(formatDistrictCity(address));
+};
+
 
   const fetchImage = async (uid: string) => {
     const uri = await getImageUrl('user', uid);
