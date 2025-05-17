@@ -1,156 +1,94 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Event, EventType } from '@/models/Event';
 import { getEventById } from '@/services/eventService';
-import { Event } from '@/models/Event';
-import { calculateEventDateTime } from '@/utils/dateTimeUtils';
-import { formatDistrictCity, getAddressFromCoordinates } from '@/utils/locationUtils';
-import { Coordinate } from '@/types/Coordinate';
-import { getImageUrl } from "@/hooks/useFirebaseStorage";
-import { SIZES, COLOURS } from '@/styles';
-import { IconNameType, getEventIconName, getIcon } from '@/utils/iconUtils';
+import { getAddressFromCoordinates, formatDistrictCity } from '@/utils/locationUtils';
+import { getImageUrl } from '@/hooks/useFirebaseStorage';
 import { getUserById } from '@/services/userService';
-import { User } from '@/models/User';
+import { getEventIconName, getIcon } from '@/utils/iconUtils';
+import { calculateEventDateTime, checkExpired, EventDateTime } from '@/utils/dateTimeUtils';
+import { Coordinate } from '@/types/Coordinate';
+import { COLOURS, SIZES } from '@/styles';
+import { useAuth } from '@/context/authContext';
 
-class EventCardViewModel {
-  private _eventId: string;
-  private _event: Event | null = null;
-  private _eventLocation: string | null = null;
-  private _imageUri: string | null = null;
-  private _icon: React.ReactNode | null = null;
-  private _host: User | null = null;
-  
-  private _loading: boolean = true;
-  private _error: string | null = null;
-  
-  constructor(eventId: string, inputEvent?: Event) {
-    this._eventId = eventId;
-    if (inputEvent) {
-      this._event = inputEvent;
-    }
-  }
+export const useEventCardViewModel = (eventId: string, initialEvent?: Event) => {
+  const [event, setEvent] = useState<Event | null>(initialEvent ?? null);
+  const [eventLocation, setEventLocation] = useState<string | null>(null);
+  const [imageUri, setImageUri] = useState<string | null>(null);
+  const [icon, setIcon] = useState<React.ReactNode | null>(null);
+  const [host, setHost] = useState<any | null>(null);
+  const [eventDateTime, setEventDateTime] = useState<EventDateTime | null>(null);
+  const [expired, setExpired] = useState<boolean>(false);
+  const userId = useAuth().user!.userId;
 
-  get event(): Event | null {
-    return this._event;
-  }
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  get loading(): boolean {
-    return this._loading;
-  }
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const evt = event ?? await getEventById(eventId);
+        if (!evt) {
+          setError('Event not found');
+          return;
+        }
+        setEvent(evt);
+        setEventDateTime(calculateEventDateTime(evt.start, evt.end));
+        setExpired(checkExpired(evt.start))
 
-  get error(): string | null {
-    return this._error;
-  }
-
-  get eventLocation(): string | null {
-    return this._eventLocation;
-  }
-
-  get imageUri(): string | null {
-    return this._imageUri;
-  }
-
-  get icon(): React.ReactNode | null {
-    return this._icon;
-  }
-
-  get host(): User | null {
-    return this._host;
-  }
-
-  private async fetchHost(): Promise<void> {
-    this._loading = true;
-    try {
-      if (this._event) {
-        this._host = await getUserById(this._event.userId);
+        await Promise.all([
+          fetchLocation(evt),
+          fetchImage(evt.eventId),
+          fetchHost(evt.userId),
+          fetchIcon(evt.eventType),
+        ]);
+      } catch (err) {
+        console.error(err);
+        setError('Failed to load event data.');
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      this._error = 'Failed to load host .';
-      console.error(err);
-    }finally {
-      this._loading = false;
-    }
-  }
+    };
 
-  async fetchEventData(): Promise<void> {
-    this._loading = true;
-    this._error = null;
-
-    try {
-      if (!this._event) {
-        await this.fetchEvent();
-      }
-      if (this._event) {
-        await this.fetchEventLocation();
-        await this.fetchEventImage();
-        await this.fetchHost();
-        this.fetchIcon();
-      }
-    } catch (err) {
-      this._error = 'Failed to load event data.';
-      console.error(err);
-    } finally {
-      this._loading = false;
-    }
-  }
-
-  private async fetchEvent(): Promise<void> {
-    this._loading = true;
-    try {
-      this._event = await getEventById(this._eventId);
-    } catch (err) {
-      this._error = 'Failed to load event.';
-      console.error(err);
-    } finally {
-      this._loading = false;
-    }
-  }
-
-  private async fetchEventLocation(): Promise<void> {
-    this._loading = true;
-    try {
-      const coordinate: Coordinate = {
-        latitude: this._event!.location.latitude,
-        longitude: this._event!.location.longitude,
+    const fetchLocation = async (evt: Event) => {
+      const coord: Coordinate = {
+        latitude: evt.location.latitude,
+        longitude: evt.location.longitude,
       };
-      const address = await getAddressFromCoordinates(coordinate);
-      this._eventLocation = formatDistrictCity(address);
-    } catch (err) {
-      this._error = 'Failed to load event location.';
-      console.error(err);
-    } finally {
-      this._loading = false;
-    }
-  }
+      const address = await getAddressFromCoordinates(coord);
+      setEventLocation(formatDistrictCity(address));
+    };
 
-  private async fetchEventImage(): Promise<void> {
-    this._loading = true;
-    try {
-      this._imageUri = await getImageUrl('event', this._eventId);
-    } catch (err) {
-      this._error = 'Failed to load event image.';
-      console.error(err);
-    } finally {
-      this._loading = false;
-    }
-  }
+    const fetchImage = async (eventId: string) => {
+      const uri = await getImageUrl('event', eventId);
+      setImageUri(uri);
+    };
 
-  get eventDateTime() {
-    if (this._event) {
-      return calculateEventDateTime(this._event.start, this._event.end);
-    } else {
-      return null;
-    }
-  }
+    const fetchHost = async (userId: string) => {
+      const user = await getUserById(userId);
+      setHost(user);
+    };
 
-  private fetchIcon(): void {
-    if (this._event) {
-      const iconHeaderName: IconNameType = getEventIconName(this._event.eventType);
-      const iconHeaderSize = SIZES.l;
-      const iconHeaderColour = COLOURS.secondary;
-      this._icon = getIcon(iconHeaderName, iconHeaderSize, iconHeaderColour);
-    } else {
-      this._icon = null;
-    }
-  }
-}
+    const fetchIcon = async (eventType: EventType) => {
+      const iconName = getEventIconName(eventType);
+      const iconNode = getIcon(iconName, SIZES.l, COLOURS.secondary);
+      setIcon(iconNode);
+    };
 
-export default EventCardViewModel;
+    fetchData();
+  }, [eventId]);
+
+  return {
+    loading,
+    error,
+    userId,
+    event,
+    eventLocation,
+    imageUri,
+    icon,
+    host,
+    eventDateTime,
+    expired
+  };
+};
