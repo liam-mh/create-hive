@@ -8,24 +8,17 @@ import FollowButton from '../buttons/FollowButton';
 import EditButton from '../buttons/EditButton';
 
 import { User } from '@/models/User';
-import { navigateToUserProfile } from '@/utils/routerUtils';
-import { router } from 'expo-router';
 import { getIcon } from '@/utils/iconUtils';
 import { useProfileCardViewModel } from '@/viewModels/ProfileCardViewModel';
 
-
 interface ProfileCardProps {
-  sessionUserId: string;
-  profileUserId: string;
-  inputProfileUser?: User;
+  inputUser: string | User;
   minimalCard?: boolean;
 }
 
 const ProfileCard: React.FC<ProfileCardProps> = ({
-  sessionUserId,
-  profileUserId,
-  inputProfileUser,
-  minimalCard = false
+  inputUser,
+  minimalCard = false,
 }) => {
   const {
     user,
@@ -34,22 +27,15 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
     city,
     loading,
     error,
-  } = useProfileCardViewModel(profileUserId, inputProfileUser, minimalCard);
-
-  const handleMinimalPress = () => {
-    navigateToUserProfile({ router, userId: profileUserId });
-  };
+    personalProfile,
+    handleMinimalPress,
+  } = useProfileCardViewModel(inputUser, minimalCard);
 
   const defaultImage = require('@/assets/images/default-profile-photo.jpg');
   const iconChevronRight = getIcon('chevronRight', SIZES.m, COLOURS.primary);
 
-  if (loading) {
-    return <View style={styles.contentContainer}><Text>Loading...</Text></View>;
-  }
-
-  if (error) {
-    return <View style={styles.contentContainer}><Text>Error: {error}</Text></View>;
-  }
+  if (loading) return <View style={styles.contentContainer}><Text>Loading...</Text></View>;
+  if (error) return <View style={styles.contentContainer}><Text>Error: {error}</Text></View>;
 
   if (user && userProfile && city && !minimalCard) {
     return (
@@ -71,14 +57,13 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         </View>
         <Text style={TEXT.regularGrey}>{userProfile.bio}</Text>
         <View style={styles.innerRow}>
-          {sessionUserId === profileUserId ? (
-            <EditButton type="profile" id={sessionUserId} />
+          {personalProfile ? (
+            <EditButton type="profile" id={user.userId} />
           ) : (
             <>
-              <FollowButton userId={sessionUserId} userToFollowId={user.userId} />
+              <FollowButton userToFollowId={user.userId} />
               <MessageButton
                 params={{
-                  primaryUserId: sessionUserId,
                   secondaryUserId: user.userId,
                   secondaryUserName: user.firstName,
                 }}
