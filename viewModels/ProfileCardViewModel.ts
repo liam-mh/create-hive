@@ -1,123 +1,77 @@
-import { formatDistrictCity, getAddressFromCoordinates } from '@/utils/locationUtils';
-import { Coordinate } from '@/types/Coordinate';
-import { getImageUrl } from "@/hooks/useFirebaseStorage";
+import { useEffect, useState } from 'react';
+import { getAddressFromCoordinates, formatDistrictCity } from '@/utils/locationUtils';
+import { getImageUrl } from '@/hooks/useFirebaseStorage';
 import { getUserById, getUserProfileById } from '@/services/userService';
+import { Coordinate } from '@/types/Coordinate';
 import { User } from '@/models/User';
 import { UserProfile } from '@/models/UserProfile';
 
-class ProfileCardViewModel {
-  private _userId: string;
-  private _user: User | null = null;
-  private _userProfile: UserProfile | null = null;
-  private _imageUri: string | null = null;
-  private _city: string | null = null;
+export const useProfileCardViewModel = (
+  userId: string,
+  inputUser?: User,
+  minimal: boolean = false
+) => {
+  const [user, setUser] = useState<User | null>(inputUser ?? null);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [imageUri, setImageUri] = useState<string | null>(null);
+  const [city, setCity] = useState<string | null>(null);
 
-  private _minimal: boolean = false;
-  private _loading: boolean = true;
-  private _error: string | null = null;
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  constructor(userId: string, inputUser?: User, minimal?: boolean) {
-    this._userId = userId;
-    if (inputUser) this._user = inputUser;
-    if (minimal) this._minimal = minimal
-  }
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const usr = user ?? await getUserById(userId);
+        if (!usr) {
+          setError('User not found');
+          return;
+        }
+        setUser(usr);
 
-  get user(): User | null {
-    return this._user;
-  }
+        await Promise.all([
+          !minimal ? fetchUserProfile(userId) : null,
+          !minimal ? fetchLocation(usr) : null,
+          fetchImage(userId),
+        ]);
+      } catch (err) {
+        console.error(err);
+        setError('Failed to load profile data.');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  get userProfile(): UserProfile | null {
-    return this._userProfile;
-  }
+    const fetchUserProfile = async (userId: string) => {
+      const profile = await getUserProfileById(userId);
+      setUserProfile(profile);
+    };
 
-  get imageUri(): string | null {
-    return this._imageUri;
-  }
-
-  get city(): string | null {
-    return this._city
-  }
-
-  get loading(): boolean {
-    return this._loading;
-  }
-
-  get error(): string | null {
-    return this._error;
-  }
-
-  private async fetchUser(): Promise<void> {
-    if (this._user) return;
-    this._loading = true;
-    try {
-      this._user = await getUserById(this._userId);
-    } catch (err) {
-      this._error = 'Failed to load user.';
-      console.error(err);
-    } finally {
-      this._loading = false;
-    }
-  }
-
-  private async fetchUserProfile(): Promise<void> {
-    this._loading = true;
-    try {
-      this._userProfile = await getUserProfileById(this._userId);
-    } catch (err) {
-      this._error = 'Failed to load userProfile.';
-      console.error(err);
-    }finally {
-      this._loading = false;
-    }
-  }
-
-  private async fetchLocation(): Promise<void> {
-    this._loading = true;
-    try {
+    const fetchLocation = async (usr: User) => {
       const coordinate: Coordinate = {
-        latitude: this._user!.location.latitude,
-        longitude: this._user!.location.longitude,
+        latitude: usr.location.latitude,
+        longitude: usr.location.longitude,
       };
       const address = await getAddressFromCoordinates(coordinate);
-      this._city = formatDistrictCity(address);
-    } catch (err) {
-      this._error = 'Failed to load location.';
-      console.error(err);
-    } finally {
-      this._loading = false;
-    }
-  }
+      setCity(formatDistrictCity(address));
+    };
 
-  private async fetchProfileImage(): Promise<void> {
-    this._loading = true;
-    try {
-      this._imageUri = await getImageUrl('user', this._userId);
-    } catch (err) {
-      this._error = 'Failed to load event image.';
-      console.error(err);
-    } finally {
-      this._loading = false;
-    }
-  }
+    const fetchImage = async (userId: string) => {
+      const uri = await getImageUrl('user', userId);
+      setImageUri(uri);
+    };
 
-  async fetchProfileData(): Promise<void> {
-    this._loading = true;
-    this._error = null;
+    fetchData();
+  }, [userId]);
 
-    try {
-      await this.fetchUser();
-      if (this._user) {
-        !this._minimal ? await this.fetchUserProfile() : null;
-        !this._minimal ? await this.fetchLocation() : null;
-        await this.fetchProfileImage();
-      }
-    } catch (err) {
-      this._error = 'Failed to load profile data.';
-      console.error(err);
-    } finally {
-      this._loading = false;
-    }
-  }
-}
-
-export default ProfileCardViewModel;
+  return {
+    user,
+    userProfile,
+    imageUri,
+    city,
+    loading,
+    error,
+  };
+};
