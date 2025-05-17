@@ -28,7 +28,7 @@ export const useEventCardViewModel = (eventId: string, initialEvent?: Event) => 
       setLoading(true);
       setError(null);
       try {
-        const evt = event ?? await getEventById(eventId);
+        const evt = initialEvent ?? await getEventById(eventId);
         if (!evt) {
           setError('Event not found');
           return;
@@ -77,7 +77,7 @@ export const useEventCardViewModel = (eventId: string, initialEvent?: Event) => 
     };
 
     fetchData();
-  }, [eventId]);
+  }, [eventId, initialEvent]);
 
   return {
     loading,
