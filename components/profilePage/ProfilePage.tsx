@@ -19,6 +19,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ( props ) => {
   const ownProfile: boolean = sessionUser?.userId === (props.userId || props.user?.userId);
 
   useEffect(() => {
+    setUser(null);
     const fetchData = async () => {
       try {
         if (!props.user && props.userId) {
