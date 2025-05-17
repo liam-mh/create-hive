@@ -79,7 +79,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         <View style={styles.innerRowMinimal}>
           <Image
             source={imageUri ? { uri: imageUri } : defaultImage}
-            style={styles.image}
+            style={styles.minimalImage}
           />
           <View style={{ flex: 1, paddingLeft: UNIT }}>
             <DetailsContainer>
@@ -105,8 +105,14 @@ const styles = StyleSheet.create({
     paddingTop: UNIT,
   },
   image: {
-    flex: 1,
-    height: UNIT * 6.5,
+    width: UNIT * 6,
+    aspectRatio: 1,
+    borderWidth: 1,
+    borderColor: COLOURS.primary,
+    borderRadius: CORNERS.default,
+  },
+  minimalImage: {
+    width: UNIT * 3,
     aspectRatio: 1,
     borderWidth: 1,
     borderColor: COLOURS.primary,
@@ -115,6 +121,7 @@ const styles = StyleSheet.create({
   innerRow: {
     flexDirection: 'row',
     gap: UNIT,
+    alignItems: 'center', 
   },
   innerRowMinimal: {
     flexDirection: 'row',
