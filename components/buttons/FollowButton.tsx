@@ -3,13 +3,12 @@ import BaseButton from '@/components/buttons/BaseButton';
 import FollowButtonViewModel from '@/viewModels/FollowButtonViewModel';
 
 interface FollowButtonProps {
-  userId: string;
   userToFollowId: string;
   isIconButton?: boolean;
 }
 
 const FollowButton: React.FC<FollowButtonProps> = ( props ) => {
-  const viewModel = useRef<FollowButtonViewModel>(new FollowButtonViewModel(props.userId, props.userToFollowId)).current;
+  const viewModel = useRef<FollowButtonViewModel>(new FollowButtonViewModel(props.userToFollowId)).current;
   const [buttonState, setButtonState] = useState(viewModel.buttonState);
   
   useEffect(() => {
