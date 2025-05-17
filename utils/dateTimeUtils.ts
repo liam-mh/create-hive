@@ -67,7 +67,7 @@ export const timestampToFormattedDate = (timestamp: Timestamp | null | undefined
   }
 };
 
-interface EventDateTime {
+export interface EventDateTime {
   date: string | null;
   time: string | null;
 }
