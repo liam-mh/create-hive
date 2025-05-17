@@ -2,19 +2,21 @@ import React from 'react';
 import BaseButton from '@/components/buttons/BaseButton';
 import { useRouter } from 'expo-router';
 import { messageParams } from '@/app/(tabs)/message';
+import { useAuth } from '@/context/authContext';
 
 interface MessageButtonProps {
-  params: messageParams
+  params: Omit<messageParams, 'primaryUserId'>
 }
 
 const MessageButton: React.FC<MessageButtonProps> = ( props ) => {
   const router = useRouter();
+  const sessionUserId = useAuth().user!.userId;
 
   const handlePress = () => {
     router.push({
       pathname: '/message',
       params: {
-        primaryUserId: props.params.primaryUserId,
+        primaryUserId: sessionUserId,
         secondaryUserId: props.params.secondaryUserId,
         secondaryUserName: props.params.secondaryUserName,
       }
