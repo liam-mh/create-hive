@@ -1,17 +1,17 @@
 
+import { useAuth } from '@/context/authContext';
 import { FollowServiceProps, followUser, getFollow, unfollowUser } from '@/services/interaction/followService';
 import { SharedButtonProps } from '@/types/SharedButtonProps';
 
 class FollowButtonViewModel {
-  private _userId: string;
+  private _userId: string = useAuth().user!.userId;
   private _userToFollowId: string;
   private _isFollowing: boolean = false;
 
   private _loading: boolean = true;
   private _error: string | null = null;
 
-  constructor(userId: string, userToFollowId: string) {
-    this._userId = userId;
+  constructor(userToFollowId: string) {
     this._userToFollowId = userToFollowId;
   }
 
