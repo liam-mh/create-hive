@@ -4,7 +4,6 @@ import TEXT, { COLOURS, SIZES, UNIT } from '@/styles';
 import { useAuth } from '@/context/authContext';
 import { getIcon } from '@/utils/iconUtils';
 import { Href, router } from 'expo-router';
-import { createUserProfile } from '@/services/userService';
 
 export default function Index() {
   const userFirstname = useAuth().user!.firstName;
