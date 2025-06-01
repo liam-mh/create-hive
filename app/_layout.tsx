@@ -35,7 +35,6 @@ export default function RootLayout() {
 
 export function InnerLayout() {
   const { user } = useAuth();
-  console.log(user);
   return (
     <Stack initialRouteName={user ? "(tabs)" : "login"}>
       <Stack.Screen name="login" options={{ headerShown: false }} />
