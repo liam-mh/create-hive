@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import DetailsContainer from '@/components/DetailsContainer';
 import DetailsRow from '@/components/DetailsRow';
 import TEXT, { COLOURS, DIVS, UNIT } from '@/styles';
-import EventCardViewModel from '@/viewModels/EventCardViewModel';
 import ContentDropdownContainer from '@/components/ContentDropdownContainer';
 import KeyValueRow from '@/components/KeyValueRow';
 import TagButton from '@/components/buttons/TagButton';
@@ -13,55 +12,32 @@ import EventHeader from '@/components/EventHeader';
 import { EventType } from '@/models/Event';
 import CustomHeader from '@/components/CustomHeader';
 import { useAuth } from '@/context/authContext';
+import { useEvent } from '@/hooks/useEvent';
 
 const eventInformation = () => {
-  const { type, id } = useLocalSearchParams();
+  const { 
+    type, 
+    id 
+  } = useLocalSearchParams();
+
+  const eventId = Array.isArray(id) ? id[0] : id;
+  if (!eventId) return <View style={styles.contentContainer}><Text>{'event not found.'}</Text></View>;
+
   const userId = useAuth().user!.userId;
-  const viewModel = new EventCardViewModel(id.toLocaleString());
+  const {
+    event,
+    host,
+    imageUri,
+    eventLocation,
+    eventDateTime,
+    expired,
+    icon,
+    loading,
+    error,
+  } = useEvent(eventId);
   
-  const [loading, setLoading] = useState(viewModel.loading);
-  const [error, setError] = useState(viewModel.error);
-  const [event, setEvent] = useState(viewModel.event);
-  const [eventLocation, setEventLocation] = useState(viewModel.eventLocation);
-  const [imageUri, setImageUri] = useState(viewModel.imageUri);
-  const [eventDateTime, setEventDateTime] = useState(viewModel.eventDateTime);
-  const [icon, setIcon] = useState(viewModel.icon);
-  const [host, setHost] = useState(viewModel.host);
-
-  useEffect(() => {
-    setLoading(true);
-    setError(null);
-    setEvent(null);
-    setEventLocation(null);
-    setImageUri(null);
-    setEventDateTime(null);
-    setIcon(null);
-    setHost(null);
-
-    const fetchData = async () => {
-      await viewModel.fetchEventData();
-      console.log("Image URI:", viewModel.imageUri);
-      setLoading(viewModel.loading);
-      setError(viewModel.error);
-      setEvent(viewModel.event);
-      setEventLocation(viewModel.eventLocation);
-      setImageUri(viewModel.imageUri);
-      setEventDateTime(viewModel.eventDateTime);
-      setIcon(viewModel.icon);
-      setHost(viewModel.host);
-    };
-    fetchData();
-  }, [id]);
-
-  if (loading || !event || !event.location || !eventDateTime || !host) {
-    return <View style={styles.contentContainer}><Text>Loading...</Text></View>;
-  }
-  if (error) {
-    return <View style={styles.contentContainer}><Text>Error: {error}</Text></View>;
-  }
-  if (!event) {
-    return <View style={styles.contentContainer}><Text>Event not found.</Text></View>;
-  }
+  if (loading) return <View style={styles.contentContainer}><Text>Loading...</Text></View>;
+  if (error || !event) return <View style={styles.contentContainer}><Text>{error || 'event not found.'}</Text></View>;
 
   const defaultImage = require('@/assets/images/default-event-photo.jpg');
   const privacyText = event.private ? 'private' : 'public';
@@ -98,7 +74,7 @@ const eventInformation = () => {
               <DetailsRow iconName='calendar' text={`${eventDateTime?.date}`} />
               <DetailsRow iconName='clock' text={`${eventDateTime?.time}`} />
               <DetailsRow iconName='geoAlt' text={`${eventLocation?.toLocaleLowerCase()}`} />
-              <DetailsRow iconName='person' text={`${host?.userAt.toLocaleLowerCase()}`} profileLink={host.userId}/>
+              <DetailsRow iconName='person' text={`${host?.userAt.toLocaleLowerCase()}`} profileLink={host?.userId}/>
             </DetailsContainer>
           </View>
 
