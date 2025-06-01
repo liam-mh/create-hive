@@ -3,6 +3,7 @@ import { View, ActivityIndicator, AppState, AppStateStatus } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { User } from '@/models/User';
 import { getUserByUserAt } from '@/services/userService';
+import { useRouter } from 'expo-router';
 
 interface AuthContextType {
   user: User | null;
@@ -25,6 +26,7 @@ export function useAuth() {
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const loadUser = async () => {
@@ -60,9 +62,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
+  useEffect(() => {
+    if (!isLoading) { 
+      if (!user) {
+        router.push('/login')
+      } 
+    }
+  }, [isLoading, user, router]);
+
   const signIn = async (userAt: string) => {
-    console.log('logging in with: ', userAt);
     try {
+      setIsLoading(true);
       const fetchedUsers: User[] = await getUserByUserAt(userAt);
       if (fetchedUsers && fetchedUsers.length > 0) {
         const fetchedUser: User = fetchedUsers[0];
@@ -75,16 +85,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error) {
       console.error('Login failed:', error);
       return null;
+    } finally {
+      setIsLoading(false);
     }
   };
 
-
   const signOut = async () => {
     try {
+      setIsLoading(true);
       await AsyncStorage.removeItem('user');
       setUser(null);
     } catch (error) {
       console.error('Error removing user:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
