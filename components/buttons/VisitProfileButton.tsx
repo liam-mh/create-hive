@@ -16,13 +16,15 @@ const VisitProfileButton: React.FC<VisitProfileButtonProps> = ( props ) => {
 
   return (
     <BaseButton
-      text='visit artist profile'
-      icon='person'
-      iconFill='personFill'
-      pending={false}
-      onPress={handlePress}
-      isSelected={false}
-      isIconButton={false}
+      state='default'
+      variant='primary'
+      states={{
+        default: {
+          text: 'visit profile',
+          icon: 'person',
+          onPress: handlePress,
+        },
+      }}
     />
   );
 };

@@ -1,83 +1,97 @@
-import { addAttendee, getAttendeeByUserIdAndEventId } from '@/services/attendeeService';
+import { useEffect, useState } from 'react';
+import { Alert } from 'react-native';
+import { useAuth } from '@/context/authContext';
+import { createAttendee, getAttendeeByUserIdAndEventId } from '@/services/attendeeService';
 import { Attendee } from '@/models/Attendee';
-import { RegisterServiceProps, registerUserForEvent } from '@/services/interaction/registerService';
-import { IconNameType } from '@/utils/iconUtils';
+import { ButtonStateOptions } from '@/types/Button';
 
-class RegisterButtonViewModel {
-  private _eventId: string;
-  private _eventIsPrivate: boolean = false;
-  private _userId: string;
-  private _attendee: Attendee | null = null;
-  private _loading: boolean = true;
-  private _isSelected: boolean = false;
-
-  constructor(eventId: string, eventIsPrivate: boolean, userId: string) {
-    this._eventId = eventId;
-    this._eventIsPrivate = eventIsPrivate;
-    this._userId = userId;
-  }
-
-  get loading(): boolean {
-    return this._loading;
-  }
-
-  get isSelected(): boolean {
-    return this._isSelected;
-  }
-
-  async handleRegister() {
-    const register: RegisterServiceProps = {
-      userId: this._userId,
-      itemId: this._eventId,
-    };
-    return register;
-  }
-
-  async fetchAttendee(): Promise<void> {
-    this._loading = true;
-    this._attendee = await getAttendeeByUserIdAndEventId(this._eventId, this._userId);
-    this._loading = false;
-  }
-
-  async handlePress(): Promise<void> {
-    this._isSelected = !this._isSelected;
-    console.log(
-      `Register button with eventId ${this._eventId} pressed. State: ${
-        this._isSelected ? 'selected' : 'unselected'
-      }`
-    );
-    await registerUserForEvent(await this.handleRegister());
-    await addAttendee(this._eventId, this._eventIsPrivate, this._userId);
-    await this.fetchAttendee();
-  }
-
-  get buttonState() {
-    let text = 'register';
-    let icon: IconNameType = 'plusSquare';
-    const iconFill: IconNameType = 'checkSquareFill';
-    let pending = false;
-
-    if (this._attendee) {
-      if (this._attendee.approved) {
-        text = 'registered';
-        pending = false;
-        this._isSelected = true;
-      } else {
-        text = 'pending';
-        icon = 'slashSquare';
-        pending = true;
-      }
-    }
-  
-    return {
-      text,
-      icon,
-      pending,
-      iconFill,
-      onPress: async () => await this.handlePress(), 
-      isSelected: this._isSelected,
-    };
-  }
+interface UseRegisterButtonViewModelProps {
+  eventId: string;
+  eventTitle: string;
+  eventIsPrivate: boolean;
+  userId?: string;
+  userAt?: string;
+  userName?: string;
 }
 
-export default RegisterButtonViewModel;
+export function useRegisterButtonViewModel(props: UseRegisterButtonViewModelProps) {
+  const {
+    eventId,
+    eventTitle,
+    eventIsPrivate,
+    userId,
+    userAt,
+    userName,
+  } = props;
+
+  const auth = useAuth();
+  const [state, setState] = useState<ButtonStateOptions>('default');
+  const [attendee, setAttendee] = useState<Attendee | null>(null);
+
+  const userToRegister = userId && userAt && userName
+    ? { id: userId, at: userAt, name: userName }
+    : { id: auth.user!.userId, at: auth.user!.userAt, name: auth.user!.firstName };
+
+  const fetchAttendee = async () => {
+    try {
+      const result = await getAttendeeByUserIdAndEventId(eventId, userToRegister.id);
+      setAttendee(result);
+      if (result?.approved) setState('active');
+      else if (result) setState('pending');
+      else setState('default');
+    } catch {
+      setAttendee(null);
+      setState('default');
+    }
+  };
+
+  useEffect(() => {
+    fetchAttendee();
+  }, [eventId, userToRegister.id]);
+
+  const register = async () => {
+    setState('pending');
+    try {
+      await createAttendee(
+        eventId,
+        eventTitle,
+        eventIsPrivate,
+        userToRegister.id,
+        userToRegister.at,
+        userToRegister.name
+      );
+      await fetchAttendee();
+    } catch {
+      Alert.alert("Registration Failed", "Please try again.");
+      await fetchAttendee();
+    }
+  };
+
+  const unregister = async () => {
+    if (!attendee) return;
+    // TODO: Hook up backend unregistration
+    console.log("Unregistering attendee", attendee.attendeeId);
+    await fetchAttendee();
+  };
+
+  const confirmUnregister = () => {
+    Alert.alert(
+      "Remove Registration?",
+      "This will cancel your registration.",
+      [
+        { text: "Cancel", style: "cancel" },
+        { text: "OK", onPress: unregister },
+      ]
+    );
+  };
+
+  return {
+    state,
+    handlers: {
+      default: register,
+      pending: confirmUnregister,
+      active: confirmUnregister,
+      disabled: () => {}
+    }
+  };
+}

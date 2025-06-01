@@ -9,13 +9,16 @@ interface RefreshButtonProps {
 const RefreshButton: React.FC<RefreshButtonProps> = ( props ) => {
   return (
     <BaseButton
-      text='refresh'
-      icon='arrowClockwise'
-      iconFill='arrowClockwise'
-      pending={false}
-      onPress={props.onRefresh}
-      isSelected={false}
-      isIconButton={props.iconButton ? true : false}
+      isIconButton={props.iconButton}
+      state='default'
+      variant='primary'
+      states={{
+        default: {
+          text: 'refresh',
+          icon: 'arrowClockwise',
+          onPress: props.onRefresh,
+        },
+      }}
     />
   );
 };

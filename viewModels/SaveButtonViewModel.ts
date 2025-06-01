@@ -1,82 +1,64 @@
-import { getSave, saveItem, SaveServiceProps } from '@/services/interaction/saveService';
-import { Interaction, ItemType } from '@/models/Interaction';
-import { IconNameType } from '@/utils/iconUtils';
+import { SaveButtonProps } from '@/components/buttons/Savebutton';
+import { useAuth } from '@/context/authContext';
+import { Interaction } from '@/models/Interaction';
+import { getSave, saveItem, SaveServiceProps, unsaveItem } from '@/services/interaction/saveService';
+import { ButtonStateOptions } from '@/types/Button';
+import { useEffect, useState } from 'react';
+import { Alert } from 'react-native';
 
-class SaveButtonViewModel {
-  private _itemId: string;
-  private _itemType: ItemType;
-  private _userId: string;
-  private _loading: boolean = true;
-  private _isSelected: boolean = false;
-  private _saveInteraction: Interaction | null = null;
+export function useSaveButtonViewModel(props: Omit<SaveButtonProps, 'isIconButton'>) {
+  const { 
+    itemId,
+    itemType,
+  } = props;
 
-  constructor(userId: string, itemId: string, itemType: ItemType) {
-    this._userId = userId;
-    this._itemId = itemId;
-    this._itemType = itemType;
-  }
+  const auth = useAuth();
+  const userId = auth.user!.userId;
+  const saveServiceProps: SaveServiceProps = { userId, itemId, itemType };
 
-  get loading(): boolean {
-    return this._loading;
-  }
+  const [state, setState] = useState<ButtonStateOptions>('default');
+  const [save, setSave] = useState<Interaction | null>(null);
 
-  get isSelected(): boolean {
-    return this._isSelected;
-  }
-
-  async handleSave() {
-    const save: SaveServiceProps = {
-      userId: this._userId,
-      itemId: this._itemId,
-      itemType: this._itemType
-    };
-    return save;
-  }
-
-
-  async saveItem(): Promise<void> {
-    this._loading = true;
-    await saveItem(await this.handleSave());
-    this._loading = false;
-    await this.fetchSavedState();
-  }
-
-  async fetchSavedState(): Promise<void> {
-    this._loading = true;
-    this._saveInteraction = await getSave(await this.handleSave());
-    this._loading = false;
-  }
-
-  async handlePress(): Promise<void> {
-    this._isSelected = !this._isSelected;
-    console.log(
-      `Save button with itemtId ${this._itemId} pressed. State: ${
-        this._isSelected ? 'selected' : 'unselected'
-      }`
-    );
-    await this.saveItem();
-  }
-
-  get buttonState() {
-    let text = 'save';
-
-    if (this._saveInteraction) {
-      text = 'saved';
-      this._isSelected = true;
+  const fetchSave = async () => {
+    try {
+      const result = await getSave(saveServiceProps);
+      setSave(result);
+      if (result) setState('active');
+      else setState('default');
+    } catch {
+      setSave(null);
+      setState('default');
     }
-
-    const icon: IconNameType = 'bookmark';
-    const iconFill: IconNameType = 'bookmarkFill';
-
-    return {
-      text,
-      icon,
-      iconFill,
-      onPress: async () => await this.handlePress(), 
-      isSelected: this._isSelected,
-      pending: false,
-    };
   }
-}
 
-export default SaveButtonViewModel;
+  useEffect(() => {
+    fetchSave();
+  }, [itemId])
+
+  const handleSave = async () => {
+    setState('pending');
+    try {
+      await saveItem(saveServiceProps);
+      await fetchSave();
+    } catch {
+      Alert.alert("Save Failed", "Please try again.");
+      await fetchSave();
+    }
+  }
+
+  const handleUnsave = async () => {
+    if (!save) return;
+    await unsaveItem(saveServiceProps);
+    await fetchSave();
+  }
+
+  return {
+    state,
+    handlers: {
+      default: handleSave,
+      pending: handleUnsave,
+      active: handleUnsave,
+      disabled: () => {}
+    }
+  };
+}

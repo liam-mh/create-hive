@@ -25,13 +25,15 @@ const MessageButton: React.FC<MessageButtonProps> = ( props ) => {
 
   return (
     <BaseButton
-      text='message'
-      icon='chat'
-      iconFill='chatFill'
-      pending={false}
-      onPress={handlePress}
-      isSelected={false}
-      isIconButton={false}
+      state='default'
+      variant='primary'
+      states={{
+        default: {
+          text: 'message',
+          icon: 'chat',
+          onPress: handlePress,
+        },
+      }}
     />
   );
 };

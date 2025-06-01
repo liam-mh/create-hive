@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import BaseButton from '@/components/buttons/BaseButton';
 import { useAuth } from '@/context/authContext';
 import { useRouter } from 'expo-router';
@@ -24,13 +24,15 @@ const LoginButton: React.FC<LoginButtonProps> = ( props ) => {
 
   return (
     <BaseButton
-      text='login'
-      icon='checkCircle'
-      iconFill='infoSquareFill'
-      pending={false}
-      onPress={handlePress}
-      isSelected={false}
-      isIconButton={false}
+      state='default'
+      variant='primary'
+      states={{
+        default: {
+          text: 'login',
+          icon: 'checkCircle',
+          onPress: handlePress,
+        },
+      }}
     />
   );
 };

@@ -1,52 +1,42 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import BaseButton from '@/components/buttons/BaseButton';
-import SaveButtonViewModel from '@/viewModels/SaveButtonViewModel';
 import { ItemType } from '@/models/Interaction';
+import { useSaveButtonViewModel } from '@/viewModels/SaveButtonViewModel';
 
-interface SaveButtonProps {
+export interface SaveButtonProps {
   itemId: string;
   itemType: ItemType;
-  userId: string;
   isIconButton?: boolean;
 }
 
-const SaveButton: React.FC<SaveButtonProps> = ({
-  userId,
-  itemId,
-  itemType,
-  isIconButton,
-}) => {
-  const viewModel = new SaveButtonViewModel(userId, itemId, itemType);
-
-  const [loading, setLoading] = useState(viewModel.loading);
-  const [buttonState, setButtonState] = useState(viewModel.buttonState);
-  const [isSelected, setIsSelected] = useState(viewModel.isSelected);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      await viewModel.fetchSavedState();
-      setLoading(viewModel.loading);
-      setButtonState(viewModel.buttonState);
-      setIsSelected(viewModel.isSelected);
-    };
-    fetchData();
-  }, [itemId]);
-
-  const handlePress = async () => {
-    await viewModel.handlePress();
-    setButtonState(viewModel.buttonState);
-    setIsSelected(viewModel.isSelected);
-  };
+const SaveButton: React.FC<SaveButtonProps> = (props) => {
+  const {
+    state,
+    handlers
+  } = useSaveButtonViewModel(props);
 
   return (
     <BaseButton
-      text={buttonState.text}
-      icon={buttonState.icon}
-      iconFill={buttonState.iconFill}
-      pending={buttonState.pending}
-      onPress={handlePress}
-      isSelected={isSelected}
-      isIconButton={isIconButton ?? false}
+      isIconButton={props.isIconButton}
+      state={state}
+      variant='primary'
+      states={{
+        default: {
+          text: 'save',
+          icon: 'bookmark',
+          onPress: handlers.default,
+        },
+        pending: {
+          text: 'pending',
+          icon: 'bookmark',
+          onPress: handlers.pending,
+        },
+        active: {
+          text: 'saved',
+          icon: 'bookmarkFill',
+          onPress: handlers.active,
+        },
+      }}
     />
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import BaseButton from '@/components/buttons/BaseButton';
 import { useRouter } from 'expo-router';
 
@@ -7,8 +7,11 @@ interface InformationButtonProps {
   id: string;
 }
 
-const InformationButton: React.FC<InformationButtonProps> = ( props: InformationButtonProps ) => {
+const InformationButton: React.FC<InformationButtonProps> = ( props ) => {
   const router = useRouter();
+  const text = props.type == 'event' 
+    ? 'more information' 
+    : 'view post'
 
   const handlePress = () => {
     router.push({
@@ -22,14 +25,15 @@ const InformationButton: React.FC<InformationButtonProps> = ( props: Information
 
   return (
     <BaseButton
-      text={props.type == 'event' ? 'more information' : 'view post'}
-      icon='infoSquare'
-      iconFill='infoSquareFill'
-      pending={false}
-      onPress={handlePress}
-      isSelected={false}
-      isIconButton={false}
-    />
+        state='default'
+        states={{
+          default: {
+            text: text,
+            icon: 'infoSquare',
+            onPress: handlePress
+          }
+        }}
+      />
   );
 };
 

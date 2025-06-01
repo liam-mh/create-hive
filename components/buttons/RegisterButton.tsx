@@ -1,51 +1,50 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import BaseButton from '@/components/buttons/BaseButton';
-import RegisterButtonViewModel from '@/viewModels/RegisterButtonViewModel';
+import { useRegisterButtonViewModel } from '@/viewModels/RegisterButtonViewModel';
 
 interface RegisterButtonProps {
   eventId: string;
+  eventTitle: string;
   eventIsPrivate: boolean;
-  userId: string;
+  userId?: string;
+  userAt?: string;
+  userName?: string;
   isIconButton?: boolean;
 }
 
-const RegisterButton: React.FC<RegisterButtonProps> = ({
-  eventId,
-  eventIsPrivate,
-  userId,
-  isIconButton,
-}) => {
-  const viewModel = new RegisterButtonViewModel(eventId, eventIsPrivate, userId);
-
-  const [loading, setLoading] = useState(viewModel.loading);
-  const [buttonState, setButtonState] = useState(viewModel.buttonState);
-  const [isSelected, setIsSelected] = useState(viewModel.isSelected);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      await viewModel.fetchAttendee();
-      setLoading(viewModel.loading);
-      setButtonState(viewModel.buttonState);
-      setIsSelected(viewModel.isSelected); 
-    };
-    fetchData();
-  }, [eventId]);
-
-  const handlePress = async () => {
-    await viewModel.handlePress();
-    setButtonState(viewModel.buttonState);
-    setIsSelected(viewModel.isSelected); 
-  };
+const RegisterButton: React.FC<RegisterButtonProps> = (props) => {
+  const {
+    state,
+    handlers
+  } = useRegisterButtonViewModel(props);
 
   return (
     <BaseButton
-      text={buttonState.text}
-      icon={buttonState.icon}
-      iconFill={buttonState.iconFill}
-      pending={buttonState.pending}
-      onPress={handlePress}
-      isSelected={isSelected} 
-      isIconButton={isIconButton ?? false}
+      isIconButton={props.isIconButton}
+      state={state}
+      variant="primary"
+      states={{
+        default: {
+          text: "register",
+          icon: "plusSquare",
+          onPress: handlers.default,
+        },
+        pending: {
+          text: "pending",
+          icon: "slashSquare",
+          onPress: handlers.pending,
+        },
+        active: {
+          text: "registered",
+          icon: "checkSquareFill",
+          onPress: handlers.active,
+        },
+        disabled: {
+          text: "expired",
+          icon: "xCircle",
+          onPress: handlers.disabled,
+        },
+      }}
     />
   );
 };

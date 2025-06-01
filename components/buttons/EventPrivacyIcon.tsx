@@ -6,23 +6,21 @@ interface EventPrivacyIconProps {
 }
 
 const InformationButton: React.FC<EventPrivacyIconProps> = ({ isPrivate = false }) => {
-  const handlePress = () => {};
-
   if (isPrivate) {
     return (
       <BaseButton
-        text='private'
-        icon='lock'
-        iconFill='lock'
-        pending={false}
-        onPress={handlePress}
-        isSelected={false}
         isIconButton={true}
+        state='default'
+        states={{
+          default: {
+            text: 'private',
+            icon: 'lock',
+            onPress: () => {}
+          }
+        }}
       />
     );
-  } else {
-    null;
-  }
+  } 
 };
 
 export default InformationButton;

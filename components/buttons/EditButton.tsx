@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import BaseButton from '@/components/buttons/BaseButton';
 import { useRouter } from 'expo-router';
+import { ButtonStateOptions } from '@/types/Button';
 
 interface EditButtonProps {
   type: 'event' | 'artwork' | 'profile';
@@ -9,19 +10,23 @@ interface EditButtonProps {
 }
 
 const EditButton: React.FC<EditButtonProps> = ( props ) => {
+  const [currentState, setCurrentState] = useState<ButtonStateOptions>('default');
   const router = useRouter();
-
+  
   const handlePress = () => {};
 
   return (
     <BaseButton
-      text={'edit '+ props.type}
-      icon='pencilSquare'
-      iconFill='pencilSquare'
-      pending={false}
-      onPress={handlePress}
-      isSelected={false}
-      isIconButton={props.iconButton ? true : false}
+      isIconButton={props.iconButton}
+      state={currentState}
+      variant='secondary'
+      states={{
+        default: {
+          text: `edit ${props.type}`,
+          icon: 'pencilSquare',
+          onPress: handlePress
+        }
+      }}
     />
   );
 };

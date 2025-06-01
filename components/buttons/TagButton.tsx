@@ -41,13 +41,20 @@ const TagButton: React.FC<TagButtonProps> = (props) => {
   if (!props.edit) {
     return (
       <BaseButton
-        text={tagText}
-        icon="tag"
-        iconFill="tagFill"
-        pending={false}
-        onPress={handlePress}
-        isSelected={false}
-        isIconButton={false}
+        state={'default'}
+        variant='primary'
+        states={{
+          default: {
+            text: tagText,
+            icon: 'tag',
+            onPress: handlePress,
+          },
+          active: {
+            text: tagText,
+            icon: 'tagFill',
+            onPress: handlePress,
+          },
+        }}
       />
     );
   } else {

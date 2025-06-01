@@ -23,13 +23,16 @@ const EventAttendeesButton: React.FC<EventAttendeesButtonProps> = ( props ) => {
 
   return (
     <BaseButton
-      text='attendees'
-      icon='personAdd'
-      iconFill='personAdd'
-      pending={false}
-      onPress={handlePress}
-      isSelected={false}
-      isIconButton={props.iconButton ? true : false}
+      isIconButton={props.iconButton}
+      variant='secondary'
+      state={'default'}
+      states={{
+        default: {
+          text: 'attendees',
+          icon: 'personAdd',
+          onPress: handlePress
+        }
+      }}     
     />
   );
 };
