@@ -4,15 +4,48 @@ export const UNIT = 16;
 
 export const COLOURS = {
   primary: '#00626B', 
+  primaryLight: '#B2D0D3',
   primaryDark: '#00464C',
+
   secondary: '#83C5BE',
-  offwhite: '#DDE8ED',  
+  secondaryDark: '#5C8A85',
+
   darkgrey: '#505050', 
-  background: '#f0f0f0',        
+  background: '#f0f0f0',   
+
   white: '#FFFFFF',
+  offwhite: '#DDE8ED',  
+
   black: '#000000',
   offblack: '#001C1F',
+
   red: '#AD1A00'
+};
+
+export const BUTTON_COLOURS = {
+  primaryBackground: COLOURS.primary, 
+  primaryBackgroundPressed: '#00454B',
+  primaryText: COLOURS.white,
+
+  secondaryBackground: '#F2F4F6',
+  secondaryBackgroundPressed: '#D2D4D7',
+  secondaryText: '#485E75',
+
+  tertiaryBackground: null, 
+  tertiaryBackgroundPressed: '#D2D4D7', 
+  tertiaryText: COLOURS.primary, 
+
+  disabledBackground: '#EFF1F3',
+  disabledText: '#B9C3CC',
+
+  optionPrimaryBackground: '#D1EDEF',
+  optionPrimaryText: COLOURS.primary,
+
+  optionNeutralBackground: '#F2F4F6',
+  optionNeutralText: '#485E75',
+
+  optionNegativeBackground: '#FEEAF3',
+  optionNegativeText: '#D93335',
 };
 
 const FONTS = {
@@ -25,7 +58,8 @@ export const SIZES = {
   s: UNIT * 0.75,
   m: UNIT,
   l: UNIT * 1.5,
-  xl: UNIT * 2
+  xl: UNIT * 2,
+  icon: UNIT * 1.25
 };
 
 const SPACING = {
@@ -57,7 +91,8 @@ export const DIVS = {
 }
 
 export const CORNERS = {
-  default: 5
+  default: 5,
+  small: 2
 }
 
 export const TEXT = StyleSheet.create({
