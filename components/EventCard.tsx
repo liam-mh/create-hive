@@ -7,9 +7,11 @@ import DetailsContainer from './DetailsContainer';
 import DetailsRow from './DetailsRow';
 import EventPrivacyIcon from './buttons/EventPrivacyIcon';
 import SaveButton from './buttons/Savebutton';
+import EditButton from './buttons/EditButton';
 
 import { Event } from '@/models/Event';
-import { useEventCardViewModel } from '@/viewModels/EventCardViewModel';
+import { useEvent } from '@/hooks/useEvent';
+import { useAuth } from '@/context/authContext';
 
 interface EventCardProps {
   eventId: string;
@@ -21,7 +23,6 @@ const EventCard: React.FC<EventCardProps> = ({
   inputEvent 
 }) => {
   const {
-    userId,
     event,
     host,
     imageUri,
@@ -31,7 +32,9 @@ const EventCard: React.FC<EventCardProps> = ({
     icon,
     loading,
     error,
-  } = useEventCardViewModel(eventId, inputEvent);
+  } = useEvent(eventId, inputEvent);
+  const auth = useAuth();
+  const hostViewingOwnEvent: boolean = host?.userId == auth.user?.userId 
 
   if (loading) return <View style={styles.contentContainer}><Text>Loading...</Text></View>;
   if (error || !event) return <View style={styles.contentContainer}><Text>{error || 'Event not found.'}</Text></View>;
@@ -51,7 +54,7 @@ const EventCard: React.FC<EventCardProps> = ({
           </View>
           <View style={styles.innerRow}>
             <EventPrivacyIcon isPrivate={event.private} />
-            <SaveButton itemId={event.eventId} itemType={'event'} userId={userId} isIconButton={true} />
+            <SaveButton itemId={event.eventId} itemType={'event'} isIconButton={true} />
           </View>
         </View>
 
@@ -64,13 +67,21 @@ const EventCard: React.FC<EventCardProps> = ({
         </DetailsContainer>
 
         <View style={styles.buttonsContainer}>
-          <InformationButton type={'event'} id={event.eventId} />
-          {expired ? (
-            <Text style={TEXT.regularError}>expired</Text>
+          <InformationButton 
+            type={'event'} 
+            id={event.eventId} 
+          />
+          {hostViewingOwnEvent ? (
+            <EditButton 
+              type={'event'} 
+              id={event.eventId} 
+            />
           ) : (
-            userId != event.userId && (
-              <RegisterButton eventId={event.eventId} eventIsPrivate={event.private} userId={userId} />
-            )
+            <RegisterButton 
+              eventId={event.eventId} 
+              eventIsPrivate={event.private} 
+              eventTitle={event.title} 
+            />
           )}
         </View>
       </View>
