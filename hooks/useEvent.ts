@@ -8,17 +8,16 @@ import { getEventIconName, getIcon } from '@/utils/iconUtils';
 import { calculateEventDateTime, checkExpired, EventDateTime } from '@/utils/dateTimeUtils';
 import { Coordinate } from '@/types/Coordinate';
 import { COLOURS, SIZES } from '@/styles';
-import { useAuth } from '@/context/authContext';
+import { User } from '@/models/User';
 
-export const useEventCardViewModel = (eventId: string, initialEvent?: Event) => {
+export const useEvent = (eventId: string, initialEvent?: Event) => {
   const [event, setEvent] = useState<Event | null>(initialEvent ?? null);
   const [eventLocation, setEventLocation] = useState<string | null>(null);
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [icon, setIcon] = useState<React.ReactNode | null>(null);
-  const [host, setHost] = useState<any | null>(null);
+  const [host, setHost] = useState<User | null>(null);
   const [eventDateTime, setEventDateTime] = useState<EventDateTime | null>(null);
   const [expired, setExpired] = useState<boolean>(false);
-  const userId = useAuth().user!.userId;
 
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -82,7 +81,6 @@ export const useEventCardViewModel = (eventId: string, initialEvent?: Event) => 
   return {
     loading,
     error,
-    userId,
     event,
     eventLocation,
     imageUri,
