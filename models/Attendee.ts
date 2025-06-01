@@ -1,10 +1,14 @@
 import { DocumentData, Timestamp } from "firebase/firestore";
 
 export interface Attendee {
-  id?: string;
   eventId: string;
+  eventTitle: string;
+  eventIsPrivate: boolean;
   attendeeId: string;
+  attendeeAt: string;
+  attendeeName: string;
   approved: boolean;
+  approvedTimestamp: Timestamp | null;
   timestamp: Timestamp;
 } 
 
@@ -12,10 +16,14 @@ export const mapAttendeeFirestore = (data: DocumentData | undefined): Attendee |
   if (!data) return null; 
 
   return {
-    id: data.id,
-    eventId: data.id, 
+    eventId: data.eventId, 
+    eventTitle: data.eventTitle,
+    eventIsPrivate: data.eventIsPrivate,
     attendeeId: data.attendeeId,
+    attendeeAt: data.attendeeAt,
+    attendeeName: data.attendeeName,
     approved: data.approved,
-    timestamp: data.timestamp instanceof Timestamp ? data.timestamp : new Timestamp(0, 0),
+    approvedTimestamp: data.approvedTimestamp,
+    timestamp: data.timestamp,
   };
 };
