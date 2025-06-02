@@ -14,18 +14,13 @@ interface ProfileTabSelectorProps {
 
 const ProfileTabSelector: React.FC<ProfileTabSelectorProps> = ({ userId }) => {
   const [activeTab, setActiveTab] = useState<ProfileTab>('events');
+  const [mountedTabs, setMountedTabs] = useState<ProfileTab[]>(['events']); 
 
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case 'events':
-        return <ProfileTabEventsDisplay userId={userId} />;
-      case 'artwork':
-        return <ProfileTabArtwork userId={userId} />;
-      case 'verification':
-        return <ProfileTabVerification userId={userId} />;
-      default:
-        return null;
+  const handleTabChange = (tab: ProfileTab) => {
+    if (!mountedTabs.includes(tab)) {
+      setMountedTabs((prev) => [...prev, tab]); 
     }
+    setActiveTab(tab);
   };
 
   return (
@@ -34,20 +29,37 @@ const ProfileTabSelector: React.FC<ProfileTabSelectorProps> = ({ userId }) => {
         tabs={[
           {
             icon: 'brushFill',
-            onPress: () => setActiveTab('events'),
+            onPress: () => handleTabChange('events'),
           },
           {
             icon: 'paletteFill',
-            onPress: () => setActiveTab('artwork'),
+            onPress: () => handleTabChange('artwork'),
           },
           {
             icon: 'personFill',
-            onPress: () => setActiveTab('verification'),
+            onPress: () => handleTabChange('verification'),
           },
         ]}
         style={{ marginHorizontal: 16, marginBottom: UNIT }}
       />
-      {renderTabContent()}
+
+      <View style={styles.container}>
+        {mountedTabs.includes('events') && (
+          <View style={{ display: activeTab === 'events' ? 'flex' : 'none' }}>
+            <ProfileTabEventsDisplay userId={userId} />
+          </View>
+        )}
+        {mountedTabs.includes('artwork') && (
+          <View style={{ display: activeTab === 'artwork' ? 'flex' : 'none' }}>
+            <ProfileTabArtwork userId={userId} />
+          </View>
+        )}
+        {mountedTabs.includes('verification') && (
+          <View style={{ display: activeTab === 'verification' ? 'flex' : 'none' }}>
+            <ProfileTabVerification userId={userId} />
+          </View>
+        )}
+      </View>
     </View>
   );
 };
