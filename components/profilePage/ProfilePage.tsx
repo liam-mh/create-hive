@@ -36,9 +36,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ( props ) => {
     fetchData();
   }, [props.user, props.userId]);
 
-  if (!user) {
-    return <View style={styles.container}><Text>Could not find user</Text></View>;
-  };
+  if (!user) return <View style={styles.container}><Text>Could not find user</Text></View>;
 
   return (
     <>
