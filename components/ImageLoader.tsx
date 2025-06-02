@@ -77,6 +77,9 @@ const ImageLoader: React.FC<ImageLoaderProps> = ({
   };
 
   const fallbackIcon = (() => {
+    if (error) {
+      return getIcon('xCircle', iconSize, iconColour);
+    }
     switch (type) {
       case 'event':
         return getIcon('brushFill', iconSize, iconColour);
@@ -84,6 +87,8 @@ const ImageLoader: React.FC<ImageLoaderProps> = ({
         return getIcon('paletteFill', iconSize, iconColour);
       case 'user':
         return getIcon('personFill', iconSize, iconColour);
+      default :
+        return getIcon('xCircle', iconSize, iconColour);
     }
   })();
 
