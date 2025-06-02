@@ -1,9 +1,10 @@
 import { COLOURS, TEXT, UNIT } from '@/styles';
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import ProfileTabEventsDisplay from './ProfileTabEventsDisplay';
 import ProfileTabVerification from './ProfileTabVerification';
 import ProfileTabArtwork from './ProfileTabArtwork';
+import SlidingTabSelector from '../SlidingTabSelector';
 
 type ProfileTab = 'events' | 'artwork' | 'verification';
 
@@ -11,27 +12,17 @@ interface ProfileTabSelectorProps {
   userId: string;
 }
 
-const ProfileTabSelector: React.FC<ProfileTabSelectorProps> = ( props ) => {
+const ProfileTabSelector: React.FC<ProfileTabSelectorProps> = ({ userId }) => {
   const [activeTab, setActiveTab] = useState<ProfileTab>('events');
-
-  const handleTabPress = (tabName: ProfileTab) => {
-    setActiveTab(tabName);
-  };
 
   const renderTabContent = () => {
     switch (activeTab) {
       case 'events':
-        return (
-          <ProfileTabEventsDisplay userId={props.userId} />
-        );
+        return <ProfileTabEventsDisplay userId={userId} />;
       case 'artwork':
-        return (
-          <ProfileTabArtwork userId={props.userId} />
-        );
+        return <ProfileTabArtwork userId={userId} />;
       case 'verification':
-        return (
-          <ProfileTabVerification userId={props.userId} />
-        );
+        return <ProfileTabVerification userId={userId} />;
       default:
         return null;
     }
@@ -39,34 +30,23 @@ const ProfileTabSelector: React.FC<ProfileTabSelectorProps> = ( props ) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.tabBar}>
-        <TouchableOpacity
-          style={[styles.tabButton, activeTab === 'events' && styles.activeTabBorder]}
-          onPress={() => handleTabPress('events')}
-        >
-          <Text style={activeTab === 'events' ? TEXT.regularPrimary : TEXT.regular}>
-            events
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.tabButton, activeTab === 'artwork' && styles.activeTabBorder]}
-          onPress={() => handleTabPress('artwork')}
-        >
-          <Text style={activeTab === 'artwork' ? TEXT.regularPrimary : TEXT.regular}>
-            artwork
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.tabButton, activeTab === 'verification' && styles.activeTabBorder]}
-          onPress={() => handleTabPress('verification')}
-        >
-          <Text style={activeTab === 'verification' ? TEXT.regularPrimary : TEXT.regular}>
-            verification
-          </Text>
-        </TouchableOpacity>
-      </View>
+      <SlidingTabSelector
+        tabs={[
+          {
+            icon: 'brushFill',
+            onPress: () => setActiveTab('events'),
+          },
+          {
+            icon: 'paletteFill',
+            onPress: () => setActiveTab('artwork'),
+          },
+          {
+            icon: 'personFill',
+            onPress: () => setActiveTab('verification'),
+          },
+        ]}
+        style={{ marginHorizontal: 16, marginBottom: UNIT }}
+      />
       {renderTabContent()}
     </View>
   );
@@ -75,21 +55,6 @@ const ProfileTabSelector: React.FC<ProfileTabSelectorProps> = ( props ) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  tabBar: {
-    flexDirection: 'row',
-    backgroundColor: COLOURS.white,
-    paddingBottom: UNIT
-  },
-  tabButton: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingBottom: UNIT/4
-  },
-  activeTabBorder: {
-    borderBottomWidth: 2,
-    borderBottomColor: COLOURS.primary,
   },
 });
 
