@@ -1,4 +1,4 @@
-import { COLOURS, TEXT, UNIT } from '@/styles';
+import { UNIT } from '@/styles';
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import ProfileTabEventsDisplay from './ProfileTabEventsDisplay';
