@@ -10,6 +10,7 @@ import EditButton from '../buttons/EditButton';
 import { User } from '@/models/User';
 import { getIcon } from '@/utils/iconUtils';
 import { useProfileCardViewModel } from '@/viewModels/ProfileCardViewModel';
+import ImageLoader from '../ImageLoader';
 
 interface ProfileCardProps {
   inputUser: string | User;
@@ -41,9 +42,10 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
     return (
       <View style={styles.contentContainer}>
         <View style={styles.innerRow}>
-          <Image
-            source={imageUri ? { uri: imageUri } : defaultImage}
-            style={styles.image}
+          <ImageLoader
+            type='user'
+            id={user.userId}
+            style={styles.image} 
           />
           <DetailsContainer>
             <DetailsRow iconName='at' text={user.userAt} />
@@ -77,9 +79,10 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
     return (
       <TouchableOpacity style={styles.contentContainer} onPress={handleMinimalPress}>
         <View style={styles.innerRowMinimal}>
-          <Image
-            source={imageUri ? { uri: imageUri } : defaultImage}
-            style={styles.minimalImage}
+          <ImageLoader
+            type='user'
+            id={user.userId}
+            style={styles.minimalImage} 
           />
           <View style={{ flex: 1, paddingLeft: UNIT }}>
             <DetailsContainer>
