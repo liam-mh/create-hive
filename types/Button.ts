@@ -5,7 +5,7 @@ import { IconNameType } from '@/utils/iconUtils';
 export type ButtonStateOptions = 'default' | 'active' | 'pending' | 'disabled';
 
 // Configuration for each state
-interface ButtonStateConfig {
+export interface ButtonStateConfig {
   text?: string;
   icon?: IconNameType;
   onPress: () => void;
