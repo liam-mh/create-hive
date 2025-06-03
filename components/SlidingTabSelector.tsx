@@ -10,7 +10,7 @@ import {
   StyleProp,
   ViewStyle,
 } from 'react-native';
-import { getIcon } from '@/utils/iconUtils'; 
+import { getIcon } from '@/utils/iconUtils';
 
 interface SlidingTabSelectorProps {
   tabs: ButtonStateConfig[];
@@ -36,12 +36,17 @@ const SlidingTabSelector: React.FC<SlidingTabSelectorProps> = ({
   const [selectedIndex, setSelectedIndex] = useState(initialIndex);
   const [containerWidth, setContainerWidth] = useState(0);
   const translateX = useRef(new Animated.Value(0)).current;
-
   const tabWidth = containerWidth / tabs.length;
 
   useEffect(() => {
-    translateX.setValue(initialIndex * tabWidth);
-  }, [initialIndex, tabWidth]);
+    setSelectedIndex(initialIndex);
+    if (containerWidth > 0 && tabWidth > 0) { 
+      Animated.spring(translateX, {
+        toValue: initialIndex * tabWidth,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [initialIndex, containerWidth, tabWidth]); 
 
   const handleTabPress = (index: number) => {
     setSelectedIndex(index);
