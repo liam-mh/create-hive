@@ -4,11 +4,12 @@ import { getIcon } from '@/utils/iconUtils';
 import { StyleSheet, View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { useRef, useState } from 'react';
-import CreateEvent from '@/components/createPage/CreateEvent';
 import { useAuth } from '@/context/authContext';
 import { Event } from '@/models/Event';
 import InformationButton from '@/components/buttons/InformationButton';
 import CreateArtwork from '@/components/createPage/CreateArtwork';
+import CreateEventScreen from '@/components/createPage/CreateEventScreen';
+import { CreateEventProvider } from '@/context/createEventContext';
 
 export default function Create() {
   const userId = useAuth().user!.userId;
@@ -65,12 +66,12 @@ export default function Create() {
           ]}
         >
           {showCreateEvent && !successfulCreateEvent &&
-            <CreateEvent 
-              userId={userId} 
-              userLocation={userLocation} 
-              onSuccess={setSuccessfulCreateEvent}
-              onRefresh={handleResetCreate}
-            />
+            <CreateEventProvider>
+              <CreateEventScreen 
+                onSuccess={setSuccessfulCreateEvent}
+                onRefresh={handleResetCreate}
+              />
+            </CreateEventProvider>
           }
           {showCreateArtwork && !successfulCreateArtwork &&
             <CreateArtwork 

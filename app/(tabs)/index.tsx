@@ -40,13 +40,13 @@ export default function Index() {
             style={TEXT.h1} 
             testID='header-text' 
           >
-            hey there, {userFirstname}
+            hi, {userFirstname}!
           </Text>
           <Text 
             style={TEXT.regular}
             testID='subheader-text' 
           >
-            lets get you started
+            let's make something amazing
           </Text>
         </View>
 

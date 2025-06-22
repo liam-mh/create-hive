@@ -22,6 +22,7 @@ interface SmallMapProps {
   inputPin?: InputPinProps;
   outputPin?: OutputPinProps;
   initialCoordinate: Coordinate;
+  showsPointsOfInterest?: boolean;
 }
 
 const SmallMap: React.FC<SmallMapProps> = (props) => {
@@ -63,7 +64,7 @@ const SmallMap: React.FC<SmallMapProps> = (props) => {
         style={styles.map}
         provider={PROVIDER_DEFAULT}
         initialRegion={initialRegion}
-        showsPointsOfInterest={false}
+        showsPointsOfInterest={props.showsPointsOfInterest ? true : false}
         userInterfaceStyle={'light'}
         showsCompass={false}
         onPress={handleMapPress}

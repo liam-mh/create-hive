@@ -3,13 +3,14 @@ import { StyleSheet, View, Text, TouchableOpacity, Keyboard, ActivityIndicator }
 import { useLocalSearchParams } from 'expo-router';
 import BottomSheet, { BottomSheetTextInput, BottomSheetView } from '@gorhom/bottom-sheet';
 import CustomHeader from '@/components/CustomHeader';
-import EventTypeSelection from '@/components/createPage/EventTypeSelection';
-import MediumSelection from '@/components/createPage/MediumSelection';
+import EventTypeSelection from '@/components/createPage/EventTypeTabSelector';
+import MediumSelection from '@/components/createPage/MediumTabSelector';
 import { getIcon } from '@/utils/iconUtils';
 import TEXT, { SIZES, UNIT, COLOURS, CORNERS } from '@/styles';
 import { EventType } from '@/models/Event';
 import { PrimaryMedium, SecondaryMedium } from '@/types/Medium';
 import SearchResultsPage from '@/components/searchPage/SearchResultsPage';
+import EventTypeTabSelector from '@/components/createPage/EventTypeTabSelector';
 
 export type SearchOptions = 'event' | 'artwork' | 'user' | 'tag';
 
@@ -135,7 +136,11 @@ export default function Search() {
           {searchOption === 'event' && (
             <>
               <Text style={TEXT.regular}>what event type?</Text>
-              <EventTypeSelection onSelect={setEventType} hideDescription />
+              <EventTypeTabSelector
+                eventType={eventType}
+                setEventType={setEventType}
+                hideDescription
+              />
             </>
           )}
 
@@ -143,8 +148,10 @@ export default function Search() {
             <>
               <Text style={TEXT.regular}>what medium?</Text>
               <MediumSelection
-                onPrimarySelect={setPrimaryMedium}
-                onSecondarySelect={setSecondaryMedium}
+                primary={primaryMedium}
+                secondary={secondaryMedium}
+                setPrimary={setPrimaryMedium}
+                setSecondary={setSecondaryMedium}
                 regularHeading
               />
             </>

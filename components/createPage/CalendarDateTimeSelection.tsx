@@ -1,133 +1,121 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import { Calendar, DateData } from 'react-native-calendars';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Platform, Text } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { Timestamp } from 'firebase/firestore';
-import TEXT, { COLOURS, CORNERS, UNIT } from '@/styles';
+import TEXT, { UNIT } from '@/styles';
 import { formatDateForCalendar } from '@/utils/dateTimeUtils';
+import CustomModal from '../CustomModal';
+import BaseButton from '../buttons/BaseButton';
 
 interface CalendarDateTimeSelectionProps {
+  defaultDateTime?: Timestamp;
   onDateSelection: (timestamp: Timestamp | null) => void;
+  disableDate?: boolean;
 }
 
-const CalendarDateTimeSelection: React.FC<CalendarDateTimeSelectionProps> = ({ onDateSelection }) => {
-  const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
-  const [showCalendar, setShowCalendar] = useState<boolean>(false);
-  const [selectedTime, setSelectedTime] = useState<string>('00:00');
-  const [showTimePicker, setShowTimePicker] = useState<boolean>(false);
-  const [selectedHour, setSelectedHour] = useState<string>('00');
-  const [selectedMinute, setSelectedMinute] = useState<string>('00');
+const CalendarDateTimeSelection: React.FC<CalendarDateTimeSelectionProps> = ({
+  defaultDateTime,
+  onDateSelection,
+  disableDate,
+}) => {
+  const [selectedDateTime, setSelectedDateTime] = useState<Date>(
+    defaultDateTime ? defaultDateTime.toDate() : new Date()
+  );
+
+  const defaultDate = defaultDateTime?.toDate();
 
   useEffect(() => {
-    updateTimestamp();
-  }, [selectedDate, selectedTime]);
+    if (defaultDate && selectedDateTime < defaultDate) {
+      setSelectedDateTime(defaultDate);
+      onDateSelection(Timestamp.fromDate(defaultDate));
+    }
+  }, [defaultDateTime]);
 
-  const updateTimestamp = () => {
-    const dateParts = selectedDate.split('-');
-    const timeParts = selectedTime.split(':');
+  const onDateChange = (event: any, pickedDate?: Date) => {
+    if (pickedDate && defaultDate) {
+      const updatedDateTime = new Date(pickedDate);
+      updatedDateTime.setHours(selectedDateTime.getHours());
+      updatedDateTime.setMinutes(selectedDateTime.getMinutes());
 
-    const year = parseInt(dateParts[0], 10);
-    const month = parseInt(dateParts[1], 10) - 1;
-    const day = parseInt(dateParts[2], 10);
-    const hours = parseInt(timeParts[0], 10);
-    const minutes = parseInt(timeParts[1], 10);
-
-    const dateObject = new Date(year, month, day, hours, minutes);
-    const timestamp = Timestamp.fromDate(dateObject);
-    onDateSelection(timestamp);
+      if (updatedDateTime >= defaultDate) {
+        setSelectedDateTime(updatedDateTime);
+        onDateSelection(Timestamp.fromDate(updatedDateTime));
+      }
+    }
   };
 
-  const handleDatePress = () => {
-    setShowCalendar(!showCalendar);
-    setShowTimePicker(false);
-  };
+  const onTimeChange = (event: any, pickedTime?: Date) => {
+    if (pickedTime && defaultDate) {
+      const newDateTime = new Date(selectedDateTime);
+      newDateTime.setHours(pickedTime.getHours());
+      newDateTime.setMinutes(pickedTime.getMinutes());
 
-  const handleTimePress = () => {
-    setShowTimePicker(!showTimePicker);
-    setShowCalendar(false);
-  };
-
-  const onDayPress = (day: DateData) => {
-    setSelectedDate(day.dateString);
-    setShowCalendar(false);
-  };
-
-  const handleTimeChange = (newTime: string) => {
-    setSelectedTime(newTime);
-  };
-
-  const hours = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0'));
-  const minutes = ['00', '15', '30', '45'];
-
-  const handleHourPress = (hour: string) => {
-    setSelectedHour(hour);
-    handleTimeChange(`${hour}:${selectedMinute}`);
-  };
-
-  const handleMinutePress = (minute: string) => {
-    setSelectedMinute(minute);
-    handleTimeChange(`${selectedHour}:${minute}`);
+      if (newDateTime >= defaultDate) {
+        setSelectedDateTime(newDateTime);
+        onDateSelection(Timestamp.fromDate(newDateTime));
+      }
+    }
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={handleDatePress}>
-          <Text style={TEXT.regularPrimary}>{formatDateForCalendar(selectedDate).toLowerCase()}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={handleTimePress}>
-          <Text style={TEXT.regularPrimary}>{selectedTime}</Text>
-        </TouchableOpacity>
+        {/* Date Picker Button */}
+        <CustomModal
+          trigger={(showModal) => (
+            <BaseButton
+              state={disableDate ? 'disabled' : 'default'}
+              variant="secondary"
+              isFullWidth
+              states={{
+                default: {
+                  text: formatDateForCalendar(selectedDateTime.toISOString().split('T')[0]).toLowerCase(),
+                  onPress: () => showModal(),
+                },
+              }}
+            />
+          )}
+        >
+          <Text style={TEXT.regular}>What date will you be hosting the event?</Text>
+          <DateTimePicker
+            value={selectedDateTime}
+            mode="date"
+            minimumDate={defaultDate || new Date()}
+            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+            onChange={onDateChange}
+          />
+        </CustomModal>
+
+        {/* Time Picker Button */}
+        <CustomModal
+          trigger={(showModal) => (
+            <BaseButton
+              state="default"
+              variant="secondary"
+              isFullWidth
+              states={{
+                default: {
+                  text: selectedDateTime.toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  }),
+                  onPress: () => showModal(),
+                },
+              }}
+            />
+          )}
+        >
+          <Text style={TEXT.regular}>What time will the event start?</Text>
+          <DateTimePicker
+            value={selectedDateTime}
+            mode='time'
+            minuteInterval={15}
+            minimumDate={defaultDate}
+            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+            onChange={onTimeChange}
+          />
+        </CustomModal>
       </View>
-
-      {showCalendar && (
-        <Calendar
-          style={styles.calendar}
-          theme={{
-            backgroundColor: COLOURS.white,
-            calendarBackground: COLOURS.white,
-            textSectionTitleColor: COLOURS.primary,
-            selectedDayBackgroundColor: COLOURS.primary,
-            selectedDayTextColor: COLOURS.white,
-            todayTextColor: COLOURS.primary,
-            dayTextColor: COLOURS.black,
-            textDisabledColor: COLOURS.offwhite,
-          }}
-          onDayPress={onDayPress}
-          markedDates={{
-            [selectedDate]: { selected: true, disableTouchEvent: true, selectedDotColor: 'orange' },
-          }}
-        />
-      )}
-
-      {showTimePicker && (
-        <View style={styles.timePickerContainer}>
-          <Text style={TEXT.regularGrey}>hour</Text>
-          <ScrollView showsVerticalScrollIndicator={false} style={styles.scroll}>
-            {hours.map((hour) => (
-              <TouchableOpacity
-                key={hour}
-                style={[styles.timeButton, hour === selectedHour && styles.selectedButton]}
-                onPress={() => handleHourPress(hour)}
-              >
-                <Text style={TEXT.regular}>{hour}</Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-
-          <Text style={TEXT.regularGrey}>minute</Text>
-          <ScrollView showsVerticalScrollIndicator={false} style={styles.scroll}>
-            {minutes.map((minute) => (
-              <TouchableOpacity
-                key={minute}
-                style={[styles.timeButton, minute === selectedMinute && styles.selectedButton]}
-                onPress={() => handleMinutePress(minute)}
-              >
-                <Text style={TEXT.regular}>{minute}</Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        </View>
-      )}
     </View>
   );
 };
@@ -137,38 +125,9 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  button: {
-    padding: UNIT,
-    borderWidth: 2,
-    borderColor: COLOURS.primary,
-    borderRadius: CORNERS.default,
-  },
-  calendar: {
-    width: '100%',
-  },
-  timePickerContainer: {
-    borderRadius: CORNERS.default,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    height: UNIT * 5,
-    paddingTop: UNIT
-  },
-  scroll: {
     flex: 1,
-    marginHorizontal: UNIT / 2,
-  },
-  timeButton: {
-    padding: UNIT / 2,
-    marginVertical: UNIT / 4,
-    borderWidth: 1,
-    borderColor: COLOURS.primary,
-    borderRadius: CORNERS.default,
-  },
-  selectedButton: {
-    backgroundColor: `${COLOURS.primary}30`,
+    flexDirection: 'row',
+    gap: UNIT,
   },
 });
 

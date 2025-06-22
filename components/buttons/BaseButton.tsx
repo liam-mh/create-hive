@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   fullWidth: {
-    alignSelf: 'stretch',
+    flex: 1
   },
   wrapContent: {
     alignSelf: 'flex-start',

@@ -44,6 +44,18 @@ export const getAddressFromCoordinates = async (
   }
 };
 
+export const getNameFromCoordinates = async (
+  coordinate: Coordinate
+): Promise<string | null> => {
+  try {
+    const address = await getAddressFromCoordinates(coordinate);
+    return address?.name || null; 
+  } catch (error) {
+    console.error('Error getting city:', error);
+    return null; 
+  }
+};
+
 export const getCityFromCoordinates = async (
   coordinate: Coordinate
 ): Promise<string | null> => {
